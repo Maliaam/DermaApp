@@ -8,13 +8,14 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="100dp"
+
         android:id="@+id/home_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!-- Przycisk menu lewy górny róg -->
         <com.google.android.material.card.MaterialCardView
+            android:layout_marginTop="15dp"
             android:id="@+id/materialCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,6 +41,15 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="click me"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_search_recyclerView" />
 
 <!--        &lt;!&ndash; Do nawigacji fragmentów &ndash;&gt;-->
 <!--        <androidx.viewpager2.widget.ViewPager2-->

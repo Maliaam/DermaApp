@@ -1,6 +1,7 @@
 package com.example.dermaapplication
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,14 +30,12 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        // Inicjalizacja klasy DatabaseFetch
         databaseFetch = DatabaseFetch()
 
         // Ustawianie parametrów dla obiektów
         setupRecyclerView()
         setupSearchView()
 
-        // Pobieranie danych z bazy danych
         fetchDiseasesFromDatabase()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerMenu)) { v, insets ->
@@ -51,46 +50,62 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
+            visibility = View.GONE // Ustawiam początkowo na GONE - żeby nie był widoczny
         }
     }
 
     private fun setupSearchView() {
         searchView = findViewById<SearchView>(R.id.home_searchView).apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?) = false
-                override fun onQueryTextChange(newText: String?) =
-                    filterSearch(newText).let { true }
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    recyclerView.visibility = View.VISIBLE
+                    filterSearch(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    adapter.setFilteredList(mList)
+                    filterSearch(newText)
+                    return true
+                }
             })
+            setOnQueryTextFocusChangeListener{_, hasFocus ->
+                if(hasFocus){
+                    recyclerView.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
+
     private fun filterSearch(query: String?) {
-        if (query != null) {
+        if (!query.isNullOrEmpty()) {
             val filteredQuery = ArrayList<Disease>()
+            val lowerCaseQuery = query.lowercase(Locale.ROOT)
             for (data in mList) {
-                if (data.name.lowercase(Locale.ROOT).contains(query.lowercase(Locale.ROOT))) {
+                if (data.name.lowercase(Locale.ROOT).contains(lowerCaseQuery)) {
                     filteredQuery.add(data)
                 }
             }
-            if (filteredQuery.isEmpty()) {
-                Toast.makeText(this, "No Data found", Toast.LENGTH_SHORT).show()
-            } else {
                 adapter.setFilteredList(filteredQuery)
-            }
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            adapter.setFilteredList(mList)
         }
     }
 
+
     private fun fetchDiseasesFromDatabase() {
-        // Pobieramy dane z Firestore
         databaseFetch.fetchDiseasesNames().addOnCompleteListener { task: Task<List<String>> ->
             if (task.isSuccessful) {
-                val diseasesNames: List<String> = task.result ?: emptyList() // Obsługa przypadku null
-                mList.clear() // Czyścimy listę przed dodaniem nowych danych
+                val diseasesNames: List<String> =
+                    task.result ?: emptyList()
+                mList.clear()
                 for (name in diseasesNames) {
                     val disease = Disease(name)
                     mList.add(disease)
                 }
-                adapter.notifyDataSetChanged() // Powiadom adapter o zmianach w danych
+                adapter.notifyDataSetChanged()
             } else {
                 Toast.makeText(this, "Failed to fetch data", Toast.LENGTH_SHORT).show()
             }
