@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "55985247351",
+    "project_id": "dermappam",
+    "storage_bucket": "dermappam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55985247351:android:addc0d94f2b74b34bc2272",
+        "android_client_info": {
+          "package_name": "com.example.dermaapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXxr1qlNLhO2vYOJf27kmCRhbyI4-ESas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55985247351:android:b3e6c9173a610888bc2272",
+        "android_client_info": {
+          "package_name": "com.example.dermacare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXxr1qlNLhO2vYOJf27kmCRhbyI4-ESas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -32,5 +32,6 @@ class DiseaseAdapter(var mList: List<Disease>): RecyclerView.Adapter<DiseaseAdap
 
     override fun onBindViewHolder(holder: DiseaseViewHolder, position: Int) {
         holder.image.setImageResource(R.drawable.baseline_10k_24)
+        holder.text.text = mList[position].name
     }
 }
