@@ -15,6 +15,10 @@ class DiseaseAdapter(var mList: List<Disease>): RecyclerView.Adapter<DiseaseAdap
         val text: TextView = itemView.findViewById(R.id.disease_recyclerView_text)
 
     }
+    fun setFilteredList(mList: List<Disease>){
+        this.mList = mList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiseaseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.home_search_item,parent,

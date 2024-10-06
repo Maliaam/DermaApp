@@ -1,4 +1,4 @@
 package com.example.dermaapplication.items
 
-class Disease {
+data class Disease(val name: String) {
 }
