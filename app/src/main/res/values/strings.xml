@@ -6,6 +6,14 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <!-- Strings for navigation menu -->
+    <string name="menu_login">Zaloguj się</string>
+    <string name="menu_home">Strona główna</string>
+    <string name="menu_skin">Problemy skórne</string>
+    <string name="menu_questionaire">Ankieta</string>
+    <string name="menu_specialists">Specjaliści</string>
+    <string name="todo">TODO</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -44,4 +52,5 @@
     </string>
     <string name="image_missing">Image missing</string>
     <string name="example_od_disease">Example od disease</string>
+    <string name="userName">UserName</string>
 </resources>

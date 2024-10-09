@@ -1,19 +1,29 @@
 package com.example.dermaapplication
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
 import com.example.dermaapplication.database.DatabaseFetch
 import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import java.util.Locale
 
@@ -24,24 +34,44 @@ class MainActivity : AppCompatActivity() {
     private val mList = ArrayList<Disease>()
     private val adapter by lazy { DiseaseAdapter(mList) }
     private lateinit var databaseFetch: DatabaseFetch
+    private lateinit var menuButton: ImageView
+    private lateinit var navigation: NavigationView
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var headerUserName: TextView
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        // Ustawienie pełnego ekranu
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.insetsController?.apply {
+            hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+            systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         databaseFetch = DatabaseFetch()
 
         // Ustawianie parametrów dla obiektów
         setupRecyclerView()
         setupSearchView()
+        setupMainMenu()
 
         fetchDiseasesFromDatabase()
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerMenu)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+    private fun setupMainMenu() {
+        menuButton = findViewById(R.id.home_menu_openButton)
+        navigation = findViewById(R.id.nav_view)
+        drawerLayout = findViewById(R.id.drawerMenu)
+
+        val headerView = navigation.getHeaderView(0)
+        headerUserName = headerView.findViewById(R.id.headerUserName)
+
+        menuButton.setOnClickListener{
+            drawerLayout.openDrawer(GravityCompat.START)
         }
     }
 
@@ -64,14 +94,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    adapter.setFilteredList(mList)
                     filterSearch(newText)
                     return true
                 }
             })
-            setOnQueryTextFocusChangeListener{_, hasFocus ->
-                if(hasFocus){
-                    recyclerView.visibility = View.VISIBLE
+
+            // Nasłuchiwanie na zmianę fokusu
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    recyclerView.visibility = View.GONE // Ukryj RecyclerView
+                } else {
+                    recyclerView.visibility = View.VISIBLE // Pokaż RecyclerView
                 }
             }
         }
@@ -87,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                     filteredQuery.add(data)
                 }
             }
-                adapter.setFilteredList(filteredQuery)
+            adapter.setFilteredList(filteredQuery)
         } else {
             recyclerView.visibility = View.VISIBLE
             adapter.setFilteredList(mList)
