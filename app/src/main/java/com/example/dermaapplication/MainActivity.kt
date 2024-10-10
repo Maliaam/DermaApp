@@ -2,6 +2,7 @@ package com.example.dermaapplication
 
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -69,9 +70,21 @@ class MainActivity : AppCompatActivity() {
 
         val headerView = navigation.getHeaderView(0)
         headerUserName = headerView.findViewById(R.id.headerUserName)
+        val menu = navigation.menu
 
         menuButton.setOnClickListener{
             drawerLayout.openDrawer(GravityCompat.START)
+        }
+        navigation.setNavigationItemSelectedListener { menuItem ->
+            for(i in 0 until menu.size()){
+                val currentItem = menu.getItem(i)
+                updateIconColor(currentItem,getColor((android.R.color.white)))
+                currentItem.isChecked = false
+            }
+            menuItem.isChecked = true
+            updateIconColor(menuItem, getColor(R.color.checked_state_color))
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
         }
     }
 
@@ -144,5 +157,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    /**
+     * Metoda służąca do zmiany koloru itemu w nawigacji
+     *
+     * @param menuItem - przycisk w nawigacji menu
+     * @param color - kolor, na który ma zmienić się ikona
+     */
+    private fun updateIconColor(menuItem: MenuItem, color: Int) {
+        val icon = menuItem.icon
+        icon?.let {
+            it.setTint(color)
+            it.invalidateSelf() // Wymuszenie ponownego odrysowania ikony
+        }
+    }
+
 
 }
