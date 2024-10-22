@@ -36,7 +36,19 @@ class User {
     }
 
     // TODO: Metoda do logowania użytwkonika
-    fun loginUser(login: String, password: String) {
+    // TODO: PASSWORD RESET
+    fun loginUser(email: String, password: String, activity: Activity) {
+        userConnection.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task ->
+            if(task.isSuccessful){
+                Toast.makeText(activity, "Successful login",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(activity, "Login failed",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun getUserID(){
+
 
     }
+
 }

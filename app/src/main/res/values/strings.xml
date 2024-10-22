@@ -62,4 +62,12 @@
     <string name="powtorz_haslo">Powtórz hasło</string>
     <string name="register">Zarejestruj</string>
     <string name="rejestracja">Dalej</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">ZALOGUJ SIĘ</string>
+    <string name="zaloguj">Zaloguj</string>
+    <string name="czaty">Czaty</string>
+    <string name="name_surname">Imie Nazwisko</string>
+    <string name="example_message">Przykładowa wiadomość...</string>
+    <string name="message_hour">20:08</string>
 </resources>

@@ -18,10 +18,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
 import com.example.dermaapplication.database.DatabaseFetch
+import com.example.dermaapplication.fragments.ChatFragment
+import com.example.dermaapplication.fragments.RegistrationFragment
 import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
 import com.google.android.material.navigation.NavigationView
@@ -72,13 +75,32 @@ class MainActivity : AppCompatActivity() {
         headerUserName = headerView.findViewById(R.id.headerUserName)
         val menu = navigation.menu
 
-        menuButton.setOnClickListener{
+        menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
         navigation.setNavigationItemSelectedListener { menuItem ->
-            for(i in 0 until menu.size()){
+            when (menuItem.itemId) {
+                R.id.menu_login -> {
+//                    replaceFragment(RegistrationFragment())
+                    replaceFragment(ChatFragment())
+                }
+                // TODO EDIT TRANSACTIONS
+                R.id.menu_home -> {
+                    Toast.makeText(this, "Home Page", Toast.LENGTH_SHORT).show()
+                }
+                R.id.menu_skin -> {
+                    Toast.makeText(this, "Problemy skórne", Toast.LENGTH_SHORT).show()
+                }
+                R.id.menu_ankieta -> {
+                    Toast.makeText(this, "Ankieta", Toast.LENGTH_SHORT).show()
+                }
+                R.id.menu_specialists -> {
+                    Toast.makeText(this, "Specjaliści", Toast.LENGTH_SHORT).show()
+                }
+            }
+            for (i in 0 until menu.size()) {
                 val currentItem = menu.getItem(i)
-                updateIconColor(currentItem,getColor((android.R.color.white)))
+                updateIconColor(currentItem, getColor((android.R.color.white)))
                 currentItem.isChecked = false
             }
             menuItem.isChecked = true
@@ -157,6 +179,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     /**
      * Metoda służąca do zmiany koloru itemu w nawigacji
      *
@@ -171,5 +194,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Metoda służąca do zamiany fragmentów.
+     *
+     * @param Fragment - fragment do zmiany
+     */
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 }

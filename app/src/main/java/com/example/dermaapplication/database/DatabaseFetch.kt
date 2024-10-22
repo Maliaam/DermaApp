@@ -1,6 +1,7 @@
 package com.example.dermaapplication.database
 
 import android.util.Log
+import com.example.dermaapplication.items.Message
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -62,4 +63,40 @@ class DatabaseFetch {
             }
         }
     }
+
+    fun fetchMessages(userId: String): Task<List<Message>> {
+        val task = firestore.collection("messages").get()
+        return task.continueWith { task ->
+            if (task.isSuccessful) {
+                val documents = task.result!!.documents
+                val messages = mutableListOf<Message>()
+                for (document in documents) {
+                    val databaseId = document.getString("receiverId")
+                    if (userId == databaseId) {
+                        val senderId = document.getString("senderId") ?: ""
+                        val senderName = document.getString("senderName") ?: "Unknown sender"
+                        val receiverId = document.getString("receiverId") ?: ""
+                        val messageText = document.getString("messageText") ?: "No message"
+                        val timestamp = document.getString("timestamp") ?: "21:37"
+
+                        val message = Message(
+                            senderId = senderId,
+                            senderName = senderName,
+                            receiverId = receiverId,
+                            messageText = messageText,
+                            timestamp = timestamp
+                        )
+                        messages.add(message)
+                    }
+                }
+                messages
+            } else {
+                val exception = task.exception
+                Log.e("DatabaseFetch", "Error during database fetch - messages", exception)
+                throw exception ?: Exception("Error during fetch")
+            }
+        }
+    }
+
+
 }
