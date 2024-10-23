@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +15,9 @@ import com.example.dermaapplication.R
 import com.example.dermaapplication.adapters.ChatAdapter
 import com.example.dermaapplication.database.DatabaseFetch
 import com.example.dermaapplication.vmd.ChatViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
-class ChatFragment : Fragment() {
+class ChatMenuFragment : Fragment() {
     private lateinit var viewModel: ChatViewModel
     private val messList = ArrayList<Message>()
     private val adapter by lazy { ChatAdapter(messList) }
@@ -33,9 +32,13 @@ class ChatFragment : Fragment() {
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         chatRecyclerView = view.findViewById(R.id.chat_rv)
+        chatRecyclerView.adapter = adapter
+        adapter.onItemClick = { message ->
+            Toast.makeText(activity, message.senderName+message.senderId, Toast.LENGTH_SHORT).show()
+        }
         setupRecyclerView()
         databaseFetch = DatabaseFetch()
-        //TODO GET USER ID
+        //TODO GET LOGGED USER ID
         userID = "9YVo5GyArBcVKoLyRpOU"
         fetchMessagesFromDatabase()
 
@@ -46,7 +49,7 @@ class ChatFragment : Fragment() {
         chatRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@ChatFragment.adapter
+            adapter = this@ChatMenuFragment.adapter
         }
     }
 
@@ -58,16 +61,12 @@ class ChatFragment : Fragment() {
                 val sortedMessages =
                     lastMessages.sortedByDescending { message -> message.timestamp }
 
-
-
                 messList.clear()
                 messList.addAll(sortedMessages)
                 adapter.notifyDataSetChanged()
                 for (message in sortedMessages) {
                     Log.d("SortedMessages", "Sender Name: ${message.senderName}, Last Message: ${message.messageText}, Timestamp: ${message.timestamp}")
                 }
-
-                // Automatyczne przewijanie do ostatniej wiadomości
             } else {
                 Log.e("FetchMessages", "Failed to fetch messages", task.exception)
             }

@@ -1,12 +1,12 @@
 package com.example.dermaapplication.database
 
 import android.util.Log
+import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Message
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DatabaseFetch {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     /**
      * Metoda pobierająca dane z bazy danych Firebase.
@@ -15,7 +15,7 @@ class DatabaseFetch {
      * @throws: Exception przy nieudanym pobieraniu danych.
      */
     fun fetchDiseasesNames(): Task<List<String>> {
-        val task = firestore.collection("diseases").get()
+        val task = Utilities.firestore.collection("diseases").get()
         return task.continueWith { task1 ->
             if (task1.isSuccessful) {
                 val documents = task1.result!!.documents
@@ -37,7 +37,7 @@ class DatabaseFetch {
     }
 
     fun fetchDisease(diseaseName: String): Task<List<String>> {
-        val task = firestore.collection("diseases").get()
+        val task = Utilities.firestore.collection("diseases").get()
         return task.continueWith { task1 ->
             if (task1.isSuccessful) {
                 val documents = task1.result!!.documents
@@ -65,7 +65,7 @@ class DatabaseFetch {
     }
 
     fun fetchMessages(userId: String): Task<List<Message>> {
-        val task = firestore.collection("messages").get()
+        val task = Utilities.firestore.collection("messages").get()
         return task.continueWith { task ->
             if (task.isSuccessful) {
                 val documents = task.result!!.documents

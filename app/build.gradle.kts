@@ -20,6 +20,9 @@ android {
             useSupportLibrary = true
         }
     }
+    dataBinding{
+        enable
+    }
 
     buildTypes {
         release {
@@ -77,4 +80,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation("com.google.firebase:firebase-firestore:25.1.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation(libs.firebase.messaging)
 }

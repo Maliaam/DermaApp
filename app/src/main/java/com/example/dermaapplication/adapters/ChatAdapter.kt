@@ -11,11 +11,17 @@ import com.example.dermaapplication.items.Message
 
 class ChatAdapter(var messageList: List<Message>) :
     RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+    var onItemClick: ((Message) -> Unit)? = null
+
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.chatUserImage)
         val senderName: TextView = itemView.findViewById(R.id.chatUserNameSurname)
         val lastMessageText: TextView = itemView.findViewById(R.id.last_message)
         val lastMessageHour: TextView = itemView.findViewById(R.id.last_message_hour)
+
+        init {
+            itemView.setOnClickListener { onItemClick?.invoke(messageList[adapterPosition]) }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {

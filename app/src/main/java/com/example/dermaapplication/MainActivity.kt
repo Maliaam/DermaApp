@@ -9,26 +9,21 @@ import android.view.WindowInsetsController
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
 import com.example.dermaapplication.database.DatabaseFetch
-import com.example.dermaapplication.fragments.ChatFragment
-import com.example.dermaapplication.fragments.RegistrationFragment
+import com.example.dermaapplication.fragments.ChatMenuFragment
 import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.FirebaseApp
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -82,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.menu_login -> {
 //                    replaceFragment(RegistrationFragment())
-                    replaceFragment(ChatFragment())
+                    replaceFragment(ChatMenuFragment())
                 }
                 // TODO EDIT TRANSACTIONS
                 R.id.menu_home -> {
