@@ -1,8 +1,12 @@
 package com.example.dermaapplication
 
 import android.annotation.SuppressLint
+import androidx.fragment.app.Fragment
+import com.example.dermaapplication.user.User
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class Utilities {
 
@@ -10,13 +14,17 @@ class Utilities {
     companion object {
         val firestore = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
-        private var userId = ""
+        val user = User()
 
-        fun getCurrentUserUid(): String {
-            if (auth.currentUser != null) {
-                userId = auth.currentUser!!.uid
-            }
-            return userId
+        /**
+         * Metoda sprawdzająca UID użytkownika
+         *
+         * @return UID użytkownika (String | null)
+         */
+        fun getCurrentUserUid(): String? {
+            return auth.currentUser?.uid
         }
+
+
     }
 }

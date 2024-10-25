@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.R
+import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.adapters.ChatAdapter
 import com.example.dermaapplication.database.DatabaseFetch
 import com.example.dermaapplication.vmd.ChatViewModel
@@ -40,6 +41,7 @@ class ChatMenuFragment : Fragment() {
         databaseFetch = DatabaseFetch()
         //TODO GET LOGGED USER ID
         userID = "9YVo5GyArBcVKoLyRpOU"
+        val userID2 = Utilities.getCurrentUserUid()
         fetchMessagesFromDatabase()
 
         return view

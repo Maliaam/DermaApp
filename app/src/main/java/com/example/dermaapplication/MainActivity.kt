@@ -16,11 +16,13 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.WindowCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
 import com.example.dermaapplication.database.DatabaseFetch
 import com.example.dermaapplication.fragments.ChatMenuFragment
+import com.example.dermaapplication.fragments.LoginFragment
 import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
 import com.google.android.material.navigation.NavigationView
@@ -76,19 +78,21 @@ class MainActivity : AppCompatActivity() {
         navigation.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_login -> {
-//                    replaceFragment(RegistrationFragment())
-                    replaceFragment(ChatMenuFragment())
+                    replaceFragment(LoginFragment())
                 }
                 // TODO EDIT TRANSACTIONS
                 R.id.menu_home -> {
-                    Toast.makeText(this, "Home Page", Toast.LENGTH_SHORT).show()
+                    replaceFragment(ChatMenuFragment())
                 }
+
                 R.id.menu_skin -> {
                     Toast.makeText(this, "Problemy skórne", Toast.LENGTH_SHORT).show()
                 }
+
                 R.id.menu_ankieta -> {
                     Toast.makeText(this, "Ankieta", Toast.LENGTH_SHORT).show()
                 }
+
                 R.id.menu_specialists -> {
                     Toast.makeText(this, "Specjaliści", Toast.LENGTH_SHORT).show()
                 }
@@ -110,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
-            visibility = View.GONE // Ustawiam początkowo na GONE - żeby nie był widoczny
+            visibility = View.GONE
         }
     }
 
@@ -132,9 +136,9 @@ class MainActivity : AppCompatActivity() {
             // Nasłuchiwanie na zmianę fokusu
             setOnQueryTextFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    recyclerView.visibility = View.GONE // Ukryj RecyclerView
+                    recyclerView.visibility = View.GONE
                 } else {
-                    recyclerView.visibility = View.VISIBLE // Pokaż RecyclerView
+                    recyclerView.visibility = View.VISIBLE
                 }
             }
         }
@@ -194,10 +198,11 @@ class MainActivity : AppCompatActivity() {
      *
      * @param Fragment - fragment do zmiany
      */
-    private fun replaceFragment(fragment: Fragment) {
+    fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
 }
