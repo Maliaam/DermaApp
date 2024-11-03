@@ -1,5 +1,4 @@
 package com.example.dermaapplication.fragments
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,13 +7,18 @@ import android.view.ViewGroup
 import com.example.dermaapplication.R
 
 
-class FragmentQuestion : Fragment() {
+
+class FragmentQuestionnaire : Fragment() {
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_question, container, false)
+        val view =  inflater.inflate(R.layout.fragment_question, container, false)
+
+
+
+        return view
     }
 }

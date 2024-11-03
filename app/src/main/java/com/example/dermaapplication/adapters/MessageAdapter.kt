@@ -9,9 +9,13 @@ import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Message
 import com.example.dermaapplication.user.User
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class MessageAdapter(var messageList: List<Message>) :
+class MessageAdapter(private var messageList: List<Message>) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+    var onItemClick: ((Message) -> Unit)? = null
 
     private val messageLEFT = 0
     private val messageRIGHT = 1
@@ -20,12 +24,20 @@ class MessageAdapter(var messageList: List<Message>) :
         val messageText: TextView = itemView.findViewById(R.id.messageText)
         val timestamp: TextView = itemView.findViewById(R.id.messageTime)
 
+        init {
+            itemView.setOnClickListener{ onItemClick?.invoke(messageList[adapterPosition])}
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.message_display, parent, false)
-        return MessageViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == messageRIGHT) {
+            val view = inflater.inflate(R.layout.message_display_right, parent, false)
+            MessageViewHolder(view)
+        } else {
+            val view = inflater.inflate(R.layout.message_display, parent, false)
+            MessageViewHolder(view)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -34,9 +46,18 @@ class MessageAdapter(var messageList: List<Message>) :
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         holder.messageText.text = messageList[position].messageText
+
+        val fullTimeStamp = messageList[position].timestamp
+        val cutTimeStamp = try {
+            val originalFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val date = originalFormat.parse(fullTimeStamp)
+            SimpleDateFormat("HH:mm",Locale.getDefault()).format(date ?: Date())
+        }catch (e: Exception){
+            fullTimeStamp
+        }
+        holder.timestamp.text = cutTimeStamp
     }
 
     override fun getItemViewType(position: Int) =
         if (messageList[position].senderId == Utilities.getCurrentUserUid()) messageRIGHT else messageLEFT
-
 }

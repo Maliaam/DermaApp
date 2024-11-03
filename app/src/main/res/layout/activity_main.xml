@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_constraint_layout"
         android:layout_width="match_parent"
@@ -33,12 +34,12 @@
                     android:contentDescription="@string/image_missing"
                     android:src="@drawable/baseline_menu_24" />
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/home_searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:iconifiedByDefault="false"
-                    app:queryHint="Szukaj..." />
+<!--                <androidx.appcompat.widget.SearchView-->
+<!--                    android:id="@+id/home_searchView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:iconifiedByDefault="false"-->
+<!--                    app:queryHint="Szukaj..." />-->
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -46,8 +47,7 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            app:layout_constraintTop_toBottomOf="@id/materialCardView" />
+            app:layout_constraintTop_toBottomOf="@id/materialCardView"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/home_search_recyclerView"
@@ -59,9 +59,46 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/white"
+            app:fabCradleMargin="10dp"
+            app:fabAlignmentMode="center"
+            app:fabAnimationMode="slide"
+            app:hideOnScroll="true"
+            app:removeEmbeddedFabElevation="false">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@android:color/transparent"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/menu_bottom" />
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_margin="30dp"
+            android:contentDescription="fab"
+            android:src="@drawable/register_icon_user"
+            app:layout_anchor="@id/bottomAppBar"
+            app:maxImageSize="32dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- Navigation drawer -->
     <com.google.android.material.navigation.NavigationView
@@ -76,5 +113,6 @@
         app:itemIconTint="@color/menu_color_state"
         app:itemTextColor="@color/white"
         app:menu="@menu/navigation_menu" />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

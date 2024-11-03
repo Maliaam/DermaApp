@@ -1,0 +1,59 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:backgroundTint="#1C1C1C"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#1C1C1C">
+
+        <!-- Obraz choroby -->
+        <ImageView
+            android:id="@+id/wiki_skinMenu_diseaseImageRv"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:background="#333333"
+            android:src="@drawable/baseline_10k_24"
+            android:contentDescription="@string/image_missing" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wiki_skinMenu_diseaseNameRv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Nazwa choroby" />
+
+            <TextView
+                android:id="@+id/wiki_skinMenu_diseaseDescriptionRv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:text="Krótki opis choroby, który daje podstawowe informacje." />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

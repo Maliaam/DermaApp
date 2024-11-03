@@ -5,29 +5,33 @@
     <!-- Grupa dla tytułu -->
     <group android:id="@+id/group_main_title">
         <item
-            android:title="MAIN MENU"
-            android:enabled="false" />
+            android:enabled="false"
+            android:title="MAIN MENU" />
     </group>
 
     <!-- Pozostałe elementy menu -->
     <item
-        android:id="@+id/menu_login"
-        android:title="@string/menu_login"
-        android:icon="@drawable/enter"/>
-    <item
         android:id="@+id/menu_home"
         android:icon="@drawable/home1"
-        android:title="@string/menu_home"/>
+        android:title="@string/menu_home" />
+    <item
+        android:id="@+id/menu_login"
+        android:icon="@drawable/enter"
+        android:title="@string/menu_login" />
+    <item
+        android:id="@+id/menu_chat"
+        android:icon="@drawable/messenger"
+        android:title="@string/chat" />
     <item
         android:id="@+id/menu_skin"
         android:icon="@drawable/dryskin"
-        android:title="@string/menu_skin"/>
+        android:title="@string/menu_skin" />
     <item
         android:id="@+id/menu_ankieta"
         android:icon="@drawable/checklist"
-        android:title="@string/menu_questionaire"/>
+        android:title="@string/menu_questionaire" />
     <item
         android:id="@+id/menu_specialists"
         android:icon="@drawable/doctor"
-        android:title="@string/menu_specialists"/>
+        android:title="@string/menu_specialists" />
 </menu>

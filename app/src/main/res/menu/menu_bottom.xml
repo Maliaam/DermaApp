@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_home"
+        android:icon="@drawable/bottom_menu_home_icon"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/wiki"
+        android:icon="@drawable/encyclopedia"
+        android:title="Wikipedia" />
+
+    <item
+        android:enabled="true"
+        android:title="" />
+
+    <item
+        android:id="@+id/ankieta"
+        android:icon="@drawable/checklist"
+        android:title="Ankieta" />
+
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/messenger"
+        android:title="Wiadomości" />
+</menu>

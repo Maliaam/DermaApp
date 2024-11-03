@@ -9,7 +9,7 @@
     <!-- Strings for navigation menu -->
     <string name="menu_login">Zaloguj się</string>
     <string name="menu_home">Strona główna</string>
-    <string name="menu_skin">Problemy skórne</string>
+    <string name="menu_skin">Wikipedia schorzeń</string>
     <string name="menu_questionaire">Ankieta</string>
     <string name="menu_specialists">Specjaliści</string>
     <string name="todo">TODO</string>
@@ -41,4 +41,10 @@
     <string name="message_hour">20:08</string>
     <string name="reset_password"><u>Przypomnij hasło</u></string>
     <string name="register_no_acc"><u>Nie masz konta? Zarejestruj się!</u></string>
+    <string name="choose_account_type">Wybierz rodzaj konta</string>
+    <string name="additional_information">Dodatkowe informacje</string>
+    <string name="authenticationCode">Kod uwierzytelniający</string>
+    <string name="name">Imię</string>
+    <string name="Surname">Nazwisko</string>
+    <string name="chat">Czat</string>
 </resources>

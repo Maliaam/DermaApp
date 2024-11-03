@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/gradient_background"
-    tools:context=".fragments.FragmentQuestion">
+    tools:context=".fragments.FragmentQuestionnaire">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -18,9 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:justificationMode="inter_word"
+            android:textStyle="bold"
             android:text="@string/lorem_ipsum"
-            android:textSize="22sp"
+            android:textSize="18sp"
             tools:targetApi="o" />
+
+
     </com.google.android.material.card.MaterialCardView>
 
 

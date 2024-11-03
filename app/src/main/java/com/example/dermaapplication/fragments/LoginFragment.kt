@@ -1,20 +1,22 @@
 package com.example.dermaapplication.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 
-
+/**
+ * Fragment umożliwiający użytkownikowi zalogowanie się do aplikacji, przejścia do rejestracji,
+ * jeżeli nie posiada konta. Również umożliwia zresetowania hasła użytkownika.
+ */
 class LoginFragment : Fragment() {
     private lateinit var loginButton: AppCompatButton
     private lateinit var loginEmailField: EditText
@@ -23,8 +25,7 @@ class LoginFragment : Fragment() {
     private lateinit var loginRegister: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
@@ -34,24 +35,32 @@ class LoginFragment : Fragment() {
         loginResetPassword = view.findViewById(R.id.login_passwordReset)
         loginRegister = view.findViewById(R.id.login_registerAccount)
 
+        // Obsługa przycisku umożliwiającego zalogowanie użytkownika do aplikacji
         loginButton.setOnClickListener {
             val email = loginEmailField.text.toString()
             val password = loginPasswordField.text.toString()
-            Utilities.user.loginUser(email, password, requireActivity())
-//            Toast.makeText(requireContext(),Utilities.getCurrentUserUid(),Toast.LENGTH_SHORT).show()
+            Utilities.user.loginUser(email, password, requireActivity()) { success ->
+                if (success) {
+                    Utilities.initializeUserStatus { isDoctor ->
+                        if (isDoctor) {
+                            Log.d("LoginStatus", "Zalogowano jako doktor")
+                        } else {
+                            Log.d("LoginStatus", "Zalogowano jako użytkownik")
+                        }
+                    }
+                }
+            }
         }
 
+        // Obsługa przycisku umożliwiającego przejście do fragmentu rejestracji RegistrationFragment
         loginRegister.setOnClickListener {
             (activity as? MainActivity)?.replaceFragment(RegistrationFragment())
         }
 
-
+        // Obsługa przycisku umożliwiającego zresetowania hasła
         loginResetPassword.setOnClickListener {
             // TODO RESET PASSWORD
         }
-
-
         return view
     }
-
 }

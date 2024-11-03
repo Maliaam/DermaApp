@@ -1,4 +1,12 @@
 package com.example.dermaapplication.items
 
-data class Disease(val name: String) {
-}
+/**
+ * Klasa reprezentująca schorzenie skórne
+ *
+ * @property name Nazwa schorzenia skórnego.
+ * @property description Opis schorzenia skórnego.
+ */
+data class Disease(
+    val name: String,
+    val description: String
+)

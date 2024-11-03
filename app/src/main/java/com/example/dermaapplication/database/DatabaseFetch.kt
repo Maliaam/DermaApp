@@ -1,18 +1,19 @@
 package com.example.dermaapplication.database
 
-import android.util.Log
 import com.example.dermaapplication.Utilities
-import com.example.dermaapplication.items.Message
+import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ * Klasa odpowiedzalna za komunikację z bazą danych Firebase.
+ */
 class DatabaseFetch {
 
     /**
-     * Metoda pobierająca dane z bazy danych Firebase.
+     * Pobiera listę unikalnych nazw chorób w kolekcji "diseases" z Firebase.
      *
-     * @return Lista nazw chorób znajdująca się w bazie danych.
-     * @throws: Exception przy nieudanym pobieraniu danych.
+     * @return Task<List<String>> Zwraca listę nazw chorób.
+     * @throws:  Exception W przypadku nieudanego pobierania danych zostaje wyrzucony wyjątek.
      */
     fun fetchDiseasesNames(): Task<List<String>> {
         val task = Utilities.firestore.collection("diseases").get()
@@ -30,12 +31,17 @@ class DatabaseFetch {
                 diseasesNames
             } else {
                 val exception = task1.exception
-                Log.e("DatabaseFetch", "Error during database fetch", exception)
                 throw exception ?: Exception("Unknown error during fetch")
             }
         }
     }
 
+    /**
+     * Pobiera szczegółowe informacje na temat danej choroby.
+     *
+     * @param diseaseName Nazwa choroby, której informacje mają zostać pobrane z bazy danych.
+     * @return Task<List<String>> Zwraca znalezione informacje na temat danej choroby.
+     */
     fun fetchDisease(diseaseName: String): Task<List<String>> {
         val task = Utilities.firestore.collection("diseases").get()
         return task.continueWith { task1 ->
@@ -58,45 +64,32 @@ class DatabaseFetch {
                 diseaseFetch
             } else {
                 val exception = task1.exception
-                Log.e("DatabaseFetch", "Error during database fetch", exception)
                 throw exception ?: Exception("Unknown error during fetch")
             }
         }
     }
 
-    fun fetchMessages(userId: String): Task<List<Message>> {
-        val task = Utilities.firestore.collection("messages").get()
-        return task.continueWith { task ->
+    /**
+     * Pobiera informacje o wszystkich chorobach znajdujących się w bazie danych Firebase, a
+     * następnie przekazuje ją do funkcji callback.
+     *
+     * @param callback Funkcja zwrotna, która otrzyma listę obiektów Disease.
+     */
+    fun fetchDiseases(callback: (List<Disease>) -> Unit) {
+        Utilities.firestore.collection("diseases").get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val documents = task.result!!.documents
-                val messages = mutableListOf<Message>()
-                for (document in documents) {
-                    val databaseId = document.getString("receiverId")
-                    if (userId == databaseId) {
-                        val senderId = document.getString("senderId") ?: ""
-                        val senderName = document.getString("senderName") ?: "Unknown sender"
-                        val receiverId = document.getString("receiverId") ?: ""
-                        val messageText = document.getString("messageText") ?: "No message"
-                        val timestamp = document.getString("timestamp") ?: "21:37"
+                val diseasesList = mutableListOf<Disease>()
 
-                        val message = Message(
-                            senderId = senderId,
-                            senderName = senderName,
-                            receiverId = receiverId,
-                            messageText = messageText,
-                            timestamp = timestamp
-                        )
-                        messages.add(message)
-                    }
+                for (document in documents) {
+                    val diseaseName = document.getString("name") ?: "Brak nazwy"
+                    val diseaseDescription = document.getString("description") ?: "Brak opisu"
+                    diseasesList.add(Disease(diseaseName, diseaseDescription))
                 }
-                messages
+                callback(diseasesList)
             } else {
-                val exception = task.exception
-                Log.e("DatabaseFetch", "Error during database fetch - messages", exception)
-                throw exception ?: Exception("Error during fetch")
+                callback(emptyList())
             }
         }
     }
-
-
 }

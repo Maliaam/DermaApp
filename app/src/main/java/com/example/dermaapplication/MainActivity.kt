@@ -1,68 +1,97 @@
 package com.example.dermaapplication
 
-import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
-import androidx.core.view.WindowCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
-import com.example.dermaapplication.database.DatabaseFetch
-import com.example.dermaapplication.fragments.ChatMenuFragment
+import com.example.dermaapplication.fragments.FragmentQuestionnaire
+import com.example.dermaapplication.fragments.HomeFragment
 import com.example.dermaapplication.fragments.LoginFragment
+import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
+import com.example.dermaapplication.fragments.SpecialistsFragment
+import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
 import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import java.util.Locale
 
+/**
+ * Główna klasa aplikacji, zarządza interfejsem użytkownika oraz umożliwia nawigację pomiędzy
+ * fragmentami. Odpowiada za obsługę głownego oraz dolnego menu nawigacyjnego.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var searchView: SearchView
     private val mList = ArrayList<Disease>()
     private val adapter by lazy { DiseaseAdapter(mList) }
-    private lateinit var databaseFetch: DatabaseFetch
     private lateinit var menuButton: ImageView
     private lateinit var navigation: NavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var headerUserName: TextView
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Ustawienie pełnego ekranu
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        window.insetsController?.apply {
-            hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        if (Utilities.getCurrentUserUid() != "") {
+            Utilities.auth.signOut()
         }
 
-        databaseFetch = DatabaseFetch()
-
-        // Ustawianie parametrów dla obiektów
+        // Inicjalizacja UI
         setupRecyclerView()
-        setupSearchView()
         setupMainMenu()
-
-        fetchDiseasesFromDatabase()
+        setupBottomMenu()
     }
 
+    /**
+     * Inicjalizuje dolne menu nawigacyjne i obsługuje wybór jego elementów.
+     */
+    private fun setupBottomMenu() {
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.bottom_home -> {
+                    replaceFragment(HomeFragment())
+                    true
+                }
 
+                R.id.wiki -> {
+                    replaceFragment(SkinDiseasesFragment())
+                    true
+                }
+
+                R.id.ankieta -> {
+                    replaceFragment(FragmentQuestionnaire())
+                    true
+                }
+
+                R.id.chat -> {
+                    replaceFragment(ChatMenuFragment())
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    /**
+     * Inicjalizuje menu główne i obsługuje wybór jego elementów.
+     */
     private fun setupMainMenu() {
         menuButton = findViewById(R.id.home_menu_openButton)
         navigation = findViewById(R.id.nav_view)
@@ -75,28 +104,36 @@ class MainActivity : AppCompatActivity() {
         menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
+
+
+        //TODO: Edytować menu nawigacyjne w zależności od typu konta
         navigation.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_login -> {
                     replaceFragment(LoginFragment())
                 }
-                // TODO EDIT TRANSACTIONS
+
                 R.id.menu_home -> {
+                    replaceFragment(HomeFragment())
+                }
+
+                R.id.menu_chat -> {
                     replaceFragment(ChatMenuFragment())
                 }
 
                 R.id.menu_skin -> {
-                    Toast.makeText(this, "Problemy skórne", Toast.LENGTH_SHORT).show()
+                    replaceFragment(SkinDiseasesFragment())
                 }
 
                 R.id.menu_ankieta -> {
-                    Toast.makeText(this, "Ankieta", Toast.LENGTH_SHORT).show()
+                    replaceFragment(FragmentQuestionnaire())
                 }
 
                 R.id.menu_specialists -> {
-                    Toast.makeText(this, "Specjaliści", Toast.LENGTH_SHORT).show()
+                    replaceFragment(SpecialistsFragment())
                 }
             }
+
             for (i in 0 until menu.size()) {
                 val currentItem = menu.getItem(i)
                 updateIconColor(currentItem, getColor((android.R.color.white)))
@@ -109,6 +146,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Inicjalizacja RecyclerView z adapterem i potrzebnymi danymi.
+     */
     private fun setupRecyclerView() {
         recyclerView = findViewById<RecyclerView>(R.id.home_search_recyclerView).apply {
             setHasFixedSize(true)
@@ -118,85 +158,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSearchView() {
-        searchView = findViewById<SearchView>(R.id.home_searchView).apply {
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    recyclerView.visibility = View.VISIBLE
-                    filterSearch(query)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    filterSearch(newText)
-                    return true
-                }
-            })
-
-            // Nasłuchiwanie na zmianę fokusu
-            setOnQueryTextFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    recyclerView.visibility = View.GONE
-                } else {
-                    recyclerView.visibility = View.VISIBLE
-                }
-            }
-        }
-    }
-
-
-    private fun filterSearch(query: String?) {
-        if (!query.isNullOrEmpty()) {
-            val filteredQuery = ArrayList<Disease>()
-            val lowerCaseQuery = query.lowercase(Locale.ROOT)
-            for (data in mList) {
-                if (data.name.lowercase(Locale.ROOT).contains(lowerCaseQuery)) {
-                    filteredQuery.add(data)
-                }
-            }
-            adapter.setFilteredList(filteredQuery)
-        } else {
-            recyclerView.visibility = View.VISIBLE
-            adapter.setFilteredList(mList)
-        }
-    }
-
-
-    private fun fetchDiseasesFromDatabase() {
-        databaseFetch.fetchDiseasesNames().addOnCompleteListener { task: Task<List<String>> ->
-            if (task.isSuccessful) {
-                val diseasesNames: List<String> =
-                    task.result ?: emptyList()
-                mList.clear()
-                for (name in diseasesNames) {
-                    val disease = Disease(name)
-                    mList.add(disease)
-                }
-                adapter.notifyDataSetChanged()
-            } else {
-                Toast.makeText(this, "Failed to fetch data", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     /**
-     * Metoda służąca do zmiany koloru itemu w nawigacji
+     * Aktualizuje kolor ikon w menu nawigacyjnym w zależności od wybranego elementu.
      *
-     * @param menuItem - przycisk w nawigacji menu
-     * @param color - kolor, na który ma zmienić się ikona
+     * @param menuItem Element menu, którego kolor ma zostać zmieniony.
+     * @param color Kolor, na który zmieniony zostaje zabarwienie ikony.
      */
     private fun updateIconColor(menuItem: MenuItem, color: Int) {
         val icon = menuItem.icon
         icon?.let {
             it.setTint(color)
-            it.invalidateSelf() // Wymuszenie ponownego odrysowania ikony
+            it.invalidateSelf()
         }
     }
 
     /**
-     * Metoda służąca do zamiany fragmentów.
+     * Zmienia aktualnie wyświetlany fragment na inny.
      *
-     * @param Fragment - fragment do zmiany
+     * @param fragment Klasa fragmentu, na który ma zostać zmieniony aktualny fragment.
      */
     fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
@@ -205,4 +184,21 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
+    /**
+     * Ukrywa dolne menu nawigacyjne oraz FloatingActionButton.
+     */
+    fun hideBottomNav() {
+        findViewById<BottomAppBar>(R.id.bottomAppBar).visibility = View.GONE
+        findViewById<FloatingActionButton>(R.id.fab_user).visibility = View.GONE
+        findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility = View.GONE
+    }
+
+    /**
+     * Pokazuje dolne menu nawigacyjne oraz FloatingActionButton.
+     */
+    fun showBottomNav() {
+        findViewById<BottomAppBar>(R.id.bottomAppBar).visibility = View.VISIBLE
+        findViewById<FloatingActionButton>(R.id.fab_user).visibility = View.VISIBLE
+        findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility = View.VISIBLE
+    }
 }
