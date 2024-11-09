@@ -1,4 +1,4 @@
-package com.example.dermaapplication.fragments
+package com.example.dermaapplication.fragments.registration
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,10 +1,12 @@
 package com.example.dermaapplication
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.example.dermaapplication.database.DatabaseFetch
 import com.example.dermaapplication.user.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -27,6 +29,9 @@ class Utilities {
 
         /** Referencja do instancji FirebaseAuth */
         val auth = FirebaseAuth.getInstance()
+
+        /** Referencja do instancji FirebaseStorage */
+        val storage = FirebaseStorage.getInstance().reference
 
         /** Instancja klasy DatabaseFetch do wymiany danych z bazą */
         val databaseFetch = DatabaseFetch()
@@ -83,6 +88,7 @@ class Utilities {
                         val name = document.getString("name") ?: ""
                         val surname = document.getString("surname") ?: ""
                         val fullName = "$name $surname"
+                        Log.e("CurrentUserName",fullName)
                         callback(fullName)
                     }
                 }
@@ -122,7 +128,7 @@ class Utilities {
          * @param callback Funkcja przyjmująca parametr Boolean, wskazujący czy użytkownik jest
          * lekarzem. Zwraca true jeśli jest lekarzem, false jeśli nie jest.
          */
-        fun checkIfUserIsDoctor(callback: (Boolean) -> Unit) {
+        private fun checkIfUserIsDoctor(callback: (Boolean) -> Unit) {
             val userUID = getCurrentUserUid()
             firestore.collection("doctors")
                 .get()

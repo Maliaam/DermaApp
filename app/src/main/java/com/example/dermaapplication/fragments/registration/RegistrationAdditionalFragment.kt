@@ -1,4 +1,4 @@
-package com.example.dermaapplication.fragments
+package com.example.dermaapplication.fragments.registration
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
+import com.example.dermaapplication.fragments.HomeFragment
 
 /**
  * Fragment odpowiedzialny za pobranie dodatkowych danych, które uzupełniają proces rejestracji

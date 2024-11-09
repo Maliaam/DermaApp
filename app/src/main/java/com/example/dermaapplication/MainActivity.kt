@@ -1,38 +1,40 @@
 package com.example.dermaapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
+import com.example.dermaapplication.database.FirebaseAuthListener
 import com.example.dermaapplication.fragments.FragmentQuestionnaire
 import com.example.dermaapplication.fragments.HomeFragment
-import com.example.dermaapplication.fragments.LoginFragment
+import com.example.dermaapplication.fragments.registration.LoginFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
 import com.example.dermaapplication.fragments.SpecialistsFragment
+import com.example.dermaapplication.fragments.UserFeedFragment
 import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
+import com.example.dermaapplication.interfaces.AuthStateCallback
 import com.example.dermaapplication.items.Disease
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import java.util.Locale
+import com.google.firebase.auth.FirebaseAuth
 
 /**
  * Główna klasa aplikacji, zarządza interfejsem użytkownika oraz umożliwia nawigację pomiędzy
  * fragmentami. Odpowiada za obsługę głownego oraz dolnego menu nawigacyjnego.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AuthStateCallback {
 
     private lateinit var recyclerView: RecyclerView
     private val mList = ArrayList<Disease>()
@@ -42,10 +44,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var headerUserName: TextView
+    private lateinit var authListener: FirebaseAuthListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        authListener = FirebaseAuthListener(this)
 
         if (Utilities.getCurrentUserUid() != "") {
             Utilities.auth.signOut()
@@ -65,7 +69,10 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottom_home -> {
-                    replaceFragment(HomeFragment())
+                    if (Utilities.getCurrentUserUid() != "")
+                        replaceFragment(UserFeedFragment())
+                    else
+                        replaceFragment(HomeFragment())
                     true
                 }
 
@@ -80,7 +87,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.chat -> {
-                    replaceFragment(ChatMenuFragment())
+                    if(FirebaseAuth.getInstance().currentUser != null)
+                        replaceFragment(ChatMenuFragment())
+                    else
+                        replaceFragment(SpecialistsFragment())
                     true
                 }
 
@@ -105,6 +115,9 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+
+        if (Utilities.getCurrentUserUid() != "")
+            navigation.menu.findItem(R.id.menu_chat).isVisible = false
 
         //TODO: Edytować menu nawigacyjne w zależności od typu konta
         navigation.setNavigationItemSelectedListener { menuItem ->
@@ -200,5 +213,55 @@ class MainActivity : AppCompatActivity() {
         findViewById<BottomAppBar>(R.id.bottomAppBar).visibility = View.VISIBLE
         findViewById<FloatingActionButton>(R.id.fab_user).visibility = View.VISIBLE
         findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility = View.VISIBLE
+    }
+
+    fun changeNavigationHeader() {
+        val headerLayout = navigation.getHeaderView(0)
+        val headerText = headerLayout.findViewById<TextView>(R.id.headerUserName)
+        Utilities.getCurrentUserName { userName ->
+            if (userName != null) {
+                Log.e("CurrentUserName", userName)
+            }
+            if (userName != "Unknown user")
+                headerText.text = userName
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        authListener.attachListener()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        authListener.detachListener()
+    }
+
+    private fun refreshMenu() {
+        val isUserLoggedIn = FirebaseAuth.getInstance().currentUser != null
+        val chatItemMenu = navigation.menu.findItem(R.id.menu_chat)
+
+        chatItemMenu.isVisible = isUserLoggedIn
+
+        val bottomChatItemMenu = bottomNavigationView.menu.findItem(R.id.chat)
+        if (!isUserLoggedIn) {
+            bottomChatItemMenu.apply {
+                title = "Specjaliści"
+                setIcon(R.drawable.doctor)
+            }
+        } else {
+            bottomChatItemMenu.apply {
+                title = "Chat"
+                setIcon(R.drawable.messenger)
+            }
+        }
+    }
+
+    override fun onUserLoggedIn() {
+        refreshMenu()
+    }
+
+    override fun onUserLoggedOut() {
+        refreshMenu()
     }
 }

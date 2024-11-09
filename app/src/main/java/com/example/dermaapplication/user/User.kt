@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.fragments.HomeFragment
+import com.example.dermaapplication.fragments.UserFeedFragment
 import com.google.firebase.auth.FirebaseUser
 
 /**
@@ -59,7 +60,7 @@ class User {
 
     /**
      * Loguje użytkownika do aplikacji poprzez Firebase za pomocą podanych danych uwierzytelniających.
-     * Po pomyślnym zalogowaniu następuje przekierowanie do fragmentu HomeFragment
+     * Po pomyślnym zalogowaniu następuje przekierowanie do fragmentu UserFeedFragment
      *
      * @param email E-mail użytkownika.
      * @param password Hasło użytkownika.
@@ -76,7 +77,7 @@ class User {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(activity, "Zalogowano", Toast.LENGTH_SHORT).show()
-                    (activity as? MainActivity)?.replaceFragment(HomeFragment())
+                    (activity as? MainActivity)?.replaceFragment(UserFeedFragment())
                     callback(true)
                 } else {
                     Toast.makeText(

@@ -82,4 +82,6 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation(libs.firebase.messaging)
     implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.firebase:firebase-storage:21.0.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

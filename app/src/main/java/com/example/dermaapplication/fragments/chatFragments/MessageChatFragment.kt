@@ -1,6 +1,8 @@
 package com.example.dermaapplication.fragments.chatFragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +35,7 @@ class MessageChatFragment : Fragment() {
     private lateinit var senderId: String
     private lateinit var senderName: String
     private lateinit var goBack: ImageView
+    private lateinit var makePhotoButton: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -82,6 +85,12 @@ class MessageChatFragment : Fragment() {
         goBack.setOnClickListener {
             (activity as? MainActivity)?.replaceFragment(ChatMenuFragment())
         }
+
+        makePhotoButton.setOnClickListener{
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            //TODO: Dodanie kamery i robienie zdjęcia
+        }
+
         return view
     }
 

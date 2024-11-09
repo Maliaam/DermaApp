@@ -5,7 +5,7 @@
     android:id="@+id/drawerMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background">
+    android:background="@drawable/second_bg">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,13 +33,6 @@
                     android:layout_height="48dp"
                     android:contentDescription="@string/image_missing"
                     android:src="@drawable/baseline_menu_24" />
-
-<!--                <androidx.appcompat.widget.SearchView-->
-<!--                    android:id="@+id/home_searchView"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:iconifiedByDefault="false"-->
-<!--                    app:queryHint="Szukaj..." />-->
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -70,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:backgroundTint="@color/white"
             app:fabCradleMargin="10dp"
             app:fabAlignmentMode="center"
             app:fabAnimationMode="slide"
@@ -84,6 +76,9 @@
                 android:layout_gravity="bottom"
                 android:background="@android:color/transparent"
                 app:labelVisibilityMode="labeled"
+                app:itemRippleColor="@color/white"
+                app:itemTextColor="@color/bottom_nav_color"
+                app:itemIconTint="@color/bottom_nav_color"
                 app:menu="@menu/menu_bottom" />
         </com.google.android.material.bottomappbar.BottomAppBar>
 

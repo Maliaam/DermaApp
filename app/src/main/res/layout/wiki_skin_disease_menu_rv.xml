@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:background="#1C1C1C">
+        android:background="#fae6db">
 
         <!-- Obraz choroby -->
         <ImageView
@@ -23,7 +23,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
-            android:background="#333333"
+
             android:src="@drawable/baseline_10k_24"
             android:contentDescription="@string/image_missing" />
 
@@ -37,7 +37,7 @@
                 android:id="@+id/wiki_skinMenu_diseaseNameRv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/accent10"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#CCCCCC"
+                android:textColor="@color/text30"
                 android:textSize="14sp"
                 android:maxLines="2"
                 android:ellipsize="end"

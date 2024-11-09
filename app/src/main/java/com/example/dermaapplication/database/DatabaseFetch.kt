@@ -1,8 +1,11 @@
 package com.example.dermaapplication.database
 
+import android.net.Uri
+import android.util.Log
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Disease
 import com.google.android.gms.tasks.Task
+import java.util.UUID
 
 /**
  * Klasa odpowiedzalna za komunikację z bazą danych Firebase.
@@ -90,6 +93,25 @@ class DatabaseFetch {
             } else {
                 callback(emptyList())
             }
+        }
+    }
+
+    /**
+     * Dodaje zdjęcie wybrane przez użytkownika do FirebaseStorage.
+     *
+     * @param imageUri uniform resource identifier ( uri wybranego zdjęcia).
+     */
+    fun uploadUserImage(imageUri: Uri) {
+        val userUID = Utilities.getCurrentUserUid()
+        val userImageRef = Utilities.storage.child("users/$userUID/images/${UUID.randomUUID()}.jpg")
+
+        userImageRef.putFile(imageUri).addOnSuccessListener { task ->
+            userImageRef.downloadUrl.addOnSuccessListener { uri ->
+                val downloadUrl = uri.toString()
+                Log.d("FirebaseStorage", "Image uploaded successfully. URL: $downloadUrl")
+            }
+        }.addOnFailureListener { exception ->
+            Log.e("FirebaseStorage", "Image upload failed", exception)
         }
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="48dp"
     android:background="@drawable/gradient_background"
-    tools:context=".fragments.RegistrationAdditionalFragment">
+    tools:context=".fragments.registration.RegistrationAdditionalFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

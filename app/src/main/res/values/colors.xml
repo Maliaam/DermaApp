@@ -10,4 +10,18 @@
     <color name="darkUI">#0E0E16</color>
     <color name="checked_state_color">#458DFB</color>
     <color name="derma_color">#f4ac6c</color>
+    <color name="skin_color">#F4A89E</color>
+    <color name="medicine">#030367</color>
+
+    <color name="main_color">#ECECEC</color>
+    <color name="secondary_color">#171723</color>
+
+
+    <color name="accent_color">#11E494</color>
+    <color name="accent10">#0D46D7</color>
+
+
+    <!-- Home feed colors -->
+    <color name="CardViewFeedColor">#fae6db</color>
+    <color name="text30">#2C2C2C</color>
 </resources>

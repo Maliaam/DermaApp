@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="@drawable/second_bg">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -43,7 +43,7 @@
             android:id="@+id/wiki_skinMenu_RecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#000000"
+            android:background="@android:color/transparent"
             android:clipToPadding="false"
             android:padding="16dp"
             android:scrollbars="vertical"

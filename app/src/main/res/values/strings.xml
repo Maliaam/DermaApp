@@ -47,4 +47,11 @@
     <string name="name">Imię</string>
     <string name="Surname">Nazwisko</string>
     <string name="chat">Czat</string>
+    <string name="nie">NIE</string>
+    <string name="tak">TAK</string>
+    <string name="przyk_adowe_pytanie_do_ankiety">Przykładowe pytanie do ankiety</string>
+    <string name="questions_counter">1/21</string>
+    <string name="title">Dermma ∘</string>
+    <string name="dbamy_o_twoj_sk_r">Dbamy o Twoją skórę</string>
+    <string name="feed_greeting">Witaj Adam!</string>
 </resources>

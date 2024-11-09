@@ -1,30 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/gradient_background"
     tools:context=".fragments.FragmentQuestionnaire">
 
+    <!-- Główna karta pytania -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/questionCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardElevation="10dp"
-        android:layout_margin="30dp">
+        android:layout_margin="16dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        android:padding="16dp"
+        android:backgroundTint="?attr/colorSurface">
 
-        <TextView
-            android:padding="15dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:justificationMode="inter_word"
-            android:textStyle="bold"
-            android:text="@string/lorem_ipsum"
-            android:textSize="18sp"
-            tools:targetApi="o" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:layout_margin="10dp"
+                android:text="@string/questions_counter"/>
 
+            <!-- Nagłówek pytania -->
+            <TextView
+                android:id="@+id/questionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum"
+                android:textSize="20sp"
+                android:justificationMode="inter_word"
+                android:textColor="?attr/colorOnSurface"
+                android:fontFamily="sans-serif-medium"
+                android:layout_gravity="center"
+                tools:targetApi="o" />
+
+            <!-- Opcje TAK | NIE -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="24dp">
+
+                <Button
+                    android:id="@+id/buttonYes"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/tak"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <Button
+                    android:id="@+id/buttonNo"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/nie"
+                    android:textColor="?attr/colorPrimary"/>
+            </LinearLayout>
+
+            <!-- Nawigacja między pytaniami -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="24dp">
+
+                <Button
+                    android:id="@+id/buttonPrevious"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Poprzednie"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <Button
+                    android:id="@+id/buttonNext"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Następne"
+                    android:textColor="?attr/colorPrimary"/>
+            </LinearLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
-
 </FrameLayout>

@@ -1,4 +1,4 @@
-package com.example.dermaapplication.fragments
+package com.example.dermaapplication.fragments.registration
 
 import android.os.Bundle
 import android.util.Log
@@ -41,6 +41,7 @@ class LoginFragment : Fragment() {
             val password = loginPasswordField.text.toString()
             Utilities.user.loginUser(email, password, requireActivity()) { success ->
                 if (success) {
+                    (activity as MainActivity).changeNavigationHeader()
                     Utilities.initializeUserStatus { isDoctor ->
                         if (isDoctor) {
                             Log.d("LoginStatus", "Zalogowano jako doktor")
