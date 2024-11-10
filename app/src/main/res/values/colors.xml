@@ -11,7 +11,7 @@
     <color name="checked_state_color">#458DFB</color>
     <color name="derma_color">#f4ac6c</color>
     <color name="skin_color">#F4A89E</color>
-    <color name="medicine">#030367</color>
+    <color name="medicine">#1f2b37</color>
 
     <color name="main_color">#ECECEC</color>
     <color name="secondary_color">#171723</color>
@@ -23,5 +23,6 @@
 
     <!-- Home feed colors -->
     <color name="CardViewFeedColor">#fae6db</color>
+    <color name="MainColor">#efac88</color>
     <color name="text30">#2C2C2C</color>
 </resources>

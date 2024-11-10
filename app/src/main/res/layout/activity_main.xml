@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="0dp"
-            app:cardUseCompatPadding="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -62,6 +61,7 @@
             android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#e9eaeb"
             android:layout_gravity="bottom"
             app:fabCradleMargin="10dp"
             app:fabAlignmentMode="center"
@@ -71,14 +71,15 @@
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
+                android:backgroundTint="@color/medicine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@android:color/transparent"
+                android:background="#e9eaeb"
                 app:labelVisibilityMode="labeled"
                 app:itemRippleColor="@color/white"
-                app:itemTextColor="@color/bottom_nav_color"
-                app:itemIconTint="@color/bottom_nav_color"
+                app:itemTextColor="@color/medicine"
+                app:itemIconTint="@color/medicine"
                 app:menu="@menu/menu_bottom" />
         </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -87,8 +88,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
+            android:backgroundTint="@color/medicine"
             android:layout_margin="30dp"
             android:contentDescription="fab"
+            app:tint="@color/white"
             android:src="@drawable/register_icon_user"
             app:layout_anchor="@id/bottomAppBar"
             app:maxImageSize="32dp" />

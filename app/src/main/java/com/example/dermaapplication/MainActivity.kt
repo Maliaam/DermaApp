@@ -247,12 +247,12 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
         if (!isUserLoggedIn) {
             bottomChatItemMenu.apply {
                 title = "Specjaliści"
-                setIcon(R.drawable.doctor)
+                setIcon(R.drawable.icon_doctor)
             }
         } else {
             bottomChatItemMenu.apply {
-                title = "Chat"
-                setIcon(R.drawable.messenger)
+                title = "Wiadomości"
+                setIcon(R.drawable.image_feed_message)
             }
         }
     }

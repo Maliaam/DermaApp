@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.DermaApplication" parent="android:Theme.Material.Light.NoActionBar" />
-    <style name="Base.Theme.DermaApplication" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Main Application Themes -->
+    <style name="Theme.DermaApplication" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Reference custom SearchBar style -->
     </style>
 
+
+    <style name="Base.Theme.DermaApplication" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
 
 </resources>

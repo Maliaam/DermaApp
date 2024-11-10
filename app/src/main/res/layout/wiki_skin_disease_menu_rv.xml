@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    android:backgroundTint="#1C1C1C"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
@@ -14,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:background="#fae6db">
+        android:background="#d2d5d7">
 
         <!-- Obraz choroby -->
         <ImageView
@@ -37,9 +36,10 @@
                 android:id="@+id/wiki_skinMenu_diseaseNameRv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/accent10"
-                android:textSize="18sp"
+                android:textColor="@color/medicine"
+                android:textSize="22sp"
                 android:textStyle="bold"
+                android:fontFamily="@font/playfairdisplayregular"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="Nazwa choroby" />
@@ -49,8 +49,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/text30"
+                android:textColor="@color/medicine"
                 android:textSize="14sp"
+                android:fontFamily="@font/playfairdisplayregular"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:text="Krótki opis choroby, który daje podstawowe informacje." />

@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/wiki"
-        android:icon="@drawable/encyclopedia"
+        android:icon="@drawable/image_feed_encyclopedia"
         android:title="Wikipedia" />
 
     <item
@@ -17,11 +17,11 @@
 
     <item
         android:id="@+id/ankieta"
-        android:icon="@drawable/checklist"
+        android:icon="@drawable/icon_questionnaire"
         android:title="Ankieta" />
 
     <item
         android:id="@+id/chat"
-        android:icon="@drawable/messenger"
+        android:icon="@drawable/image_feed_message"
         android:title="Wiadomości" />
 </menu>

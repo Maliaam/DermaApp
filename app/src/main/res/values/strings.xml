@@ -53,5 +53,13 @@
     <string name="questions_counter">1/21</string>
     <string name="title">Dermma ∘</string>
     <string name="dbamy_o_twoj_sk_r">Dbamy o Twoją skórę</string>
-    <string name="feed_greeting">Witaj Adam!</string>
+    <string name="feed_greeting">Witaj, Adam!</string>
+    <string name="notifaction_bell">notifaction_bell</string>
+    <string name="notification_bell">notification bell</string>
+    <string name="user_profile_image">User profile image</string>
+    <string name="skin_disease_feed_image">Skin disease feed image</string>
+    <string name="skin_disease">Egzema</string>
+    <string name="see_more">Zobacz więcej...</string>
+    <string name="menu_image">Menu image</string>
+    <string name="szukaj">Szukaj...</string>
 </resources>

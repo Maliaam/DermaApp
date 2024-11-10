@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="160dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/feed_disease_image"
+            android:layout_width="160dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_eczema"
+            android:contentDescription="@string/skin_disease_feed_image" />
+
+        <TextView
+            android:id="@+id/feed_disease_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/skin_disease"
+            android:textColor="@color/medicine"
+            android:fontFamily="@font/playfairdisplayregular"
+            android:textStyle="bold"
+            android:padding="5dp"/>
+
+        <TextView
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:textColor="#8f959b"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:text="@string/see_more"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
