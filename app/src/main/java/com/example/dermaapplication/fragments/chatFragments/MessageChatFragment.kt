@@ -47,6 +47,7 @@ class MessageChatFragment : Fragment() {
         sendMessageButton = view.findViewById(R.id.message_sendMessage)
         sendMessageText = view.findViewById(R.id.message_editText)
         personName = view.findViewById(R.id.message_receiverNameSurname)
+        makePhotoButton = view.findViewById(R.id.message_makePhoto)
 
         // Pobranie danych z bundle (przekazanych z ChatMenuFragment)
         senderId = arguments?.getString("senderUID")!!

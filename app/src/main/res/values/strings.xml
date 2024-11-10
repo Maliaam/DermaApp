@@ -62,4 +62,10 @@
     <string name="see_more">Zobacz więcej...</string>
     <string name="menu_image">Menu image</string>
     <string name="szukaj">Szukaj...</string>
+    <string name="password">password</string>
+    <string name="repeat">repeat</string>
+    <string name="drawer_menu">drawer_menu</string>
+    <string name="arc">arc</string>
+    <string name="we_care">DBAMY O TWOJĄ SKÓRĘ</string>
+    <string name="disease_name">Disease Name</string>
 </resources>

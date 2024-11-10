@@ -10,11 +10,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.fragments.HomeFragment
+import com.google.android.material.card.MaterialCardView
 
 /**
  * Fragment odpowiedzialny za pobranie dodatkowych danych, które uzupełniają proces rejestracji
@@ -29,6 +31,7 @@ class RegistrationAdditionalFragment : Fragment() {
     private lateinit var nameText: EditText
     private lateinit var surnameText: EditText
     private lateinit var registerButton: Button
+    private lateinit var authenticationCardView: CardView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -41,6 +44,7 @@ class RegistrationAdditionalFragment : Fragment() {
         authenticationCode = view.findViewById(R.id.additional_doctorAuthenticationCode)
         authenticationCodeContainer = view.findViewById(R.id.authenticationCodeContainer)
         authenticationCodeImg = view.findViewById(R.id.additional_doctorAuthImg)
+        authenticationCardView = view.findViewById(R.id.authenticationCardView)
         nameText = view.findViewById(R.id.additional_name)
         surnameText = view.findViewById(R.id.additional_surname)
         registerButton = view.findViewById(R.id.additional_Button)
@@ -51,6 +55,7 @@ class RegistrationAdditionalFragment : Fragment() {
                 userRadioButton.isChecked = false
                 authenticationCode.visibility = View.VISIBLE
                 authenticationCodeImg.visibility = View.VISIBLE
+                authenticationCardView.visibility = View.VISIBLE
             } else {
                 authenticationCode.visibility = View.GONE
             }
@@ -62,6 +67,7 @@ class RegistrationAdditionalFragment : Fragment() {
                 doctorRadioButton.isChecked = false
                 authenticationCodeImg.visibility = View.GONE
                 authenticationCode.visibility = View.GONE
+                authenticationCardView.visibility = View.GONE
             }
         }
         // Pobranie danych przekazanych z fragmentu RegistrationFragment

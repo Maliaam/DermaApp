@@ -1,43 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="160dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical"
     app:cardCornerRadius="10dp">
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:strokeColor="@color/medicine"
+        style="@style/CustomCardViewStyle"
+        app:cardPreventCornerOverlap="false"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/feed_disease_image"
             android:layout_width="160dp"
             android:layout_height="150dp"
+            android:contentDescription="@string/skin_disease_feed_image"
             android:scaleType="centerCrop"
-            android:src="@drawable/image_eczema"
-            android:contentDescription="@string/skin_disease_feed_image" />
+            android:src="@drawable/image_eczema" />
+    </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/feed_disease_name"
-            android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        style="@style/CustomCardViewStyle_Alternate"
+        android:backgroundTint="@color/white"
+        app:cardPreventCornerOverlap="false"
+        android:elevation="5dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/skin_disease"
-            android:textColor="@color/medicine"
-            android:fontFamily="@font/playfairdisplayregular"
-            android:textStyle="bold"
-            android:padding="5dp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:textColor="#8f959b"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:maxLines="2"
-            android:text="@string/see_more"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/feed_disease_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/playfairdisplayregular"
+                android:padding="5dp"
+                android:text="@string/skin_disease"
+                android:textColor="@color/medicine"
+                android:textStyle="bold" />
 
-</androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:padding="5dp"
+                android:text="@string/see_more"
+                android:textColor="#8f959b"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
+

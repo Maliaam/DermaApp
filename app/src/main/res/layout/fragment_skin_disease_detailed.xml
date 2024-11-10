@@ -1,169 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="80dp"
-    android:background="#121212">
+    android:background="@color/white">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:background="@color/medicine">
 
-            <TextView
-                android:id="@+id/wiki_detailed_diseaseName"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Disease Name"
-                android:textColor="#BB86FC"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:padding="16dp">
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/imageCarousel"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:clipToPadding="false"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wiki_detailed_diseaseName" />
-
-            <ImageView
-                android:id="@+id/leftArrow"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_left_arrow"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/imageCarousel"
-                app:tint="@color/white" />
-
-            <ImageView
-                android:id="@+id/rightArrow"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_right_arrow"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/imageCarousel"
-                app:tint="@color/white" />
-
-            <TextView
-                android:id="@+id/wiki_detailed_diseaseDescription"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_background"
-                android:lineSpacingExtra="4dp"
-                android:padding="8dp"
-                android:text="Comprehensive description of the disease goes here."
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageCarousel" />
-
-            <LinearLayout
-                android:id="@+id/characteristicsSection"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_background"
-                android:orientation="vertical"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wiki_detailed_diseaseDescription">
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_menu_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
 
                 <TextView
+                    android:id="@+id/wiki_detailed_diseaseName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/playfairdisplayregular"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/disease_name"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/imageCarousel"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/leftArrow"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_left_arrow"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/imageCarousel"
+                    app:tint="@color/medicine" />
+
+                <ImageView
+                    android:id="@+id/rightArrow"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_right_arrow"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/imageCarousel"
+                    app:tint="@color/medicine" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/playfairdisplayregular"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+
+                    android:text="Opis schorzenia"
+                    app:layout_constraintTop_toBottomOf="@+id/imageCarousel" />
+
+                <TextView
+                    android:id="@+id/wiki_detailed_diseaseDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/playfairdisplayregular"
+                    android:lineSpacingExtra="4dp"
+                    android:padding="8dp"
+                    android:text="Comprehensive description of the disease goes here."
+                    android:textColor="@color/medicine"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                <LinearLayout
+                    android:id="@+id/characteristicsSection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wiki_detailed_diseaseDescription">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Characteristics and Symptoms"
+                        android:textColor="#BB86FC"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="• Symptom 1"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="• Symptom 2"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="• Symptom 3"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/doctorsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Characteristics and Symptoms"
+                    android:layout_marginTop="24dp"
+                    android:text="Specialized Doctors"
                     android:textColor="#BB86FC"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/characteristicsSection" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/doctorsSection"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="• Symptom 1"
-                    android:textColor="@color/white" />
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/doctorsText">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="• Symptom 2"
-                    android:textColor="@color/white" />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/circle_background"
+                        android:src="@drawable/man" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="• Symptom 3"
-                    android:textColor="@color/white" />
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/circle_background"
+                        android:src="@drawable/man" />
 
-            <TextView
-                android:id="@+id/doctorsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Specialized Doctors"
-                android:textColor="#BB86FC"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/characteristicsSection" />
-
-            <LinearLayout
-                android:id="@+id/doctorsSection"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/doctorsText">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/circle_background"
-                    android:src="@drawable/man" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/circle_background"
-                    android:src="@drawable/man" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/circle_background"
-                    android:src="@drawable/man" />
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/circle_background"
+                        android:src="@drawable/man" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
 </FrameLayout>
