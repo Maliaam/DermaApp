@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
+    android:background="@color/medicine"
     tools:context=".fragments.FragmentQuestionnaire">
 
     <!-- Główna karta pytania -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/questionCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="500dp"
         android:layout_margin="16dp"
         app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        android:padding="16dp"
-        android:backgroundTint="?attr/colorSurface">
+        app:cardElevation="5dp"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,16 +24,10 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="18sp"
-                android:layout_margin="10dp"
-                android:text="@string/questions_counter"/>
 
-            <!-- Nagłówek pytania -->
+            <!-- Treść pytania -->
             <TextView
+                android:layout_marginTop="30dp"
                 android:id="@+id/questionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,6 +65,12 @@
                     android:text="@string/nie"
                     android:textColor="?attr/colorPrimary"/>
             </LinearLayout>
+
+            <Spinner
+                android:id="@+id/answersSpinner"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <!-- Nawigacja między pytaniami -->
             <LinearLayout

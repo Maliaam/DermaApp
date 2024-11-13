@@ -12,6 +12,7 @@
     <color name="derma_color">#f4ac6c</color>
     <color name="skin_color">#F4A89E</color>
     <color name="medicine">#1f2b37</color>
+    <color name="inactiveDot">#D3D3D3</color> <!-- Light gray -->
 
     <color name="main_color">#ECECEC</color>
     <color name="secondary_color">#171723</color>

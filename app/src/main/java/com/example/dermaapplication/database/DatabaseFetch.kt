@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Disease
+import com.example.dermaapplication.items.Question
 import com.google.android.gms.tasks.Task
 import java.util.UUID
 
@@ -114,4 +115,33 @@ class DatabaseFetch {
             Log.e("FirebaseStorage", "Image upload failed", exception)
         }
     }
+
+    /**
+     * Pobiera informacje o pytaniach i odpowiedziach znajdujących się w bazie danych Firebase.
+     * Następnie parsuje odpowiedzi po przecinku i zwraca listę pytań i odpowiedzi.
+     *
+     * @param callback Funkcja zwrotna, która otrzyma listę obiektów Question.
+     */
+    fun fetchQuestions(callback: (List<Question>) -> Unit) {
+        Utilities.firestore.collection("questions").get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val questions = task.result?.documents?.mapNotNull { document ->
+                    val questionText = document.getString("questionText")
+                    val answersString = document.getString("answers")
+
+                    if (questionText != null && answersString != null) {
+                        val answers = answersString.split(",").map { it.trim() }
+                        Question(questionText, answers)
+                    } else {
+                        null
+                    }
+                } ?: emptyList()
+
+                callback(questions)
+            } else {
+                callback(emptyList())
+            }
+        }
+    }
+
 }
