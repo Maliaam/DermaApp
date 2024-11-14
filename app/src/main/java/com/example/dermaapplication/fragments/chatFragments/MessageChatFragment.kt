@@ -84,6 +84,7 @@ class MessageChatFragment : Fragment() {
         // Obsługa przycisku powrotu do ChatMenuFragment
         goBack = view.findViewById(R.id.message_goBack)
         goBack.setOnClickListener {
+            (activity as? MainActivity)?.showBottomNav()
             (activity as? MainActivity)?.replaceFragment(ChatMenuFragment())
         }
 

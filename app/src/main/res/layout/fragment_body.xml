@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/medicine">
+
+    <!-- Menu icon at the top -->
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_menu_24"
+        app:tint="@color/white" />
+
+    <!-- Main content arranged vertically -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Text above ImageView -->
+        <TextView
+            android:fontFamily="@font/playfairdisplayregular"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:text="Zaznacz na obrazie gdzie występują zmiany"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <!-- Body outline ImageView -->
+        <ImageView
+            android:id="@+id/body_outline"
+            android:layout_width="300dp"
+            android:layout_height="400dp"
+            android:src="@drawable/body_positive1"
+            app:tint="@color/CardViewFeedColor" />
+
+    </LinearLayout>
+</FrameLayout>

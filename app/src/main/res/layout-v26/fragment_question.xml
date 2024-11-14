@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/medicine"
-    tools:context=".fragments.FragmentQuestionnaire">
+    tools:context=".fragments.questionnaire.FragmentQuestionnaire">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
             android:layout_width="64dp"
             android:layout_height="48dp"
@@ -19,10 +20,10 @@
             app:tint="@color/white" />
 
         <FrameLayout
-            android:layout_marginTop="40dp"
             android:id="@+id/frameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -81,10 +82,11 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/questionCard"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="15dp"
         android:padding="16dp"
         app:cardCornerRadius="20dp"
@@ -92,33 +94,35 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="450dp"
             android:orientation="vertical"
             android:padding="16dp">
 
 
             <!-- Treść pytania -->
             <TextView
+                android:layout_marginTop="15dp"
                 android:id="@+id/questionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/playfairdisplayregular"
                 android:justificationMode="inter_word"
-                android:text="@string/lorem_ipsum"
+                android:text="Zaznacz gdzie występują zmiany"
+                android:visibility="gone"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Opcje TAK | NIE -->
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/yesNoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@+id/answersSpinner"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -139,10 +143,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    app:cornerRadius="5dp"
                     android:backgroundTint="@color/medicine"
                     android:text="@string/nie"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    app:cornerRadius="5dp" />
             </LinearLayout>
 
             <Spinner
@@ -151,13 +155,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="30dp"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <!-- Nawigacja między pytaniami -->
             <LinearLayout
-                android:id="@+id/linearLayout6"
+                android:id="@+id/buttonsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -183,6 +188,7 @@
                     android:text="Następne"
                     android:textColor="?attr/colorPrimary" />
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/dotContainer"

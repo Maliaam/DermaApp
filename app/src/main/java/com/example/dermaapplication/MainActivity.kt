@@ -6,9 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -16,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
 import com.example.dermaapplication.database.FirebaseAuthListener
-import com.example.dermaapplication.fragments.FragmentQuestionnaire
+import com.example.dermaapplication.fragments.questionnaire.FragmentQuestionnaire
 import com.example.dermaapplication.fragments.HomeFragment
 import com.example.dermaapplication.fragments.registration.LoginFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment

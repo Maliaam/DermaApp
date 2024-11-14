@@ -38,23 +38,26 @@ class LoginFragment : Fragment() {
 
         // Obsługa przycisku umożliwiającego zalogowanie użytkownika do aplikacji
         loginButton.setOnClickListener {
-            if (loginEmailField.text.isNotEmpty() && loginPasswordField.text.isNotEmpty()) {
-                val email = loginEmailField.text.toString()
-                val password = loginPasswordField.text.toString()
-                Utilities.user.loginUser(email, password, requireActivity()) { success ->
-                    if (success) {
-                        (activity as MainActivity).changeNavigationHeader()
-                        Utilities.initializeUserStatus { isDoctor ->
-                            if (isDoctor) {
-                                Log.d("LoginStatus", "Zalogowano jako doktor")
-                            } else {
-                                Log.d("LoginStatus", "Zalogowano jako użytkownik")
-                            }
+//            if (loginEmailField.text.isNotEmpty() && loginPasswordField.text.isNotEmpty()) {
+//                val email = loginEmailField.text.toString()
+//                val password = loginPasswordField.text.toString()
+            val email = "wnuk9533@gmail.com"
+            val password = "123456"
+            Utilities.user.loginUser(email, password, requireActivity()) { success ->
+                if (success) {
+                    (activity as MainActivity).changeNavigationHeader()
+                    Utilities.initializeUserStatus { isDoctor ->
+                        if (isDoctor) {
+                            Log.d("LoginStatus", "Zalogowano jako doktor")
+                        } else {
+                            Log.d("LoginStatus", "Zalogowano jako użytkownik")
                         }
                     }
                 }
-            } else Toast.makeText(requireContext(),"Dane logowania są puste",Toast.LENGTH_SHORT).show()
+            }
         }
+//            } else Toast.makeText(requireContext(),"Dane logowania są puste",Toast.LENGTH_SHORT).show()
+//        }
 
         // Obsługa przycisku umożliwiającego przejście do fragmentu rejestracji RegistrationFragment
         loginRegister.setOnClickListener {
