@@ -21,6 +21,7 @@ import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
 import com.example.dermaapplication.fragments.SpecialistsFragment
 import com.example.dermaapplication.fragments.UserFeedFragment
 import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
+import com.example.dermaapplication.fragments.questionnaire.BodyFragment
 import com.example.dermaapplication.interfaces.AuthStateCallback
 import com.example.dermaapplication.items.Disease
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
                 }
 
                 R.id.ankieta -> {
-                    replaceFragment(FragmentQuestionnaire())
+                    replaceFragment(BodyFragment())
                     true
                 }
 
@@ -138,7 +139,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
                 }
 
                 R.id.menu_ankieta -> {
-                    replaceFragment(FragmentQuestionnaire())
+                    replaceFragment(BodyFragment())
                 }
 
                 R.id.menu_specialists -> {

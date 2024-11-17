@@ -68,4 +68,8 @@
     <string name="arc">arc</string>
     <string name="we_care">DBAMY O TWOJĄ SKÓRĘ</string>
     <string name="disease_name">Disease Name</string>
+    <string name="loading_progress">%d%%</string>
+    <string name="end_questionnaire_confirm">Czy chcesz zakończyć ankiete?</string>
+    <string name="help_body">Kliknij w obraz, aby zaznaczyć miejsce, w którym występują zmiany skórne. Jeśli chcesz usunąć pinezkę, kliknij ją drugi raz. Obraz domyślnie przedstawia przód ciała, jeśli chcesz to zmienić, kliknij w przycisk TYŁ.</string>
+
 </resources>

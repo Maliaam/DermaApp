@@ -118,7 +118,7 @@ class DatabaseFetch {
 
     /**
      * Pobiera informacje o pytaniach i odpowiedziach znajdujących się w bazie danych Firebase.
-     * Następnie parsuje odpowiedzi po przecinku i zwraca listę pytań i odpowiedzi.
+     * Następnie parsuje odpowiedzi po przecinku i zwraca callback obiektów Question.
      *
      * @param callback Funkcja zwrotna, która otrzyma listę obiektów Question.
      */
@@ -126,12 +126,17 @@ class DatabaseFetch {
         Utilities.firestore.collection("questions").get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val questions = task.result?.documents?.mapNotNull { document ->
+                    val id = document.getString("id")?.toInt()
                     val questionText = document.getString("questionText")
                     val answersString = document.getString("answers")
+                    val theme = document.getString("theme")
+                    val nextQuestion = document.getString("nextQuestion")?.toInt()
+                    val expectedAnswer = document.getString("expectedAnswer")
+                    val additionalInfo = document.getString("additionInfo")
 
-                    if (questionText != null && answersString != null) {
+                    if ( id != null && questionText != null && answersString != null && theme != null) {
                         val answers = answersString.split(",").map { it.trim() }
-                        Question(questionText, answers)
+                        Question(id,questionText, answers,theme,nextQuestion,expectedAnswer,additionalInfo)
                     } else {
                         null
                     }
