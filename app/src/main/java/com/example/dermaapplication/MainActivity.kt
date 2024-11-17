@@ -20,6 +20,7 @@ import com.example.dermaapplication.fragments.registration.LoginFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
 import com.example.dermaapplication.fragments.SpecialistsFragment
 import com.example.dermaapplication.fragments.UserFeedFragment
+import com.example.dermaapplication.fragments.UserFragment
 import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
 import com.example.dermaapplication.fragments.questionnaire.BodyFragment
 import com.example.dermaapplication.interfaces.AuthStateCallback
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var headerUserName: TextView
     private lateinit var authListener: FirebaseAuthListener
+    private lateinit var fabButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
      * Inicjalizuje dolne menu nawigacyjne i obsługuje wybór jego elementów.
      */
     private fun setupBottomMenu() {
+        fabButton = findViewById(R.id.fab_user)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -96,6 +99,9 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
 
                 else -> false
             }
+        }
+        fabButton.setOnClickListener {
+            replaceFragment(UserFragment())
         }
     }
 

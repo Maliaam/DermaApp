@@ -143,7 +143,7 @@ class BodyFragment : Fragment() {
 
         frontEndButton.text = if (isFrontSide) "TYŁ" else "PRZÓD"
     }
-    
+
     /**
      * Usuwa wszystkie pinezki z widoku, aby przygotować przestrzeń dla nowych pinezek po
      * przełączeniu strony (przód/tył).
