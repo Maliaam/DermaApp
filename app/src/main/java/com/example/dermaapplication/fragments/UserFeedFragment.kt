@@ -30,6 +30,7 @@ class UserFeedFragment : Fragment() {
     private val diseasesList = ArrayList<Disease>()
     private val diseasesAdapter by lazy { FeedAdapter(diseasesList) }
     private lateinit var recyclerView: RecyclerView
+    private lateinit var userPicture: ImageView
 
 
     override fun onCreateView(
@@ -48,7 +49,7 @@ class UserFeedFragment : Fragment() {
         journalCardView = view.findViewById(R.id.feed_journalCardView)
         encyclopediaCardView = view.findViewById(R.id.feed_encyclopediaCardView)
         messagesCardView = view.findViewById(R.id.feed_messagesCardView)
-
+        userPicture = view.findViewById(R.id.user_image)
 
         journalCardView.setOnClickListener {
             replaceFragment(JournalFragment())
@@ -58,6 +59,9 @@ class UserFeedFragment : Fragment() {
         }
         messagesCardView.setOnClickListener {
             replaceFragment(ChatMenuFragment())
+        }
+        userPicture.setOnClickListener {
+            replaceFragment(UserFragment())
         }
 
 

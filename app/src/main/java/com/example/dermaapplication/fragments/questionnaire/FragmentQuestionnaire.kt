@@ -46,7 +46,8 @@ class FragmentQuestionnaire : Fragment() {
     private var isUserInteracting = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_question, container, false)
 
         questionText = view.findViewById(R.id.questionText)
@@ -84,7 +85,6 @@ class FragmentQuestionnaire : Fragment() {
 
     /**
      * Wyświetla pytanie na podstawie jego indeksu w liście pytań.
-     *
      * Funkcja aktualizuje widok pytania na ekranie, ustawiając tekst pytania oraz dostosowując typ
      * odpowiedzi (przyciski "tak/nie" lub rozwijane menu) do liczby dostępnych opcji odpowiedzi.
      *
@@ -92,7 +92,7 @@ class FragmentQuestionnaire : Fragment() {
      */
     private fun displayQuestion(currentQuestionNumber: Int) {
         val question = questionsList[currentQuestionNumber]
-        Log.d("Survey",question.toString())
+        Log.d("Survey", question.toString())
         currentQuestionId = question.id
         questionText.text = question.question
         adjustAnswerTypeToQuestion(question)
@@ -100,10 +100,11 @@ class FragmentQuestionnaire : Fragment() {
 
     /**
      * Funkcja odpowiedzialna za ustalenie, które pytanie powinno zostać wyświetlone następnie,
-     * bazując na udzielonej odpowiedzi. Jeśli odpowiedź na pytanie jest zgodna z oczekiwaną,
-     * funkcja zwraca indeks pytania wskazanego w `nextQuestion`.
-     * Jeśli odpowiedź była niezgodna z oczekiwaną lub brak jest następnego pytania,
-     * usuwa pytanie i przechodzi do kolejnego w sekwencji.
+     * bazując na udzielonej odpowiedzi.
+     * Jeśli odpowiedź na pytanie jest zgodna z oczekiwaną, funkcja zwraca indeks pytania wskazanego
+     * w `nextQuestion`.
+     * Jeśli odpowiedź była niezgodna z oczekiwaną lub brak jest następnego pytania, usuwa pytanie i
+     * przechodzi do kolejnego w sekwencji.
      *
      * @param currentAnswer Odpowiedź udzielona przez użytkownika na bieżące pytanie.
      * @return Indeks następnego pytania w liście `questionsList`.
@@ -125,7 +126,8 @@ class FragmentQuestionnaire : Fragment() {
     /**
      * Funkcja wykonuje się po wybraniu odpowiedzi przez użytkownika. Zapisuje odpowiedź, ustala
      * następne pytanie do wyświetlenia i w zależności od tego, czy istnieje następne pytanie,
-     * wyświetla je lub kończy ankietę. Zmienia stan interakcji użytkownika na `false`.
+     * wyświetla je lub kończy ankietę.
+     * Zmienia stan interakcji użytkownika na `false`.
      *
      * @param answer Odpowiedź wybrana przez użytkownika ("tak" lub "nie").
      */
@@ -143,9 +145,11 @@ class FragmentQuestionnaire : Fragment() {
         }
         isUserInteracting = false
     }
+
     /**
-     * Funkcja dostosowuje typ odpowiedzi w zależności od liczby dostępnych opcji odpowiedzi
-     * dla pytania. Jeśli odpowiedzi jest więcej niż 3, wyświetlany jest spinner z rozwijanym menu.
+     * Funkcja dostosowuje typ odpowiedzi w zależności od liczby dostępnych opcji odpowiedzi dla
+     * pytania.
+     * Jeśli odpowiedzi jest więcej niż 3, wyświetlany jest spinner z rozwijanym menu.
      * W przeciwnym przypadku wyświetlane są przyciski "tak/nie".
      * Zmienia także widoczność komponentów UI w zależności od tego, jaki typ odpowiedzi jest wymagany.
      *
@@ -161,7 +165,8 @@ class FragmentQuestionnaire : Fragment() {
             yesNoLayout.visibility = View.GONE
             spinner.visibility = View.VISIBLE
 
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, answers)
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, answers)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
 
@@ -190,21 +195,18 @@ class FragmentQuestionnaire : Fragment() {
     }
 
 
-
     /**
      * Symuluje pasek postępu podczas ładowania pytań.
      * Wyświetla postęp w postaci liczb i paska.
      *
-     * @param progress Wartość postępu (w procentach).
+     * @param progress Wartość postępu.
      */
     private fun fakeProgressBar(progress: Int) {
         loadingProgressBar.progress = progress
         progressText.text = getString(R.string.loading_progress, progress)
     }
 
-    /**
-     * Rozpoczyna proces ładowania pytań z symulowanym paskiem postępu.
-     */
+    /** Rozpoczyna proces ładowania pytań z symulowanym paskiem postępu. */
     private fun startLoading() {
         loadingProgressBar.visibility = View.VISIBLE
         progressText.visibility = View.VISIBLE
@@ -225,17 +227,18 @@ class FragmentQuestionnaire : Fragment() {
             }
         }.start()
     }
+
     /**
      * Funkcja wyświetlająca komunikat kończący ankietę.
      * Informuje użytkownika o zakończeniu wypełniania ankiety.
+     * TODO(Zmienić tą funkcję)
      */
     private fun showEndOfQuestionnaire() {
         // Funkcja wyświetlająca komunikat kończący ankietę
         Toast.makeText(context, "Dziękujemy za wypełnienie ankiety!", Toast.LENGTH_SHORT).show()
     }
-    /**
-     * Inicjalizuje kropki postępu na podstawie liczby pytań.
-     */
+
+    /** Inicjalizuje kropki postępu na podstawie liczby pytań.*/
     private fun initializeDots(count: Int) {
         dotContainer.removeAllViews()
         for (i in 0 until count) {
@@ -250,9 +253,7 @@ class FragmentQuestionnaire : Fragment() {
         }
     }
 
-    /**
-     * Aktualizuje wygląd kropek, podświetlając aktualnie aktywną.
-     */
+    /** Aktualizuje wygląd kropek, podświetlając aktualnie aktywną. */
     private fun updateDotIndicator(currentIndex: Int) {
         for (i in 0 until dotContainer.childCount) {
             val dot = dotContainer.getChildAt(i)
