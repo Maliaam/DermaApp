@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +18,12 @@ import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.adapters.FeedAdapter
 import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
 import com.example.dermaapplication.fragments.journal.JournalFragment
+import com.example.dermaapplication.fragments.wikiFragments.SkinDiseaseDetailedFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
 import com.example.dermaapplication.items.Disease
 import com.google.android.material.card.MaterialCardView
 
 class UserFeedFragment : Fragment() {
-    private lateinit var doctorImage: ImageView
-
     private lateinit var journalCardView: CardView
     private lateinit var encyclopediaCardView: CardView
     private lateinit var messagesCardView: CardView
@@ -31,12 +31,11 @@ class UserFeedFragment : Fragment() {
     private val diseasesAdapter by lazy { FeedAdapter(diseasesList) }
     private lateinit var recyclerView: RecyclerView
     private lateinit var userPicture: ImageView
+    private lateinit var otherDiseasesText: TextView
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_user_feed, container, false)
 
         Utilities.databaseFetch.fetchDiseases { diseases ->
@@ -50,6 +49,8 @@ class UserFeedFragment : Fragment() {
         encyclopediaCardView = view.findViewById(R.id.feed_encyclopediaCardView)
         messagesCardView = view.findViewById(R.id.feed_messagesCardView)
         userPicture = view.findViewById(R.id.user_image)
+        otherDiseasesText = view.findViewById(R.id.feed_others)
+
 
         journalCardView.setOnClickListener {
             replaceFragment(JournalFragment())
@@ -63,18 +64,20 @@ class UserFeedFragment : Fragment() {
         userPicture.setOnClickListener {
             replaceFragment(UserFragment())
         }
+        otherDiseasesText.setOnClickListener {
+            replaceFragment(SkinDiseasesFragment())
+        }
+        diseasesAdapter.onItemClick = { disease ->
+            val bundle = Bundle().apply {
+                putString("diseaseName",disease.name)
+                putString("diseaseDescription",disease.description)
+            }
+            val skinDiseaseDetailedFragment = SkinDiseaseDetailedFragment().apply {
+                arguments = bundle
+            }
+            (activity as? MainActivity)?.replaceFragment(skinDiseaseDetailedFragment)
+        }
 
-
-//
-//
-//        doctorImage = view.findViewById(R.id.storage)
-//        val imageRef = Utilities.storage.child("doctorsImages/female_doctor.jpg")
-//
-//        imageRef.downloadUrl.addOnSuccessListener { url ->
-//            Glide.with(view.context).load(url).into(doctorImage)
-//        }.addOnFailureListener {exception ->
-//            Log.e("FirebaseStorage", "Error loading image", exception)
-//        }
 
         return view
     }

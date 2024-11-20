@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermaapplication.R
 import com.example.dermaapplication.items.Disease
 
@@ -14,10 +15,12 @@ import com.example.dermaapplication.items.Disease
  * Każdy wyświetlany element posiada nazwę choroby oraz obraz.
  *
  * @property diseasesList Lista obiektów Disease reprezentująca dermatozy, które mają być wyświetlone
- * w RecyclerView.
+ *                        w RecyclerView.
  */
-class FeedAdapter(var diseasesList: List<Disease>) :
+class FeedAdapter(private var diseasesList: List<Disease>) :
     RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+
+        var onItemClick: ((Disease) -> Unit)? = null
     /**
      * Odpowiedzialny za przechowywanie oraz łączenie widoków dla każdego elementu listy.
      *
@@ -27,6 +30,10 @@ class FeedAdapter(var diseasesList: List<Disease>) :
     inner class FeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val diseaseName: TextView = itemView.findViewById(R.id.feed_disease_name)
         val diseaseImage: ImageView = itemView.findViewById(R.id.feed_disease_image)
+
+        init {
+            itemView.setOnClickListener { onItemClick?.invoke(diseasesList[adapterPosition]) }
+        }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -50,7 +57,20 @@ class FeedAdapter(var diseasesList: List<Disease>) :
      * @param position Pozycja elementu w liście przekazanej do adaptera.
      */
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
-        holder.diseaseImage.setImageResource(R.drawable.image_eczema)
-        holder.diseaseName.text = diseasesList[position].name
+        val disease = diseasesList[position]
+
+        if (disease.images.isNotEmpty()) {
+            val imageUrl = disease.images[0]
+
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.baseline_10k_24)
+                .into(holder.diseaseImage)
+        } else {
+            holder.diseaseImage.setImageResource(R.drawable.baseline_10k_24)
+        }
+
+        holder.diseaseName.text = disease.name
     }
+
 }

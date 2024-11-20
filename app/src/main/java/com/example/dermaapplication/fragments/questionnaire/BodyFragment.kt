@@ -33,11 +33,13 @@ class BodyFragment : Fragment() {
 
     /** Lista pinezek dla widoku z przodu */
     private val frontPins = mutableListOf<Pair<Float, Float>>()
+
     /** Lista pinezek dla widoku z tyłu */
     private val backPins = mutableListOf<Pair<Float, Float>>()
 
     /** Flaga wskazująca, która strona (przód/tył) jest aktywna */
     private var isFrontSide = true
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -66,7 +68,7 @@ class BodyFragment : Fragment() {
             if (event.action == MotionEvent.ACTION_DOWN) {
                 val imageView = frameLayoutContainer.findViewById<ImageView>(R.id.imageView6)
                 val imageBounds = getImageBounds(imageView)
-                if (removePinIfClicked(frameLayoutContainer, event.x, event.y,0.05f)) {
+                if (removePinIfClicked(frameLayoutContainer, event.x, event.y, 0.05f)) {
                     return@setOnTouchListener true
                 }
                 if (imageBounds.contains(event.x, event.y)) {
@@ -108,6 +110,7 @@ class BodyFragment : Fragment() {
         }
         container.addView(pin)
     }
+
     /**
      * Funkcja przełącza między stronami "przód" i "tył" i aktualizuje widoczność pinezek.
      * Po przełączeniu wszystkie pinezki dla danej strony są ładowane z zapisanych współrzędnych, a
@@ -143,6 +146,7 @@ class BodyFragment : Fragment() {
         }
         viewsToRemove.forEach { container.removeView(it) }
     }
+
     /**
      * Funkcja oblicza granice obrazu w widoku, uwzględniając wszelkie transformacje (skalowanie,
      * przesunięcie), które mogły zostać zastosowane do obrazu. Granice obrazu są używane do
@@ -163,6 +167,7 @@ class BodyFragment : Fragment() {
         val height = drawable.intrinsicHeight * values[Matrix.MSCALE_Y]
         return RectF(left, top, left + width, top + height)
     }
+
     /**
      * Funkcja sprawdza, czy użytkownik kliknął na istniejącą pinezkę. Jeśli kliknięcie znajduje się
      * w granicach pinezki, pinezka jest usuwana z widoku. Dodatkowo, współrzędne tej pinezki są
@@ -215,4 +220,10 @@ class BodyFragment : Fragment() {
         return removed
     }
 
+    private fun exportPins(
+        frontPins: MutableList<Pair<Float, Float>>,
+        backPins: MutableList<Pair<Float, Float>>
+    ) {
+        
+    }
 }

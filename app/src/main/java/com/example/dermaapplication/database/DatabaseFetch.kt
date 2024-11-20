@@ -44,34 +44,37 @@ class DatabaseFetch {
      * Pobiera szczegółowe informacje na temat danej choroby.
      *
      * @param diseaseName Nazwa choroby, której informacje mają zostać pobrane z bazy danych.
-     * @return Task<List<String>> Zwraca znalezione informacje na temat danej choroby.
+     * @param callback Funkcja zwrotna, która otrzyma listę informacji o chorobie lub null w przypadku błędu.
      */
-    fun fetchDisease(diseaseName: String): Task<List<String>> {
-        val task = Utilities.firestore.collection("diseases").get()
-        return task.continueWith { task1 ->
-            if (task1.isSuccessful) {
-                val documents = task1.result!!.documents
-                val diseaseFetch = mutableListOf<String>()
-
+    fun fetchDisease(diseaseName: String, callback: (Disease?) -> Unit) {
+        Utilities.firestore.collection("diseases").get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val documents = task.result!!.documents
                 for (document in documents) {
                     val databaseName = document.getString("name")
                     if (diseaseName == databaseName) {
                         val description = document.getString("description")
-                        val specialists = document.getString("specialist")
-                        val symptoms = document.get("symptoms").toString()
+//                        val specialists = document.getString("specialist")
+                        val symptoms = document.get("symptoms") as? List<String> ?: emptyList()
+                        val images = document.get("images") as? List<String> ?: emptyList()
 
-                        if (description != null) diseaseFetch.add(description)
-                        if (specialists != null) diseaseFetch.add(specialists)
-                        diseaseFetch.add(symptoms)
+                        val diseaseDetails = Disease(
+                            databaseName,
+                            description = description!!,
+                            symptoms = symptoms,
+                            images = images
+                        )
+                        callback(diseaseDetails)
+                        return@addOnCompleteListener
                     }
                 }
-                diseaseFetch
+                callback(null)
             } else {
-                val exception = task1.exception
-                throw exception ?: Exception("Unknown error during fetch")
+                callback(null)
             }
         }
     }
+
 
     /**
      * Pobiera informacje o wszystkich chorobach znajdujących się w bazie danych Firebase, a
@@ -88,7 +91,16 @@ class DatabaseFetch {
                 for (document in documents) {
                     val diseaseName = document.getString("name") ?: "Brak nazwy"
                     val diseaseDescription = document.getString("description") ?: "Brak opisu"
-                    diseasesList.add(Disease(diseaseName, diseaseDescription))
+                    val diseaseSymptoms = document.get("symptoms") as? List<String> ?: emptyList()
+                    val diseaseImages = document.get("images") as? List<String> ?: emptyList()
+                    diseasesList.add(
+                        Disease(
+                            diseaseName,
+                            diseaseDescription,
+                            diseaseSymptoms,
+                            diseaseImages
+                        )
+                    )
                 }
                 callback(diseasesList)
             } else {
@@ -134,9 +146,17 @@ class DatabaseFetch {
                     val expectedAnswer = document.getString("expectedAnswer")
                     val additionalInfo = document.getString("additionInfo")
 
-                    if ( id != null && questionText != null && answersString != null && theme != null) {
+                    if (id != null && questionText != null && answersString != null && theme != null) {
                         val answers = answersString.split(",").map { it.trim() }
-                        Question(id,questionText, answers,theme,nextQuestion,expectedAnswer,additionalInfo)
+                        Question(
+                            id,
+                            questionText,
+                            answers,
+                            theme,
+                            nextQuestion,
+                            expectedAnswer,
+                            additionalInfo
+                        )
                     } else {
                         null
                     }
@@ -148,5 +168,4 @@ class DatabaseFetch {
             }
         }
     }
-
 }

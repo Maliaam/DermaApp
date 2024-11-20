@@ -20,7 +20,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -54,7 +54,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="@color/medicine">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/imageCarousel"
-                    app:tint="@color/medicine" />
+                    app:tint="@color/white" />
 
                 <ImageView
                     android:id="@+id/rightArrow"
@@ -93,15 +93,19 @@
                     app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/imageCarousel"
-                    app:tint="@color/medicine" />
+                    app:tint="@color/white" />
 
                 <TextView
+                    android:layout_marginTop="20dp"
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:fontFamily="@font/playfairdisplayregular"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:layout_marginStart="8dp"
+                    android:textSize="22sp"
+                    android:textColor="#B388FF"
 
                     android:text="Opis schorzenia"
                     app:layout_constraintTop_toBottomOf="@+id/imageCarousel" />
@@ -112,9 +116,10 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/playfairdisplayregular"
                     android:lineSpacingExtra="4dp"
+                    android:justificationMode="inter_word"
                     android:padding="8dp"
-                    android:text="Comprehensive description of the disease goes here."
-                    android:textColor="@color/medicine"
+                    android:text="Opis schorzenia skórnego "
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -126,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/wiki_detailed_diseaseDescription">
@@ -134,31 +139,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Characteristics and Symptoms"
+                        android:layout_gravity="center"
+                        android:text="Symptomy"
+                        android:fontFamily="@font/playfairdisplayregular"
                         android:textColor="#BB86FC"
-                        android:textSize="18sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="• Symptom 1"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="• Symptom 2"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="• Symptom 3"
-                        android:textColor="@color/white" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/symptomsRecyclerView"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
 
                 <TextView
@@ -166,10 +157,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Specialized Doctors"
+                    android:gravity="center |bottom"
+                    android:text="Doktorzy"
                     android:textColor="#BB86FC"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/characteristicsSection" />
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermaapplication.R
 import com.example.dermaapplication.items.Disease
 
@@ -74,7 +75,17 @@ class WikiDiseaseAdapter(var diseasesList: List<Disease>) :
      * @param position Pozycja elementu w liście przekazanej do adaptera.
      */
     override fun onBindViewHolder(holder: WikiViewHolder, position: Int) {
-        holder.diseaseImage.setImageResource(R.drawable.baseline_10k_24)
+        val disease = diseasesList[position]
+        if (disease.images.isNotEmpty()) {
+            val imageUrl = disease.images[0]
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.baseline_10k_24)
+                .into(holder.diseaseImage)
+        } else {
+            holder.diseaseImage.setImageResource(R.drawable.baseline_10k_24)
+        }
+
         holder.diseaseName.text = diseasesList[position].name
         holder.diseaseDescription.text = diseasesList[position].description
     }
