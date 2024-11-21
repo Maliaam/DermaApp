@@ -32,7 +32,6 @@ class SkinDiseasesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_skin_diseases, container, false)
 
-        recyclerView = view.findViewById(R.id.wiki_skinMenu_RecyclerView)
         setupRecyclerView(view)
         setupSearchView(view)
         initializeOnItemClick()

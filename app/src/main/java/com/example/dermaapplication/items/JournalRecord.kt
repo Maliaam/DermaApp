@@ -6,6 +6,7 @@ import java.util.Date
  * Klasa danych przedstawiająca wpis użytkownika do jego dziennika zmian skórnych.
  *
  * @param id identyfikator wpisu.
+ * @param userUID identyfikator uzytkownika.
  * @param recordTitle tytuł wpisu.
  * @param date data utworzenia wpisu.
  * @param imageUrls zdjęcia zmiany skórnej dodanej przez użytkownika.
@@ -16,6 +17,7 @@ import java.util.Date
  */
 data class JournalRecord(
     val id: Int,
+    val userUID: String,
     val recordTitle: String,
     val date: Date,
     val imageUrls: List<String> = listOf(),

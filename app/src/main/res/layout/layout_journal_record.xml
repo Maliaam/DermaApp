@@ -1,6 +1,6 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:strokeColor="@color/black"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
@@ -11,9 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#d2d5d7"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="#d2d5d7">
+        android:padding="8dp">
 
         <!-- Obraz choroby -->
         <ImageView
@@ -21,31 +21,32 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="16dp"
+            android:contentDescription="@string/image_missing"
+
             android:scaleType="centerCrop"
+            android:src="@drawable/baseline_10k_24" />
 
-            android:src="@drawable/baseline_10k_24"
-            android:contentDescription="@string/image_missing" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/journal_recordTitle"
-                android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:textColor="@color/medicine"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/playfairdisplayregular"
-                android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Tytuł wpisu dziennika" />
+                android:fontFamily="@font/playfairdisplayregular"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Tytuł wpisu dziennika"
+                android:textColor="@color/medicine"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/journal_remove_record_icon"
+            android:layout_gravity="center"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_recyclebin"
+            app:tint="@color/medicine" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

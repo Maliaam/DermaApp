@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Disease
+import com.example.dermaapplication.items.JournalRecord
 import com.example.dermaapplication.items.Question
 import com.google.android.gms.tasks.Task
 import java.util.UUID
@@ -168,4 +169,78 @@ class DatabaseFetch {
             }
         }
     }
+
+    fun fetchJournalRecords(callback: (List<JournalRecord>) -> Unit) {
+        Utilities.firestore.collection("journals").get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val journalRecords = task.result?.documents?.mapNotNull { document ->
+                    try {
+                        val id = document.getLong("id")?.toInt() ?: return@mapNotNull null
+                        val userUID = document.getString("userUID")!!
+                        val recordTitle =
+                            document.getString("recordTitle") ?: return@mapNotNull null
+                        val date = document.getDate("date") ?: return@mapNotNull null
+                        val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
+                        val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
+                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
+                        val backPins = (document.get("backPins") as? List<Map<String, Any>>)
+                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
+                        val surveyResponses =
+                            (document.get("surveyResponses") as? List<Map<String, String>>)
+                                ?.map { Pair(it["question"] ?: "", it["response"] ?: "") }
+                        val additionalNotes = document.getString("additionalNotes")
+
+                        JournalRecord(
+                            id = id,
+                            recordTitle = recordTitle,
+                            userUID = userUID,
+                            date = date,
+                            imageUrls = imageUrls,
+                            frontPins = frontPins,
+                            backPins = backPins,
+                            surveyResponses = surveyResponses,
+                            additionalNotes = additionalNotes
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        null
+                    }
+                } ?: listOf()
+
+                callback(journalRecords)
+            } else {
+                callback(listOf())
+            }
+        }
+    }
+
+    fun addJournalRecordToDatabase(
+        record: JournalRecord,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+
+        val recordMap = mapOf(
+            "id" to record.id,
+            "userUID" to record.userUID,
+            "recordTitle" to record.recordTitle,
+            "date" to record.date,
+            "imageUrls" to listOf<String>(),
+            "frontPins" to listOf<Map<Float, Float>>(),
+            "backPins" to listOf<Map<Float, Float>>(),
+            "surveyResponses" to listOf<Map<String, String>>(),
+            "additionalNotes" to null
+        )
+
+        // Dodajemy do kolekcji "journals"
+        Utilities.firestore.collection("journals")
+            .add(recordMap)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
+
 }
