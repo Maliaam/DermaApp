@@ -35,10 +35,12 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
      *
      * @property journalRecord TextView reprezentujący tytuł wpisu do dziennika.
      * @property deleteIcon Ikona reprezentująca kosz do usuwania wpisów.
+     * @property dateText TextView reprezentujący datę dodanego wpisu do dziennika.
      */
     inner class JournalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val journalRecord: TextView = itemView.findViewById(R.id.journal_recordTitle)
         val deleteIcon: ImageView = itemView.findViewById(R.id.journal_remove_record_icon)
+        val dateText: TextView = itemView.findViewById(R.id.journal_record_date)
 
         init {
             itemView.setOnClickListener {
@@ -84,5 +86,6 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
     override fun onBindViewHolder(holder: JournalViewHolder, position: Int) {
         holder.journalRecord.text = journalRecords[position].recordTitle
         holder.deleteIcon.visibility = if (isDeleteMode) View.VISIBLE else View.GONE
+        holder.dateText.text = journalRecords[position].date.toString()
     }
 }

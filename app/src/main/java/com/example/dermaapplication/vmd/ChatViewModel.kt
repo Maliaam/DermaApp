@@ -35,7 +35,7 @@ class ChatViewModel : ViewModel() {
         Utilities.firestore.collection("messages")
             .document(uniqueChatId)
             .collection("chats")
-            .document(Utilities.getCurrentTime())
+            .document(Utilities.getCurrentTime(""))
             .set(message)
     }
 

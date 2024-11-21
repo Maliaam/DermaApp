@@ -175,11 +175,10 @@ class DatabaseFetch {
             if (task.isSuccessful) {
                 val journalRecords = task.result?.documents?.mapNotNull { document ->
                     try {
-                        val id = document.getLong("id")?.toInt() ?: return@mapNotNull null
-                        val userUID = document.getString("userUID")!!
-                        val recordTitle =
-                            document.getString("recordTitle") ?: return@mapNotNull null
-                        val date = document.getDate("date") ?: return@mapNotNull null
+                        val id = document.getLong("id")?.toInt()
+                        val userUID = document.getString("userUID")
+                        val recordTitle = document.getString("recordTitle")
+                        val date = document.getString("date")
                         val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
                         val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
                             ?.map { Pair(it["x"] as Float, it["y"] as Float) }
@@ -191,10 +190,10 @@ class DatabaseFetch {
                         val additionalNotes = document.getString("additionalNotes")
 
                         JournalRecord(
-                            id = id,
-                            recordTitle = recordTitle,
-                            userUID = userUID,
-                            date = date,
+                            id = id!!,
+                            recordTitle = recordTitle!!,
+                            userUID = userUID!!,
+                            date = date!!,
                             imageUrls = imageUrls,
                             frontPins = frontPins,
                             backPins = backPins,

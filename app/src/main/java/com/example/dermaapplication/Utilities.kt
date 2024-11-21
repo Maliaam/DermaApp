@@ -88,7 +88,7 @@ class Utilities {
                         val name = document.getString("name") ?: ""
                         val surname = document.getString("surname") ?: ""
                         val fullName = "$name $surname"
-                        Log.e("CurrentUserName",fullName)
+                        Log.e("CurrentUserName", fullName)
                         callback(fullName)
                     }
                 }
@@ -98,14 +98,22 @@ class Utilities {
          * Pobiera aktualny czas z systemu, na którym używana jest aplikacja.
          * Dane są pobierane w formacie "yyyy-MM-dd HH:mm:ss"
          * Wykorzystywana do znaczników ("timestamp") wysłanych wiadomości.
+         *
+         * @param dateType "short" - zwraca datę bez godzin.
+         *                  else - zwraca pełną datę.
          */
         @SuppressLint("SimpleDateFormat")
-        fun getCurrentTime(): String {
-            val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val date = Date(System.currentTimeMillis())
+        fun getCurrentTime(dateType: String): String {
+            val format = when (dateType) {
+                "short" -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                else -> { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                }
+            }
 
+            val date = Date(System.currentTimeMillis())
             return format.format(date)
         }
+
 
         /**
          * Tworzy unikalny identyfikator czatu, na podstawie UID nadawcy oraz UID odbierającego.

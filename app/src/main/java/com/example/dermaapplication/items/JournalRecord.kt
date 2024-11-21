@@ -19,7 +19,7 @@ data class JournalRecord(
     val id: Int,
     val userUID: String,
     val recordTitle: String,
-    val date: Date,
+    val date: String,
     val imageUrls: List<String> = listOf(),
     val frontPins: List<Pair<Float, Float>>? = null,
     val backPins: List<Pair<Float, Float>>? = null,

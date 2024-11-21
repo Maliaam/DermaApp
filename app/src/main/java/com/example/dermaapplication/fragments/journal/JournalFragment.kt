@@ -1,10 +1,12 @@
 package com.example.dermaapplication.fragments.journal
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.adapters.JournalRecordsAdapter
 import com.example.dermaapplication.items.JournalRecord
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Date
 import java.util.Locale
 
@@ -31,18 +34,40 @@ class JournalFragment : Fragment() {
         addJournalRecord = view.findViewById(R.id.journal_add_new_record)
         removeJournalRecord = view.findViewById(R.id.journal_remove_record)
     }
-    private fun toggleDeleteMode(){
+
+    private fun toggleDeleteMode() {
         journalAdapter.isDeleteMode = !journalAdapter.isDeleteMode
         journalAdapter.notifyDataSetChanged()
     }
 
+    private fun showAddRecordDialog(context: Context, onTitleEntered: (String) -> Unit) {
+        val editText = EditText(context).apply {
+            hint = "Wpisz tytuł"
+            setPadding(16,16,16,16)
+        }
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Dodaj nowy wpis")
+            .setView(editText)
+            .setPositiveButton("OK") { dialog, _ ->
+                val title = editText.text.toString()
+                if (title.isNotBlank()) {
+                    onTitleEntered(title)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Anuluj") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
+    }
+
     private fun setupOnClickListeners() {
         addJournalRecord.setOnClickListener {
-            val newRecord = JournalRecord(
+            showAddRecordDialog(requireContext()){ title ->
+                            val newRecord = JournalRecord(
                 id = 1,
                 userUID = Utilities.getCurrentUserUid(),
-                recordTitle = "Wpis #1",
-                date = Date(),
+                recordTitle = title,
+                date = "Data dodania: " + Utilities.getCurrentTime("short"),
                 imageUrls = listOf(),
                 frontPins = null,
                 backPins = null,
@@ -67,6 +92,7 @@ class JournalFragment : Fragment() {
                     ).show()
                 }
             )
+            }
         }
         removeJournalRecord.setOnClickListener {
             toggleDeleteMode()

@@ -68,7 +68,7 @@ class MessageChatFragment : Fragment() {
                     receiverId = senderId, // UID odbiorcy
                     receiverName = arguments?.getString("senderName")!!, // Imię odbiorcy
                     messageText = messageText, // Treść wiadomości
-                    timestamp = Utilities.getCurrentTime() // Znacznik czasowy wiadomości
+                    timestamp = Utilities.getCurrentTime("") // Znacznik czasowy wiadomości
                 )
                 viewModel.sendMessage(message)
             }
