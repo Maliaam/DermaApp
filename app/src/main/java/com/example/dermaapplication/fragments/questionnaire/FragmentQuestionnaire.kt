@@ -236,6 +236,11 @@ class FragmentQuestionnaire : Fragment() {
     private fun showEndOfQuestionnaire() {
         // Funkcja wyświetlająca komunikat kończący ankietę
         Toast.makeText(context, "Dziękujemy za wypełnienie ankiety!", Toast.LENGTH_SHORT).show()
+        /// todo: Końcowy widok ankiety ( różny dla zalogowanego i niezalogowanego użytkownika)
+        // todo: po zakończeniu ankiety, użytkownik powinien móc wybrać czy chce zapisać daną ankietę
+        // oraz zaznaczenia do istniejącego dziennika, lub utworzyć nowy. Niezalogowany użytkownik nie będzie miał dostępu do takiej funkcjonalności.
+        // po prostu pokaże mu choroby po symptompach.
+        // Dla zapisu możliwie, nowy fragment, ponieważ łatwiej będzie kooperować. przesłanie bundla w pinezkach. a następnie do bazy danych.
     }
 
     /** Inicjalizuje kropki postępu na podstawie liczby pytań.*/

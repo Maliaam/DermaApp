@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="8dp"
         android:background="#d2d5d7">
 
         <!-- Obraz choroby -->
@@ -33,28 +33,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/wiki_skinMenu_diseaseNameRv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/journal_recordTitle"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_height="match_parent"
                 android:textColor="@color/medicine"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/playfairdisplayregular"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Nazwa choroby" />
+                android:text="Tytuł wpisu dziennika" />
 
-            <TextView
-                android:id="@+id/wiki_skinMenu_diseaseDescriptionRv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/medicine"
-                android:textSize="14sp"
-                android:fontFamily="@font/playfairdisplayregular"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:text="Krótki opis choroby, który daje podstawowe informacje." />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
