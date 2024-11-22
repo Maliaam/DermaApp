@@ -175,7 +175,6 @@ class DatabaseFetch {
             if (task.isSuccessful) {
                 val journalRecords = task.result?.documents?.mapNotNull { document ->
                     try {
-                        val id = document.getLong("id")?.toInt()
                         val userUID = document.getString("userUID")
                         val recordTitle = document.getString("recordTitle")
                         val date = document.getString("date")
@@ -190,15 +189,15 @@ class DatabaseFetch {
                         val additionalNotes = document.getString("additionalNotes")
 
                         JournalRecord(
-                            id = id!!,
-                            recordTitle = recordTitle!!,
-                            userUID = userUID!!,
-                            date = date!!,
+                            recordTitle = recordTitle ?: "Brak tytułu",
+                            userUID = userUID ?: "Nieznany użytkownik",
+                            date = date ?: "Brak daty",
                             imageUrls = imageUrls,
                             frontPins = frontPins,
                             backPins = backPins,
                             surveyResponses = surveyResponses,
-                            additionalNotes = additionalNotes
+                            additionalNotes = additionalNotes,
+                            documentId = document.id
                         )
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -213,14 +212,13 @@ class DatabaseFetch {
         }
     }
 
+
     fun addJournalRecordToDatabase(
         record: JournalRecord,
-        onSuccess: () -> Unit,
+        onSuccess: (String) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-
         val recordMap = mapOf(
-            "id" to record.id,
             "userUID" to record.userUID,
             "recordTitle" to record.recordTitle,
             "date" to record.date,
@@ -228,18 +226,32 @@ class DatabaseFetch {
             "frontPins" to listOf<Map<Float, Float>>(),
             "backPins" to listOf<Map<Float, Float>>(),
             "surveyResponses" to listOf<Map<String, String>>(),
-            "additionalNotes" to null
+            "additionalNotes" to null,
+            "documentId" to null
         )
 
-        // Dodajemy do kolekcji "journals"
         Utilities.firestore.collection("journals")
             .add(recordMap)
-            .addOnSuccessListener {
-                onSuccess()
+            .addOnSuccessListener { documentReference ->
+                val documentId = documentReference.id
+                onSuccess(documentId)
             }
             .addOnFailureListener { exception ->
                 onFailure(exception)
             }
+    }
+
+
+    fun removeJournalByDocumentId(
+        documentId: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        Utilities.firestore.collection("journals")
+            .document(documentId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { exception -> onFailure(exception) }
     }
 
 }

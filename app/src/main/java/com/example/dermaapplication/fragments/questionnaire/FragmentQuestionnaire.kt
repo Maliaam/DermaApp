@@ -15,7 +15,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
@@ -40,6 +39,7 @@ class FragmentQuestionnaire : Fragment() {
     private lateinit var yesNoLayout: LinearLayout
     private val questionsList = ArrayList<Question>()
     private val userAnswers = mutableMapOf<Int, String>()
+    private lateinit var questionnaireProgressBar: ProgressBar
     private var currentQuestionNumber = 0
     private var totalQuestionsNumber = 0
     private var currentQuestionId = 0
@@ -56,12 +56,13 @@ class FragmentQuestionnaire : Fragment() {
         backButton = view.findViewById(R.id.buttonPrevious)
         nextButton = view.findViewById(R.id.buttonNext)
         spinner = view.findViewById(R.id.answersSpinner)
-        dotContainer = view.findViewById(R.id.dotContainer)
+//        dotContainer = view.findViewById(R.id.dotContainer)
         yesNoLayout = view.findViewById(R.id.yesNoLayout)
         loadingProgressBar = view.findViewById(R.id.progressBar)
         progressText = view.findViewById(R.id.progressText)
         content = view.findViewById(R.id.contentLayout)
         questionnaireEndButton = view.findViewById(R.id.endQuestionnaire)
+        questionnaireProgressBar = view.findViewById(R.id.progressbar_questionnaire)
 
         Utilities.databaseFetch.fetchQuestions { questions ->
             startLoading()
@@ -72,8 +73,8 @@ class FragmentQuestionnaire : Fragment() {
 
 
             displayQuestion(currentQuestionNumber)
-            initializeDots(questionsList.size)
-            updateDotIndicator(0)
+            initializeProgressBar(questionsList.size)
+            updateProgressBar(0)
         }
 
         yesButton.setOnClickListener { onAnswerSelected("tak") }
@@ -139,7 +140,7 @@ class FragmentQuestionnaire : Fragment() {
         if (nextQuestionNumber < questionsList.size) {
             currentQuestionNumber = nextQuestionNumber
             displayQuestion(currentQuestionNumber)
-            updateDotIndicator(currentQuestionNumber)
+            updateProgressBar(currentQuestionNumber)
         } else {
             showEndOfQuestionnaire()
         }
@@ -243,28 +244,40 @@ class FragmentQuestionnaire : Fragment() {
         // Dla zapisu możliwie, nowy fragment, ponieważ łatwiej będzie kooperować. przesłanie bundla w pinezkach. a następnie do bazy danych.
     }
 
-    /** Inicjalizuje kropki postępu na podstawie liczby pytań.*/
-    private fun initializeDots(count: Int) {
-        dotContainer.removeAllViews()
-        for (i in 0 until count) {
-            val dot = View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(16, 16).apply {
-                    marginStart = 8
-                    marginEnd = 8
-                }
-                background = ContextCompat.getDrawable(context, R.drawable.dot_inactive)
-            }
-            dotContainer.addView(dot)
-        }
+    /** Ustawia maksymalną wartość ProgressBar na podstawie liczby pytań. */
+    private fun initializeProgressBar(count: Int) {
+        questionnaireProgressBar.max = count
+        questionnaireProgressBar.progress = 0
     }
 
-    /** Aktualizuje wygląd kropek, podświetlając aktualnie aktywną. */
-    private fun updateDotIndicator(currentIndex: Int) {
-        for (i in 0 until dotContainer.childCount) {
-            val dot = dotContainer.getChildAt(i)
-            val drawableRes =
-                if (i == currentIndex) R.drawable.dot_active else R.drawable.dot_inactive
-            dot.background = context?.let { ContextCompat.getDrawable(it, drawableRes) }
-        }
+    /** Aktualizuje wartość ProgressBar na podstawie aktualnego indeksu pytania. */
+    private fun updateProgressBar(currentIndex: Int) {
+        questionnaireProgressBar.progress = currentIndex + 1
     }
+
+
+//    /** Inicjalizuje kropki postępu na podstawie liczby pytań.*/
+//    private fun initializeDots(count: Int) {
+//        dotContainer.removeAllViews()
+//        for (i in 0 until count) {
+//            val dot = View(context).apply {
+//                layoutParams = LinearLayout.LayoutParams(16, 16).apply {
+//                    marginStart = 8
+//                    marginEnd = 8
+//                }
+//                background = ContextCompat.getDrawable(context, R.drawable.dot_inactive)
+//            }
+//            dotContainer.addView(dot)
+//        }
+//    }
+//
+//    /** Aktualizuje wygląd kropek, podświetlając aktualnie aktywną. */
+//    private fun updateDotIndicator(currentIndex: Int) {
+//        for (i in 0 until dotContainer.childCount) {
+//            val dot = dotContainer.getChildAt(i)
+//            val drawableRes =
+//                if (i == currentIndex) R.drawable.dot_active else R.drawable.dot_inactive
+//            dot.background = context?.let { ContextCompat.getDrawable(it, drawableRes) }
+//        }
+//    }
 }

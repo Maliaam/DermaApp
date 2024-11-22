@@ -140,13 +140,14 @@
                 android:layout_height="match_parent">
             <!-- Treść pytania -->
             <TextView
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="35dp"
+                android:padding="20dp"
                 android:id="@+id/questionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/playfairdisplayregular"
-                android:justificationMode="inter_word"
+                android:textAlignment="center"
                 android:text="Zaznacz gdzie występują zmiany"
                 android:visibility="gone"
                 android:textSize="20sp"
@@ -221,7 +222,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/dotContainer"
+                app:layout_constraintBottom_toTopOf="@id/progressbar_questionnaire"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="336dp">
 
@@ -241,17 +242,31 @@
                     android:text="Następne"
                     android:textColor="?attr/colorPrimary" />
             </LinearLayout>
+                
+                <ProgressBar
+                    android:id="@+id/progressbar_questionnaire"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:progressDrawable="@drawable/progress_bar_style"
+                    android:progress="0"
+                    android:max="100"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
 
-            <LinearLayout
-                android:id="@+id/dotContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+<!--            <LinearLayout-->
+<!--                android:id="@+id/dotContainer"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:orientation="horizontal"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

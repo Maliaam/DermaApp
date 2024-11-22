@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
                 }
 
                 R.id.chat -> {
-                    if(FirebaseAuth.getInstance().currentUser != null)
+                    if (FirebaseAuth.getInstance().currentUser != null)
                         replaceFragment(ChatMenuFragment())
                     else
                         replaceFragment(SpecialistsFragment())
@@ -132,7 +132,10 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
                 }
 
                 R.id.menu_home -> {
-                    replaceFragment(HomeFragment())
+                    if (FirebaseAuth.getInstance().currentUser != null)
+                        replaceFragment(UserFeedFragment())
+                    else
+                        replaceFragment(HomeFragment())
                 }
 
                 R.id.menu_chat -> {

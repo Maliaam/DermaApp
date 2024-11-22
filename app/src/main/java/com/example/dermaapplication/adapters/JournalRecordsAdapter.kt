@@ -66,6 +66,7 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
         notifyDataSetChanged()
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JournalViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_journal_record, parent, false)
@@ -84,8 +85,16 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
      * @param position Pozycja elementu w liście przekazanej do adaptera.
      */
     override fun onBindViewHolder(holder: JournalViewHolder, position: Int) {
-        holder.journalRecord.text = journalRecords[position].recordTitle
-        holder.deleteIcon.visibility = if (isDeleteMode) View.VISIBLE else View.GONE
-        holder.dateText.text = journalRecords[position].date.toString()
+        val record = journalRecords[position]
+        holder.journalRecord.text = record.recordTitle
+        holder.dateText.text = record.date
+
+        if (isDeleteMode) {
+            holder.deleteIcon.setImageResource(R.drawable.icon_recyclebin)
+            holder.deleteIcon.visibility = View.VISIBLE
+        } else {
+            holder.deleteIcon.setImageResource(R.drawable.ic_right_arrow)
+            holder.deleteIcon.visibility = View.VISIBLE
+        }
     }
 }
