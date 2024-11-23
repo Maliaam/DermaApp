@@ -26,4 +26,9 @@
     <color name="CardViewFeedColor">#fae6db</color>
     <color name="MainColor">#efac88</color>
     <color name="text30">#2C2C2C</color>
+    <color name="grey">#E0E0E0</color>
+    <color name="dark_grey">#BDBDBD</color>
+    <color name="icon_highlight">#F5F5F5</color>
+
+
 </resources>

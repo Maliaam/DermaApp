@@ -176,7 +176,13 @@ class JournalFragment : Fragment() {
      */
     private fun initializeOnItemClick() {
         journalAdapter.onItemClick = { record ->
-            Toast.makeText(requireContext(), record.recordTitle, Toast.LENGTH_SHORT).show()
+            val bundle = Bundle().apply {
+                putSerializable("record",record)
+            }
+            val recordFragment = RecordFragment().apply {
+                arguments = bundle
+            }
+            (activity as MainActivity).replaceFragment(recordFragment)
         }
         journalAdapter.onDeleteClick = { record ->
             showDeleteConfirmationDialog(record)

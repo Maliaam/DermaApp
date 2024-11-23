@@ -5,7 +5,10 @@ import android.util.Log
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Disease
 import com.example.dermaapplication.items.JournalRecord
+import com.example.dermaapplication.items.Note
+import com.example.dermaapplication.items.Pin
 import com.example.dermaapplication.items.Question
+import com.example.dermaapplication.items.SurveyResponse
 import com.google.android.gms.tasks.Task
 import java.util.UUID
 
@@ -171,46 +174,111 @@ class DatabaseFetch {
     }
 
     fun fetchJournalRecords(callback: (List<JournalRecord>) -> Unit) {
-        Utilities.firestore.collection("journals").get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val journalRecords = task.result?.documents?.mapNotNull { document ->
-                    try {
-                        val userUID = document.getString("userUID")
-                        val recordTitle = document.getString("recordTitle")
-                        val date = document.getString("date")
-                        val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
-                        val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
-                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
-                        val backPins = (document.get("backPins") as? List<Map<String, Any>>)
-                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
-                        val surveyResponses =
-                            (document.get("surveyResponses") as? List<Map<String, String>>)
-                                ?.map { Pair(it["question"] ?: "", it["response"] ?: "") }
-                        val additionalNotes = document.getString("additionalNotes")
+        Utilities.firestore.collection("journals")
+            .whereEqualTo("userUID", Utilities.getCurrentUserUid())
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val journalRecords = task.result?.documents?.mapNotNull { document ->
+                        try {
+                            val userUID = document.getString("userUID")
+                            val recordTitle = document.getString("recordTitle")
+                            val date = document.getString("date")
+                            val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
 
-                        JournalRecord(
-                            recordTitle = recordTitle ?: "Brak tytułu",
-                            userUID = userUID ?: "Nieznany użytkownik",
-                            date = date ?: "Brak daty",
-                            imageUrls = imageUrls,
-                            frontPins = frontPins,
-                            backPins = backPins,
-                            surveyResponses = surveyResponses,
-                            additionalNotes = additionalNotes,
-                            documentId = document.id
-                        )
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        null
-                    }
-                } ?: listOf()
+                            val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
+                                ?.mapNotNull { map ->
+                                    val x = (map["x"] as? Number)?.toFloat()
+                                    val y = (map["y"] as? Number)?.toFloat()
+                                    if (x != null && y != null) Pin(x, y) else null
+                                }
+                            val backPins = (document.get("backPins") as? List<Map<String, Any>>)
+                                ?.mapNotNull { map ->
+                                    val x = (map["x"] as? Number)?.toFloat()
+                                    val y = (map["y"] as? Number)?.toFloat()
+                                    if (x != null && y != null) Pin(x, y) else null
+                                }
+                            val surveyResponses =
+                                (document.get("surveyResponses") as? List<Map<String, String>>)
+                                    ?.mapNotNull { map ->
+                                        val question = map["question"]
+                                        val answer = map["response"]
+                                        if (question != null && answer != null)
+                                            SurveyResponse(question, answer) else null
+                                    }
+                            val additionalNotes =
+                                (document.get("additionalNotes") as? List<Map<String, String>>)
+                                    ?.mapNotNull { map ->
+                                        val date = map["date"]
+                                        val content = map["content"]
+                                        if (date != null && content != null)
+                                            Note(date, content) else null
+                                    }
 
-                callback(journalRecords)
-            } else {
-                callback(listOf())
+                            JournalRecord(
+                                userUID = userUID ?: "Użytkownik niezalogowany",
+                                recordTitle = recordTitle ?: "Brak tytułu",
+                                date = date ?: "Brak daty",
+                                imageUrls = imageUrls,
+                                frontPins = frontPins,
+                                backPins = backPins,
+                                surveyResponses = surveyResponses,
+                                additionalNotes = additionalNotes,
+                                documentId = document.id
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            null
+                        }
+                    } ?: listOf()
+                    callback(journalRecords)
+                } else {
+                    callback(listOf())
+                }
             }
-        }
     }
+
+//    fun fetchJournalRecords(callback: (List<JournalRecord>) -> Unit) {
+//        Utilities.firestore.collection("journals").get().addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val journalRecords = task.result?.documents?.mapNotNull { document ->
+//                    try {
+//                        val userUID = document.getString("userUID")
+//                        val recordTitle = document.getString("recordTitle")
+//                        val date = document.getString("date")
+//                        val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
+//                        val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
+//                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
+//                        val backPins = (document.get("backPins") as? List<Map<String, Any>>)
+//                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
+//                        val surveyResponses =
+//                            (document.get("surveyResponses") as? List<Map<String, String>>)
+//                                ?.map { Pair(it["question"] ?: "", it["response"] ?: "") }
+//                        val additionalNotes = document.getString("additionalNotes")
+//
+//                        JournalRecord(
+//                            recordTitle = recordTitle ?: "Brak tytułu",
+//                            userUID = userUID ?: "Nieznany użytkownik",
+//                            date = date ?: "Brak daty",
+//                            imageUrls = imageUrls,
+//                            frontPins = frontPins,
+//                            backPins = backPins,
+//                            surveyResponses = surveyResponses,
+//                            additionalNotes = additionalNotes,
+//                            documentId = document.id
+//                        )
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                        null
+//                    }
+//                } ?: listOf()
+//
+//                callback(journalRecords)
+//            } else {
+//                callback(listOf())
+//            }
+//        }
+//    }
 
 
     fun addJournalRecordToDatabase(
@@ -235,6 +303,30 @@ class DatabaseFetch {
             .addOnSuccessListener { documentReference ->
                 val documentId = documentReference.id
                 onSuccess(documentId)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
+
+    fun updateJournalRecordNote(
+        documentId: String,
+        updatedNotes: List<Note>,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val documentReference = Utilities.firestore.collection("journals")
+            .document(documentId)
+
+        val notesToSave = updatedNotes.map {
+            mapOf(
+                "date" to it.date,
+                "content" to it.content
+            )
+        }
+        documentReference.update("additionalNotes", notesToSave)
+            .addOnSuccessListener {
+                onSuccess()
             }
             .addOnFailureListener { exception ->
                 onFailure(exception)

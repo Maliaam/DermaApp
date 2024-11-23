@@ -32,6 +32,7 @@ class UserFeedFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var userPicture: ImageView
     private lateinit var otherDiseasesText: TextView
+    private lateinit var userNameTextView: TextView
 
 
     override fun onCreateView(
@@ -50,7 +51,11 @@ class UserFeedFragment : Fragment() {
         messagesCardView = view.findViewById(R.id.feed_messagesCardView)
         userPicture = view.findViewById(R.id.user_image)
         otherDiseasesText = view.findViewById(R.id.feed_others)
+        userNameTextView = view.findViewById(R.id.feed_userName)
 
+//        Utilities.getCurrentUserName { name ->
+//            userNameTextView.text = "Witaj, + " + name + "!"
+//        }
 
         journalCardView.setOnClickListener {
             replaceFragment(JournalFragment())

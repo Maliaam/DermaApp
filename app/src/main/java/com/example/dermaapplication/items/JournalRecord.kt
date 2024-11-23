@@ -1,5 +1,9 @@
 package com.example.dermaapplication.items
 
+import android.os.Parcel
+import android.os.Parcelable
+import java.io.Serializable
+
 /**
  * Klasa danych przedstawiająca wpis użytkownika do jego dziennika zmian skórnych.
  *
@@ -18,9 +22,9 @@ data class JournalRecord(
     val recordTitle: String,
     val date: String,
     val imageUrls: List<String> = listOf(),
-    val frontPins: List<Pair<Float, Float>>? = null,
-    val backPins: List<Pair<Float, Float>>? = null,
-    val surveyResponses: List<Pair<String, String>>? = null,
-    val additionalNotes: String? = null,
+    val frontPins: List<Pin>? = null,
+    val backPins: List<Pin>? = null,
+    val surveyResponses: List<SurveyResponse>? = null,
+    var additionalNotes: List<Note>? = null,
     var documentId: String?
-)
+) : Serializable
