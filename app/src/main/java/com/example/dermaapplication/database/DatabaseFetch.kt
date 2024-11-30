@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Disease
 import com.example.dermaapplication.items.JournalRecord
+import com.example.dermaapplication.items.Message
 import com.example.dermaapplication.items.Note
 import com.example.dermaapplication.items.Pin
 import com.example.dermaapplication.items.Question
@@ -184,7 +185,7 @@ class DatabaseFetch {
                             val userUID = document.getString("userUID")
                             val recordTitle = document.getString("recordTitle")
                             val date = document.getString("date")
-                            val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
+                            val imageUrls = document.get("imageUrls") as MutableList<String>
 
                             val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
                                 ?.mapNotNull { map ->
@@ -345,5 +346,6 @@ class DatabaseFetch {
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { exception -> onFailure(exception) }
     }
+
 
 }

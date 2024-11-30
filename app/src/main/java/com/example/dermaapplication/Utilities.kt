@@ -3,6 +3,7 @@ package com.example.dermaapplication
 import android.annotation.SuppressLint
 import android.util.Log
 import com.example.dermaapplication.database.DatabaseFetch
+import com.example.dermaapplication.items.JournalRecord
 import com.example.dermaapplication.user.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,6 +42,9 @@ class Utilities {
 
         /** UID aktualnie zalogowanego użytkownika */
         private var userUID: String = ""
+
+        /** Aktualny wpis w dzienniku */
+        var currentJournalRecord: JournalRecord ?= null
 
 
         /**
@@ -106,7 +110,8 @@ class Utilities {
         fun getCurrentTime(dateType: String): String {
             val format = when (dateType) {
                 "short" -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                else -> { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                else -> {
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 }
             }
 

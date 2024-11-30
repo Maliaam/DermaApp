@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,7 +24,95 @@
     <ImageView
         android:id="@+id/expand_image"
         android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <com.example.dermaapplication.DrawingOverlay
+        android:id="@+id/overlay_view"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="60dp"
-        android:scaleType="fitCenter" />
-</LinearLayout>
+        android:background="@android:color/transparent" />
+
+    <ImageButton
+        android:id="@+id/imageView_pin"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="15dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/pin_active"
+        app:tint="#fff" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/firstLinear"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_below="@id/imageView_pin"
+        android:layout_marginEnd="15dp"
+        android:layout_alignParentEnd="true">
+
+        <!-- TextView for reference -->
+        <TextView
+            android:id="@+id/text_reference"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Zaznacz referencje"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:gravity="start" /> <!-- Ensure text starts from the left -->
+
+        <!-- ImageButton for reference -->
+        <ImageButton
+            android:id="@+id/reference_symbol"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/coin"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/secondLinear"
+        android:layout_marginTop="10dp"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_below="@id/firstLinear"
+        android:layout_marginEnd="15dp"
+        android:layout_alignParentEnd="true">
+
+        <!-- TextView for skin change -->
+        <TextView
+            android:id="@+id/text_skin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Zaznacz zmianę"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:gravity="start" /> <!-- Ensure text starts from the left -->
+
+        <!-- ImageButton for skin change -->
+        <ImageButton
+            android:id="@+id/skin_symbol"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_skin_change"
+            android:scaleType="fitXY"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

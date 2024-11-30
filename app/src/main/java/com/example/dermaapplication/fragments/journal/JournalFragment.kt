@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
-import com.example.dermaapplication.adapters.JournalRecordsAdapter
+import com.example.dermaapplication.fragments.journal.adapters.JournalRecordsAdapter
 import com.example.dermaapplication.items.JournalRecord
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -103,7 +103,7 @@ class JournalFragment : Fragment() {
                     userUID = Utilities.getCurrentUserUid(),
                     recordTitle = title,
                     date = "Data dodania: " + Utilities.getCurrentTime("short"),
-                    imageUrls = listOf(),
+                    imageUrls =  mutableListOf(),
                     frontPins = null,
                     backPins = null,
                     surveyResponses = null,
@@ -182,6 +182,7 @@ class JournalFragment : Fragment() {
             val recordFragment = RecordFragment().apply {
                 arguments = bundle
             }
+            Utilities.currentJournalRecord = record
             (activity as MainActivity).replaceFragment(recordFragment)
         }
         journalAdapter.onDeleteClick = { record ->

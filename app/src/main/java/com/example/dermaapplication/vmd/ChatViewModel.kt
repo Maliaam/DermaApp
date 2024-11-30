@@ -1,6 +1,5 @@
 package com.example.dermaapplication.vmd
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.dermaapplication.Utilities
@@ -38,6 +37,8 @@ class ChatViewModel : ViewModel() {
             .document(Utilities.getCurrentTime(""))
             .set(message)
     }
+
+
 
 
     /**

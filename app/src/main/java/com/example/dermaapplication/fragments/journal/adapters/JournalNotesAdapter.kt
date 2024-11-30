@@ -12,8 +12,8 @@ import com.example.dermaapplication.items.Note
  * Adapter odpowiedzialny za wyświetlanie notatek za pomocą RecyclerView.
  * @param notes Lista obiektów Note reprezentująca notatki w dzienniku.
  */
-class NotesAdapter(private var notes: List<Note>) :
-    RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+class JournalNotesAdapter(private var notes: List<Note>) :
+    RecyclerView.Adapter<JournalNotesAdapter.NoteViewHolder>() {
 
     fun updateNotes(newNotes: List<Note>){
         notes = newNotes

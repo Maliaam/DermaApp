@@ -73,5 +73,7 @@
     <string name="help_body">Kliknij w obraz, aby zaznaczyć miejsce, w którym występują zmiany skórne. Jeśli chcesz usunąć pinezkę, kliknij ją drugi raz. Obraz domyślnie przedstawia przód ciała, jeśli chcesz to zmienić, kliknij w przycisk TYŁ.</string>
     <string name="journal_tittle">Tytuł dziennika</string>
     <string name="add_image">add_image</string>
+    <string name="last_note_text">Zaczerwienienie skóry</string>
+    <string name="_2024_04_14">last_note_date</string>
 
 </resources>

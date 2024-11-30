@@ -21,7 +21,7 @@ data class JournalRecord(
     val userUID: String,
     val recordTitle: String,
     val date: String,
-    val imageUrls: List<String> = listOf(),
+    val imageUrls: MutableList<String> = mutableListOf(),
     val frontPins: List<Pin>? = null,
     val backPins: List<Pin>? = null,
     val surveyResponses: List<SurveyResponse>? = null,

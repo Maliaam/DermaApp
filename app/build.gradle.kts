@@ -77,11 +77,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Firebase
     implementation(platform(libs.firebase.bom))
-    implementation("com.google.firebase:firebase-firestore:25.1.0")
-    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation(libs.firebase.firestore.v2511)
+    implementation(libs.firebase.auth)
     implementation(libs.firebase.messaging)
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("com.google.firebase:firebase-storage:21.0.1")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.messaging.v2410)
+
+    // Glide
+    implementation(libs.glide)
+
+    // CameraX
+
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
+
+    implementation("com.google.guava:guava:33.3.1-android")
 }

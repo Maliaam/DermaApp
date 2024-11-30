@@ -1,4 +1,4 @@
-package com.example.dermaapplication.adapters
+package com.example.dermaapplication.fragments.journal.adapters
 
 import android.view.LayoutInflater
 import android.view.View

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.widget.Toast
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.Utilities
-import com.example.dermaapplication.fragments.HomeFragment
 import com.example.dermaapplication.fragments.UserFeedFragment
 import com.google.firebase.auth.FirebaseUser
 

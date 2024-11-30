@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Message
-import com.example.dermaapplication.user.User
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -25,9 +24,11 @@ class MessageAdapter(private var messageList: List<Message>) :
         val timestamp: TextView = itemView.findViewById(R.id.messageTime)
 
         init {
-            itemView.setOnClickListener{ onItemClick?.invoke(messageList[adapterPosition])}
+            itemView.setOnClickListener { onItemClick?.invoke(messageList[adapterPosition]) }
         }
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val inflater = LayoutInflater.from(parent.context)

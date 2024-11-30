@@ -14,31 +14,32 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
-import com.example.dermaapplication.adapters.JournalImagesAdapter
-import com.example.dermaapplication.fragments.journal.adapters.NotesAdapter
+import com.example.dermaapplication.fragments.journal.adapters.JournalImagesAdapter
+import com.example.dermaapplication.fragments.journal.adapters.JournalNotesAdapter
 import com.example.dermaapplication.items.JournalRecord
 import com.example.dermaapplication.items.Note
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.dialog.MaterialDialogs
-import com.google.api.Distribution.BucketOptions.Linear
 
 
 class RecordFragment : Fragment() {
     private lateinit var recordTitle: TextView
     private lateinit var imagesRecyclerView: RecyclerView
     private lateinit var notesRecyclerView: RecyclerView
-    private lateinit var imagesAdapter: JournalImagesAdapter
-    private lateinit var notesAdapter: NotesAdapter
+    private lateinit var notesAdapter: JournalNotesAdapter
     private lateinit var editNotesButton: ImageView
+    private lateinit var goToAnalyse: MaterialCardView
     private var record: JournalRecord? = null
 
     private fun initializeViews(view: View) {
         recordTitle = view.findViewById(R.id.record_title)
         imagesRecyclerView = view.findViewById(R.id.record_images_recyclerview)
-        notesRecyclerView = view.findViewById(R.id.record_notes_recyclerview)
+//        notesRecyclerView = view.findViewById(R.id.record_notes_recyclerview)
         editNotesButton = view.findViewById(R.id.record_edit_notes)
+        goToAnalyse = view.findViewById(R.id.rightBottomLayout)
     }
 
     private fun initializeData() {
@@ -55,7 +56,7 @@ class RecordFragment : Fragment() {
     }
     private fun setupNotesRecyclerView(){
         record?.let {
-            notesAdapter = NotesAdapter(it.additionalNotes ?: mutableListOf())
+            notesAdapter = JournalNotesAdapter(it.additionalNotes ?: mutableListOf())
             notesRecyclerView.layoutManager = LinearLayoutManager(context)
             notesRecyclerView.adapter= notesAdapter
         }
@@ -72,8 +73,6 @@ class RecordFragment : Fragment() {
                     Utilities.databaseFetch.updateJournalRecordNote(documentId, updatedNotes,
                         onSuccess = {
                             Log.d("Firestore", "Notatki zaktualizowane pomyślnie")
-
-
                             notesAdapter.updateNotes(updatedNotes)
                         },
                         onFailure = { exception ->
@@ -82,11 +81,12 @@ class RecordFragment : Fragment() {
                 }
             }
         }
+        goToAnalyse.setOnClickListener {
+            val analyseFragment = AnalyseFragment()
+            analyseFragment.setTargetFragment(this,REQUEST_CODE)
+            (activity as MainActivity).replaceFragment(AnalyseFragment())
+        }
     }
-
-
-
-
 
     private fun setupNoteDialog(context: Context, onNoteAdded: (Note) -> Unit) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_dialog, null)
@@ -121,8 +121,11 @@ class RecordFragment : Fragment() {
         initializeViews(view)
         initializeData()
         setupImagesRecyclerView()
-        setupNotesRecyclerView()
+//        setupNotesRecyclerView()
         setupOnClickListeners()
         return view
+    }
+    companion object{
+        const val REQUEST_CODE = 101
     }
 }
