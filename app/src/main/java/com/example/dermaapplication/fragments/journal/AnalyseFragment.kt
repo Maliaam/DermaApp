@@ -140,27 +140,19 @@ class AnalyseFragment : Fragment() {
             Utilities.firestore.collection("journals").document(it)
         }
 
-        // Pobierz istniejącą listę URL-i
         recordRef?.get()?.addOnSuccessListener { documentSnapshot ->
-            // Pobieramy listę URL-i, jeśli istnieje, lub tworzymy pustą listę
             val existingImageUrls = documentSnapshot.get("imageUrls") as? MutableList<String> ?: mutableListOf()
-
-            // Dodajemy nowy URL do listy
             existingImageUrls.add(imageUrl)
 
-            // Zaktualizuj dokument z nową listą
             recordRef.update("imageUrls", existingImageUrls)
                 .addOnSuccessListener {
-                    // Potwierdzenie zapisania URL
                     Toast.makeText(requireContext(), "URL zdjęcia zapisany w Firestore", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { exception ->
-                    // Obsługa błędów
                     exception.printStackTrace()
                     Toast.makeText(requireContext(), "Błąd przy zapisie URL", Toast.LENGTH_SHORT).show()
                 }
         }?.addOnFailureListener { exception ->
-            // Obsługa błędów przy pobieraniu dokumentu
             exception.printStackTrace()
             Toast.makeText(requireContext(), "Błąd przy pobieraniu danych", Toast.LENGTH_SHORT).show()
         }

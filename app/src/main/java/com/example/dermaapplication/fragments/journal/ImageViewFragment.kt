@@ -18,7 +18,9 @@ import com.bumptech.glide.Glide
 import com.example.dermaapplication.R
 import com.example.dermaapplication.DrawingOverlay
 import com.example.dermaapplication.MainActivity
+import com.google.android.material.button.MaterialButton
 import kotlin.math.hypot
+import kotlin.math.sqrt
 
 
 class ImageViewFragment : Fragment() {
@@ -28,19 +30,16 @@ class ImageViewFragment : Fragment() {
     private var referenceEndX: Float = 0f
     private var referenceEndY: Float = 0f
 
-    private var firstPointX: Float = 0f
-    private var firstPointY: Float = 0f
-    private var secondPointX: Float = 0f
-    private var secondPointY: Float = 0f
-
-    private val referenceObjectDiameter = 1.6f // Średnica złotówki to 16mm
+    private val referenceObjectDiameter = 2.3f // Średnica złotówki to 23mm
     private var pixelsPerCm: Float = 0f
+    private var points = mutableListOf<Pair<Float, Float>>()
+    private var totalDistance: Float = 0f
+    private var previousDistance: Float = 0f
 
     /** Flagi boolean */
     private var isSelecting = false
     private var isSelectingReference = false
     private var isSelectingSkinChange = false
-    private var isFirstPointSelected = false
 
     private lateinit var overlayView: DrawingOverlay
 
@@ -49,6 +48,8 @@ class ImageViewFragment : Fragment() {
     private lateinit var pinButton: ImageButton
     private lateinit var referenceButton: ImageButton
     private lateinit var changeButton: ImageButton
+    private lateinit var undoButton: ImageButton
+    private lateinit var finishButton: MaterialButton
 
     private lateinit var firstLinear: LinearLayout
     private lateinit var secondLinear: LinearLayout
@@ -63,6 +64,8 @@ class ImageViewFragment : Fragment() {
         secondLinear = view.findViewById(R.id.secondLinear)
         referenceButton = view.findViewById(R.id.reference_symbol)
         changeButton = view.findViewById(R.id.skin_symbol)
+        undoButton = view.findViewById(R.id.undo_button)
+        finishButton = view.findViewById(R.id.end_button)
 
     }
 
@@ -81,6 +84,12 @@ class ImageViewFragment : Fragment() {
         }
         changeButton.setOnClickListener {
             toggleSkinChangeMode()
+        }
+        undoButton.setOnClickListener {
+            undoLastPoint()
+        }
+        finishButton.setOnClickListener {
+            finishDrawing()
         }
     }
 
@@ -133,42 +142,50 @@ class ImageViewFragment : Fragment() {
             )
         }
     }
+
+    private fun undoLastPoint() {
+        if (points.size > 1) {
+            points.removeAt(points.size - 1)
+            totalDistance -= previousDistance
+            overlayView.removePoint()
+        }
+    }
+
+    private fun finishDrawing() {
+        if (points.size > 3) {
+            val firstPoint = points.first()
+            val lastPoint = points.last()
+            val closingDistance = calculateDistanceInPixels(
+                firstPoint.first, firstPoint.second,
+                lastPoint.first, lastPoint.second
+            ) / pixelsPerCm
+            totalDistance += closingDistance
+            Toast.makeText(
+                requireContext(),
+                "Koniec. Obecny obwód: $totalDistance cm",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     // Funkcja obliczająca przelicznik pikseli na centymetry
-    private fun calculatePixelsPerCm(diameterInPixels: Float): Float {
-        return diameterInPixels / referenceObjectDiameter
+    private fun calculatePixelsPerCm(pixelsDistance: Float): Float {
+        return pixelsDistance / referenceObjectDiameter
     }
 
     // Funkcja do obliczania odległości w pikselach między dwoma punktami
-    private fun calculateDistanceInPixels(startX: Float, startY: Float, endX: Float, endY: Float): Float {
+    private fun calculateDistanceInPixels(
+        startX: Float,
+        startY: Float,
+        endX: Float,
+        endY: Float
+    ): Float {
         return hypot(endX - startX, endY - startY)
     }
 
-    // Funkcja przeliczająca odległość w pikselach na centymetry
-    private fun calculateRealDistanceInCm(pixelDistance: Float, pixelsPerCm: Float): Float {
-        return pixelDistance / pixelsPerCm
-    }
-
-    // Funkcja, która wywołuje obliczenie rzeczywistej odległości między dwoma punktami
-    private fun onSkinChangeSelected() {
-        val pixelDistance = calculateDistanceInPixels(firstPointX, firstPointY, secondPointX, secondPointY)
-        val realDistanceInCm = calculateRealDistanceInCm(pixelDistance, pixelsPerCm)
-
-
-        Toast.makeText(
-            requireContext(),
-            "Rzeczywista odległość między punktami: $realDistanceInCm cm",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-
-
     private fun onReferenceObjectSelected(startX: Float, startY: Float, endX: Float, endY: Float) {
-
         val pixelDistance = calculateDistanceInPixels(startX, startY, endX, endY)
-
-
         pixelsPerCm = calculatePixelsPerCm(pixelDistance)
-
 
         Toast.makeText(
             requireContext(),
@@ -199,72 +216,86 @@ class ImageViewFragment : Fragment() {
             if (isSelectingReference) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-
                         referenceStartX = event.x
                         referenceStartY = event.y
                         true
                     }
 
                     MotionEvent.ACTION_MOVE -> {
-
                         referenceEndX = event.x
                         referenceEndY = event.y
 
                         overlayView.setLine(
-                            referenceStartX,
-                            referenceStartY,
-                            referenceEndX,
-                            referenceEndY
+                            referenceStartX, referenceStartY, referenceEndX, referenceEndY
                         )
                         true
                     }
 
                     MotionEvent.ACTION_UP -> {
-
                         onReferenceObjectSelected(
-                            referenceStartX,
-                            referenceStartY,
-                            referenceEndX,
-                            referenceEndY
+                            referenceStartX, referenceStartY, referenceEndX, referenceEndY
                         )
                         true
                     }
 
                     else -> false
                 }
-            } else if (isSelectingSkinChange) {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        if (!isFirstPointSelected) {
 
-                            firstPointX = event.x
-                            firstPointY = event.y
-
-
-                            overlayView.setPoint(firstPointX, firstPointY)
-                            isFirstPointSelected = true
-                            true
-                        } else {
-
-                            secondPointX = event.x
-                            secondPointY = event.y
-
-
-                            overlayView.setPoint(secondPointX, secondPointY)
-
-
-                            onSkinChangeSelected()
-                            isFirstPointSelected = false
-                            true
-                        }
-                    }
-
-                    else -> false
+            } else if (isSelectingSkinChange && event.action == MotionEvent.ACTION_DOWN) {
+                val x = event.x
+                val y = event.y
+                overlayView.setPoint(x, y)
+                if (points.isNotEmpty()) {
+                    val lastPoint = points.last()
+                    val distance = calculateDistanceInPixels(
+                        lastPoint.first,
+                        lastPoint.second,
+                        x,
+                        y
+                    ) / pixelsPerCm
+                    previousDistance = distance
+                    totalDistance += distance
                 }
+                points.add(Pair(x, y))
+                Toast.makeText(
+                    requireContext(),
+                    "Punkt dodany. Obecny obwód: $totalDistance cm",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
             } else {
                 false
             }
         }
+//            } else if (isSelectingSkinChange) {
+//                when (event.action) {
+//                    MotionEvent.ACTION_DOWN -> {
+//                        if (!isFirstPointSelected) {
+//                            firstPointX = event.x
+//                            firstPointY = event.y
+//
+//                            overlayView.setPoint(firstPointX, firstPointY)
+//
+//                            isFirstPointSelected = true
+//                            true
+//                        } else {
+//                            secondPointX = event.x
+//                            secondPointY = event.y
+//
+//                            overlayView.setPoint(secondPointX, secondPointY)
+//
+//                            onSkinChangeSelected()
+//                            isFirstPointSelected = false
+//                            true
+//                        }
+//                    }
+//
+//                    else -> false
+//                }
+//            } else {
+//                false
+//            }
+//        }
 
 
         return view

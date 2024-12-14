@@ -30,6 +30,7 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
     /* Flaga wskazująca, czy tryb usuwania wpisów jest aktywny */
     var isDeleteMode: Boolean = false
 
+
     /**
      * ViewHolder odpowiedzialny za przechowywanie oraz łączenie widoków dla każdego elementu listy.
      *

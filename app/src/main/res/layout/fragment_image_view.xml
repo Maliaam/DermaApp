@@ -113,6 +113,31 @@
             app:tint="@color/white" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/undo_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="180dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_undo"
+        app:tint="@color/white" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/end_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginStart="150dp"
+        android:text="Zakończ"
+        app:cornerRadius="8dp"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black" />
+
+
 
 
 </RelativeLayout>

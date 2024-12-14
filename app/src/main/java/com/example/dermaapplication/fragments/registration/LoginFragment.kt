@@ -43,19 +43,21 @@ class LoginFragment : Fragment() {
 //                val password = loginPasswordField.text.toString()
             val email = "wnuk9533@gmail.com"
             val password = "123456"
-            Utilities.user.loginUser(email, password, requireActivity()) { success ->
-                if (success) {
-                    (activity as MainActivity).changeNavigationHeader()
-                    Utilities.initializeUserStatus { isDoctor ->
-                        if (isDoctor) {
-                            Log.d("LoginStatus", "Zalogowano jako doktor")
-                        } else {
-                            Log.d("LoginStatus", "Zalogowano jako użytkownik")
+                Utilities.user.loginUser(email, password, requireActivity()) { success ->
+                    if (success) {
+                        (activity as MainActivity).changeNavigationHeader()
+                        Utilities.initializeUserStatus { isDoctor ->
+                            if (isDoctor) {
+                                Log.d("LoginStatus", "Zalogowano jako doktor")
+                            } else {
+                                Log.d("LoginStatus", "Zalogowano jako użytkownik")
+                            }
                         }
+                        Utilities.getFCMToken()
                     }
                 }
             }
-        }
+//        }
 //            } else Toast.makeText(requireContext(),"Dane logowania są puste",Toast.LENGTH_SHORT).show()
 //        }
 

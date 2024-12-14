@@ -447,15 +447,7 @@
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
-                            <ImageButton
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:padding="10dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/icon_recyclebin"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/record_images_recyclerview"

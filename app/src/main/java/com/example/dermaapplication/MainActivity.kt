@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
         setupRecyclerView()
         setupMainMenu()
         setupBottomMenu()
+
     }
 
     /**
@@ -119,7 +120,6 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
         menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
-
 
         if (Utilities.getCurrentUserUid() != "")
             navigation.menu.findItem(R.id.menu_chat).isVisible = false
@@ -226,12 +226,13 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
     fun changeNavigationHeader() {
         val headerLayout = navigation.getHeaderView(0)
         val headerText = headerLayout.findViewById<TextView>(R.id.headerUserName)
+        Log.e("CurrentUserName", headerText.text.toString())
         Utilities.getCurrentUserName { userName ->
-            if (userName != null) {
-                Log.e("CurrentUserName", userName)
-            }
-            if (userName != "Unknown user")
+            Log.e("CurrentUserName", userName!!)
+            runOnUiThread {
                 headerText.text = userName
+
+            }
         }
     }
 

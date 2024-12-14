@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Pytanie -->
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Od kiedy zmiana występuje?"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"
+        android:textAppearance="?attr/textAppearanceBody1" />
+
+    <!-- Sekcja odpowiedzi -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Prefiks "Odp:" -->
+        <TextView
+            android:id="@+id/answerPrefix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Odp:"
+            android:textStyle="italic"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:layout_marginEnd="4dp" />
+
+        <!-- Właściwa odpowiedź -->
+        <TextView
+            android:id="@+id/answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="tydzień - dwa"
+            android:textAppearance="?attr/textAppearanceBody2" />
+    </LinearLayout>
+</LinearLayout>

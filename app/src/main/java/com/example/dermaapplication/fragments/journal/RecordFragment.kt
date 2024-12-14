@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.fragments.journal.adapters.JournalImagesAdapter
 import com.example.dermaapplication.fragments.journal.adapters.JournalNotesAdapter
+import com.example.dermaapplication.fragments.journal.surveys.SurveyListFragment
 import com.example.dermaapplication.items.JournalRecord
 import com.example.dermaapplication.items.Note
 import com.google.android.material.card.MaterialCardView
@@ -32,14 +34,19 @@ class RecordFragment : Fragment() {
     private lateinit var notesAdapter: JournalNotesAdapter
     private lateinit var editNotesButton: ImageView
     private lateinit var goToAnalyse: MaterialCardView
+    private lateinit var goToImagesFragment: CardView
+    private lateinit var goToRecordSurvey: CardView
+    private lateinit var goToRecordNotes: CardView
     private var record: JournalRecord? = null
 
     private fun initializeViews(view: View) {
         recordTitle = view.findViewById(R.id.record_title)
         imagesRecyclerView = view.findViewById(R.id.record_images_recyclerview)
-//        notesRecyclerView = view.findViewById(R.id.record_notes_recyclerview)
         editNotesButton = view.findViewById(R.id.record_edit_notes)
         goToAnalyse = view.findViewById(R.id.rightBottomLayout)
+        goToImagesFragment = view.findViewById(R.id.record_images)
+        goToRecordSurvey = view.findViewById(R.id.record_survey)
+        goToRecordNotes = view.findViewById(R.id.record_notes)
     }
 
     private fun initializeData() {
@@ -47,20 +54,14 @@ class RecordFragment : Fragment() {
         recordTitle.text = record?.recordTitle
     }
 
-    private fun setupImagesRecyclerView(){
+    private fun setupImagesRecyclerView() {
         record?.let {
             val adapter = JournalImagesAdapter(it)
-            imagesRecyclerView.layoutManager = GridLayoutManager(context,3)
+            imagesRecyclerView.layoutManager = GridLayoutManager(context, 3)
             imagesRecyclerView.adapter = adapter
         }
     }
-    private fun setupNotesRecyclerView(){
-        record?.let {
-            notesAdapter = JournalNotesAdapter(it.additionalNotes ?: mutableListOf())
-            notesRecyclerView.layoutManager = LinearLayoutManager(context)
-            notesRecyclerView.adapter= notesAdapter
-        }
-    }
+
 
     private fun setupOnClickListeners() {
         editNotesButton.setOnClickListener {
@@ -83,8 +84,37 @@ class RecordFragment : Fragment() {
         }
         goToAnalyse.setOnClickListener {
             val analyseFragment = AnalyseFragment()
-            analyseFragment.setTargetFragment(this,REQUEST_CODE)
+            analyseFragment.setTargetFragment(this, REQUEST_CODE)
             (activity as MainActivity).replaceFragment(AnalyseFragment())
+        }
+        goToImagesFragment.setOnClickListener {
+            if (!record?.imageUrls.isNullOrEmpty()) {
+                val imageUrls = record?.imageUrls ?: emptyList()
+                val galleryFragment = ImagesGalleryFragment()
+                val bundle = Bundle().apply {
+                    putStringArrayList("imageUrls", ArrayList(imageUrls))
+                }
+                galleryFragment.arguments = bundle
+
+                (activity as MainActivity).replaceFragment(galleryFragment)
+            } else {
+                Toast.makeText(context, "Brak obrazów do wyświetlenia", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        goToRecordSurvey.setOnClickListener {
+            val surveyResponses = record?.surveyResponses ?: emptyList()
+            val surveyListFragment = SurveyListFragment()
+            val bundle = Bundle().apply {
+                putSerializable("surveyResponses",ArrayList(surveyResponses))
+                putString("documentId",record?.documentId)
+            }
+            surveyListFragment.arguments = bundle
+            (activity as MainActivity).replaceFragment(surveyListFragment)
+        }
+        goToRecordNotes.setOnClickListener {
+            val bundle = Bundle().apply {
+            }
         }
     }
 
@@ -99,8 +129,8 @@ class RecordFragment : Fragment() {
             .setPositiveButton("Zapisz") { dialog, _ ->
                 val noteDate = Utilities.getCurrentTime("short")
                 val noteContent = noteEditText.text.toString()
-                if(noteContent.isNotEmpty()){
-                    val newNote = Note(noteDate,noteContent)
+                if (noteContent.isNotEmpty()) {
+                    val newNote = Note(noteDate, noteContent)
                     onNoteAdded(newNote)
                     dialog.dismiss()
                 } else {
@@ -114,18 +144,19 @@ class RecordFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_add_record, container, false)
 
 
         initializeViews(view)
         initializeData()
         setupImagesRecyclerView()
-//        setupNotesRecyclerView()
         setupOnClickListeners()
         return view
     }
-    companion object{
+
+    companion object {
         const val REQUEST_CODE = 101
     }
 }

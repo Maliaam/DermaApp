@@ -75,5 +75,7 @@
     <string name="add_image">add_image</string>
     <string name="last_note_text">Zaczerwienienie skóry</string>
     <string name="_2024_04_14">last_note_date</string>
+    <string name="gallery">GALERIA ZDJĘĆ</string>
+    <string name="done_surveys">Wypełnione ankiety</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.example.dermaapplication.fragments.questionnaire
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Spinner
@@ -16,9 +18,22 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
+import com.example.dermaapplication.fragments.UserFeedFragment
+import com.example.dermaapplication.fragments.journal.adapters.JournalRecordsAdapter
+import com.example.dermaapplication.items.JournalRecord
 import com.example.dermaapplication.items.Question
+import com.example.dermaapplication.items.Survey
+import com.example.dermaapplication.items.SurveyItem
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Fragment umożliwiający przedstawienie oraz wykonanie ankiety użytkownikowi.
@@ -35,52 +50,95 @@ class FragmentQuestionnaire : Fragment() {
     private lateinit var content: ConstraintLayout
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var progressText: TextView
-    private lateinit var dotContainer: LinearLayout
+    private lateinit var addTextView: TextView
     private lateinit var yesNoLayout: LinearLayout
+    private lateinit var journalsRV: RecyclerView
+    private val recordsList = mutableListOf<JournalRecord>()
+    private val questionnaireEndAdapter by lazy { JournalRecordsAdapter(recordsList) }
     private val questionsList = ArrayList<Question>()
-    private val userAnswers = mutableMapOf<Int, String>()
+    private val userAnswers = mutableListOf<SurveyItem>()
     private lateinit var questionnaireProgressBar: ProgressBar
     private var currentQuestionNumber = 0
     private var totalQuestionsNumber = 0
     private var currentQuestionId = 0
     private var isUserInteracting = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_question, container, false)
-
+    /**
+     * Inicjalizuje widoki fragmentu.
+     * @param view Widok główny fragmentu, używany do znajdowania elementów.
+     */
+    private fun initializeViews(view: View) {
         questionText = view.findViewById(R.id.questionText)
         yesButton = view.findViewById(R.id.buttonYes)
         noButton = view.findViewById(R.id.buttonNo)
         backButton = view.findViewById(R.id.buttonPrevious)
         nextButton = view.findViewById(R.id.buttonNext)
         spinner = view.findViewById(R.id.answersSpinner)
-//        dotContainer = view.findViewById(R.id.dotContainer)
         yesNoLayout = view.findViewById(R.id.yesNoLayout)
         loadingProgressBar = view.findViewById(R.id.progressBar)
         progressText = view.findViewById(R.id.progressText)
         content = view.findViewById(R.id.contentLayout)
         questionnaireEndButton = view.findViewById(R.id.endQuestionnaire)
         questionnaireProgressBar = view.findViewById(R.id.progressbar_questionnaire)
+        journalsRV = view.findViewById(R.id.questionnaireEnd_recyclerview)
+        addTextView = view.findViewById(R.id.addAnswers)
+    }
+
+    private fun setupOnClickListeners() {
+        yesButton.setOnClickListener { onAnswerSelected("tak") }
+        noButton.setOnClickListener { onAnswerSelected("nie") }
+        questionnaireEndAdapter.onItemClick = { record ->
+            setupTitleDialog(
+                requireContext(),
+                onTitleAdded = { title ->
+                record.documentId?.let { documentId ->
+                    createSurveyAndSave(documentId, title)
+                }
+            })
+        }
+
+        //backButton.setOnClickListener { goBack() }
+    }
+
+    private fun setupRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = questionnaireEndAdapter
+        }
+    }
+
+    /**
+     * Ładuje wszystkie dzienniki użytkownika w końcowym widoku ankiety
+     */
+    private fun fetchJournalRecord() {
+        Utilities.databaseFetch.fetchJournalRecords { records ->
+            if (records.isNotEmpty()) {
+                recordsList.clear()
+                recordsList.addAll(records)
+            }
+            questionnaireEndAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_question, container, false)
+        initializeViews(view)
+        setupOnClickListeners()
+        setupRecyclerView(journalsRV)
+        fetchJournalRecord()
 
         Utilities.databaseFetch.fetchQuestions { questions ->
             startLoading()
-
             questionsList.clear()
             questionsList.addAll(questions.sortedWith(compareBy({ it.theme }, { it.id })))
             totalQuestionsNumber = questionsList.size
-
-
             displayQuestion(currentQuestionNumber)
             initializeProgressBar(questionsList.size)
             updateProgressBar(0)
         }
-
-        yesButton.setOnClickListener { onAnswerSelected("tak") }
-        noButton.setOnClickListener { onAnswerSelected("nie") }
-//        backButton.setOnClickListener { goBack() }
-
         return view
     }
 
@@ -133,10 +191,18 @@ class FragmentQuestionnaire : Fragment() {
      * @param answer Odpowiedź wybrana przez użytkownika ("tak" lub "nie").
      */
     private fun onAnswerSelected(answer: String) {
-        userAnswers[currentQuestionNumber] = answer
+        Log.e("Survey", userAnswers.toString())
+        val currentQuestion = questionsList[currentQuestionNumber]
+        val surveyItem = SurveyItem(
+            question = currentQuestion.question,
+            answer = answer
+        )
+        if (userAnswers.size > currentQuestionNumber) {
+            userAnswers[currentQuestionNumber] = surveyItem
+        } else {
+            userAnswers.add(surveyItem)
+        }
         val nextQuestionNumber = getNextQuestion(answer)
-        Log.d("Survey", "Next Question: $nextQuestionNumber")
-
         if (nextQuestionNumber < questionsList.size) {
             currentQuestionNumber = nextQuestionNumber
             displayQuestion(currentQuestionNumber)
@@ -177,7 +243,14 @@ class FragmentQuestionnaire : Fragment() {
                 ) {
                     if (position > 0 && isUserInteracting) {
                         val selectedAnswer = answers[position]
-                        userAnswers[currentQuestionNumber] = selectedAnswer
+                        Log.e("Survey", selectedAnswer)
+                        val surveyItem = SurveyItem(
+                            question = question.question,
+                            answer = selectedAnswer
+                        )
+                        Log.e("Survey", surveyItem.question + " " + surveyItem.answer)
+                        Log.e("Survey", currentQuestionNumber.toString())
+                        userAnswers.add(surveyItem)
                         onAnswerSelected(selectedAnswer)
                     }
                 }
@@ -213,36 +286,63 @@ class FragmentQuestionnaire : Fragment() {
         progressText.visibility = View.VISIBLE
         content.visibility = View.GONE
 
-        Thread {
+        lifecycleScope.launch {
             for (progress in 0..100) {
-                Thread.sleep(10)
-                requireActivity().runOnUiThread {
-                    fakeProgressBar(progress)
-                }
+                delay(10)
+                fakeProgressBar(progress)
             }
-
-            requireActivity().runOnUiThread {
-                loadingProgressBar.visibility = View.GONE
-                progressText.visibility = View.GONE
-                content.visibility = View.VISIBLE
-            }
-        }.start()
+            loadingProgressBar.visibility = View.GONE
+            progressText.visibility = View.GONE
+            content.visibility = View.VISIBLE
+        }
     }
 
     /**
      * Funkcja wyświetlająca komunikat kończący ankietę.
      * Informuje użytkownika o zakończeniu wypełniania ankiety.
-     * TODO(Zmienić tą funkcję)
      */
     private fun showEndOfQuestionnaire() {
-        // Funkcja wyświetlająca komunikat kończący ankietę
         Toast.makeText(context, "Dziękujemy za wypełnienie ankiety!", Toast.LENGTH_SHORT).show()
-        /// todo: Końcowy widok ankiety ( różny dla zalogowanego i niezalogowanego użytkownika)
-        // todo: po zakończeniu ankiety, użytkownik powinien móc wybrać czy chce zapisać daną ankietę
-        // oraz zaznaczenia do istniejącego dziennika, lub utworzyć nowy. Niezalogowany użytkownik nie będzie miał dostępu do takiej funkcjonalności.
-        // po prostu pokaże mu choroby po symptompach.
-        // Dla zapisu możliwie, nowy fragment, ponieważ łatwiej będzie kooperować. przesłanie bundla w pinezkach. a następnie do bazy danych.
+        journalsRV.visibility = View.VISIBLE
+        yesNoLayout.visibility = View.GONE
+        loadingProgressBar.visibility = View.GONE
+        content.visibility = View.GONE
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            questionText.text = "Ankieta zakończona. Zarejestruj się aby móc zapistwać ankiety."
+        } else {
+            questionText.visibility = View.GONE
+            addTextView.visibility = View.VISIBLE
+        }
+        //todo jak nie ma wpisów a zalogowany to możliwość dodania
     }
+
+    private fun createSurveyAndSave(documentId: String,surveyTitle: String): Survey {
+        val date = Utilities.getCurrentTime("short")
+
+        val survey = Survey(
+            title = surveyTitle,
+            date = date,
+            items = userAnswers.toList()
+        )
+        Utilities.databaseFetch.updateJournalSurveys(
+            documentId = documentId,
+            surveys = listOf(survey),
+            title = surveyTitle,
+            date = date,
+            onSuccess = {
+                Toast.makeText(context, "Odpowiedzi zostały zapisane", Toast.LENGTH_SHORT).show()
+                (activity as MainActivity).replaceFragment(UserFeedFragment())
+            },
+            onFailure = { exception ->
+                Log.e("Survey", "Błąd zapisywania odpowiedzi: ${exception.message}")
+                Toast.makeText(context, "Wystąpił błąd podczas zapisywania", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        )
+
+        return survey
+    }
+
 
     /** Ustawia maksymalną wartość ProgressBar na podstawie liczby pytań. */
     private fun initializeProgressBar(count: Int) {
@@ -255,29 +355,29 @@ class FragmentQuestionnaire : Fragment() {
         questionnaireProgressBar.progress = currentIndex + 1
     }
 
+    private fun setupTitleDialog(
+        context: Context,
+        onTitleAdded: (String) -> Unit
+        ){
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.layout_dialog, null)
+        val titleEditText = dialogView.findViewById<EditText>(R.id.note_edit_text)
 
-//    /** Inicjalizuje kropki postępu na podstawie liczby pytań.*/
-//    private fun initializeDots(count: Int) {
-//        dotContainer.removeAllViews()
-//        for (i in 0 until count) {
-//            val dot = View(context).apply {
-//                layoutParams = LinearLayout.LayoutParams(16, 16).apply {
-//                    marginStart = 8
-//                    marginEnd = 8
-//                }
-//                background = ContextCompat.getDrawable(context, R.drawable.dot_inactive)
-//            }
-//            dotContainer.addView(dot)
-//        }
-//    }
-//
-//    /** Aktualizuje wygląd kropek, podświetlając aktualnie aktywną. */
-//    private fun updateDotIndicator(currentIndex: Int) {
-//        for (i in 0 until dotContainer.childCount) {
-//            val dot = dotContainer.getChildAt(i)
-//            val drawableRes =
-//                if (i == currentIndex) R.drawable.dot_active else R.drawable.dot_inactive
-//            dot.background = context?.let { ContextCompat.getDrawable(it, drawableRes) }
-//        }
-//    }
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Wpisz tytuł dziennika")
+            .setView(dialogView)
+            .setCancelable(true)
+            .setPositiveButton("Zapisz") { dialog, _ ->
+                val title = titleEditText.text.toString().trim()
+                if (title.isNotEmpty()) {
+                    onTitleAdded(title)
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(context, "Tytuł nie może być pusty", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Anuluj") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 }

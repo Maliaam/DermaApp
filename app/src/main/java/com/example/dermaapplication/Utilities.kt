@@ -7,10 +7,12 @@ import com.example.dermaapplication.items.JournalRecord
 import com.example.dermaapplication.user.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 /**
  * Klasa Utilities zawiera metody pomocniczne oraz zmienne globalne, które są używane w aplikacji.
@@ -106,14 +108,27 @@ class Utilities {
          * @param dateType "short" - zwraca datę bez godzin.
          *                  else - zwraca pełną datę.
          */
+//        @SuppressLint("SimpleDateFormat")
+//        fun getCurrentTime(dateType: String): String {
+//            val format = when (dateType) {
+//                "short" -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//                else -> {
+//                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+//                }
+//            }
+//
+//            val date = Date(System.currentTimeMillis())
+//            return format.format(date)
+//        }
+
         @SuppressLint("SimpleDateFormat")
         fun getCurrentTime(dateType: String): String {
             val format = when (dateType) {
                 "short" -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                else -> {
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                }
+                else -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             }
+
+            format.timeZone = TimeZone.getTimeZone("UTC")
 
             val date = Date(System.currentTimeMillis())
             return format.format(date)
@@ -153,6 +168,15 @@ class Utilities {
                 }.addOnFailureListener {
                     callback(false)
                 }
+        }
+        fun getFCMToken(){
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if(task.isSuccessful){
+                    val token = task.result
+                    Log.e("Token",token)
+                }
+
+            }
         }
     }
 }

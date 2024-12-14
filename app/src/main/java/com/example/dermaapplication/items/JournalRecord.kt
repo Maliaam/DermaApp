@@ -24,7 +24,7 @@ data class JournalRecord(
     val imageUrls: MutableList<String> = mutableListOf(),
     val frontPins: List<Pin>? = null,
     val backPins: List<Pin>? = null,
-    val surveyResponses: List<SurveyResponse>? = null,
+    val surveyResponses: List<Survey>? = null,
     var additionalNotes: List<Note>? = null,
     var documentId: String?
 ) : Serializable

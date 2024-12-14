@@ -5,11 +5,11 @@ import android.util.Log
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Disease
 import com.example.dermaapplication.items.JournalRecord
-import com.example.dermaapplication.items.Message
 import com.example.dermaapplication.items.Note
 import com.example.dermaapplication.items.Pin
 import com.example.dermaapplication.items.Question
-import com.example.dermaapplication.items.SurveyResponse
+import com.example.dermaapplication.items.Survey
+import com.example.dermaapplication.items.SurveyItem
 import com.google.android.gms.tasks.Task
 import java.util.UUID
 
@@ -187,6 +187,7 @@ class DatabaseFetch {
                             val date = document.getString("date")
                             val imageUrls = document.get("imageUrls") as MutableList<String>
 
+                            // Przetwarzanie pinów
                             val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
                                 ?.mapNotNull { map ->
                                     val x = (map["x"] as? Number)?.toFloat()
@@ -199,14 +200,30 @@ class DatabaseFetch {
                                     val y = (map["y"] as? Number)?.toFloat()
                                     if (x != null && y != null) Pin(x, y) else null
                                 }
-                            val surveyResponses =
-                                (document.get("surveyResponses") as? List<Map<String, String>>)
-                                    ?.mapNotNull { map ->
-                                        val question = map["question"]
-                                        val answer = map["response"]
-                                        if (question != null && answer != null)
-                                            SurveyResponse(question, answer) else null
-                                    }
+
+                            // Przetwarzanie odpowiedzi z ankiety
+                            val surveysMap =
+                                document.get("surveyResponses") as? List<Map<String, Any>>
+                            val surveys = surveysMap?.mapNotNull { surveyMap ->
+                                val title = surveyMap["title"] as? String
+                                val surveyDate = surveyMap["date"] as? String
+                                val questions = surveyMap["questions"] as? List<Map<String, Any>>
+
+                                val items = questions?.map { questionMap ->
+                                    SurveyItem(
+                                        question = questionMap["question"] as? String ?: "",
+                                        answer = questionMap["answer"] as? String ?: ""
+                                    )
+                                } ?: emptyList()
+
+                                Survey(
+                                    title = title ?: "Brak tytułu",
+                                    date = surveyDate ?: "Brak daty",
+                                    items = items
+                                )
+                            }
+
+                            // Dodatkowe notatki
                             val additionalNotes =
                                 (document.get("additionalNotes") as? List<Map<String, String>>)
                                     ?.mapNotNull { map ->
@@ -216,6 +233,7 @@ class DatabaseFetch {
                                             Note(date, content) else null
                                     }
 
+                            // Tworzenie obiektu JournalRecord
                             JournalRecord(
                                 userUID = userUID ?: "Użytkownik niezalogowany",
                                 recordTitle = recordTitle ?: "Brak tytułu",
@@ -223,7 +241,7 @@ class DatabaseFetch {
                                 imageUrls = imageUrls,
                                 frontPins = frontPins,
                                 backPins = backPins,
-                                surveyResponses = surveyResponses,
+                                surveyResponses = surveys,
                                 additionalNotes = additionalNotes,
                                 documentId = document.id
                             )
@@ -232,54 +250,22 @@ class DatabaseFetch {
                             null
                         }
                     } ?: listOf()
+
+                    // Logowanie znalezionych dzienników
+                    Log.d("JournalRecords", "Znalezione dzienniki: ${journalRecords.size}")
+                    journalRecords.forEach { record ->
+                        Log.d(
+                            "JournalRecords",
+                            "Dziennik: ${record.recordTitle}, Data: ${record.date}"
+                        )
+                    }
+
                     callback(journalRecords)
                 } else {
                     callback(listOf())
                 }
             }
     }
-
-//    fun fetchJournalRecords(callback: (List<JournalRecord>) -> Unit) {
-//        Utilities.firestore.collection("journals").get().addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                val journalRecords = task.result?.documents?.mapNotNull { document ->
-//                    try {
-//                        val userUID = document.getString("userUID")
-//                        val recordTitle = document.getString("recordTitle")
-//                        val date = document.getString("date")
-//                        val imageUrls = document.get("imageUrls") as? List<String> ?: listOf()
-//                        val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
-//                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
-//                        val backPins = (document.get("backPins") as? List<Map<String, Any>>)
-//                            ?.map { Pair(it["x"] as Float, it["y"] as Float) }
-//                        val surveyResponses =
-//                            (document.get("surveyResponses") as? List<Map<String, String>>)
-//                                ?.map { Pair(it["question"] ?: "", it["response"] ?: "") }
-//                        val additionalNotes = document.getString("additionalNotes")
-//
-//                        JournalRecord(
-//                            recordTitle = recordTitle ?: "Brak tytułu",
-//                            userUID = userUID ?: "Nieznany użytkownik",
-//                            date = date ?: "Brak daty",
-//                            imageUrls = imageUrls,
-//                            frontPins = frontPins,
-//                            backPins = backPins,
-//                            surveyResponses = surveyResponses,
-//                            additionalNotes = additionalNotes,
-//                            documentId = document.id
-//                        )
-//                    } catch (e: Exception) {
-//                        e.printStackTrace()
-//                        null
-//                    }
-//                } ?: listOf()
-//
-//                callback(journalRecords)
-//            } else {
-//                callback(listOf())
-//            }
-//        }
-//    }
 
 
     fun addJournalRecordToDatabase(
@@ -334,6 +320,53 @@ class DatabaseFetch {
             }
     }
 
+    fun updateJournalSurveys(
+        documentId: String,
+        surveys: List<Survey>,
+        title: String,
+        date: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val documentReference = Utilities.firestore.collection("journals").document(documentId)
+
+        // Mapowanie nowych danych na format, który chcemy dodać
+        val newSurveysMap = surveys.map { survey ->
+            mapOf(
+                "title" to title,
+                "date" to date,
+                "questions" to survey.items.map { item ->
+                    mapOf(
+                        "question" to item.question,
+                        "answer" to item.answer
+                    )
+                }
+            )
+        }
+
+        // Pobranie aktualnych surveyResponses z dokumentu
+        documentReference.get()
+            .addOnSuccessListener { documentSnapshot ->
+                val existingSurveys =
+                    documentSnapshot.get("surveyResponses") as? List<Map<String, Any>>
+                        ?: emptyList()
+
+                // Dodanie nowych survey do istniejącej listy
+                val updatedSurveys = existingSurveys + newSurveysMap
+
+                // Zaktualizowanie pola w bazie danych
+                documentReference.update("surveyResponses", updatedSurveys)
+                    .addOnSuccessListener {
+                        onSuccess() // Zakończono pomyślnie
+                    }
+                    .addOnFailureListener { exception ->
+                        onFailure(exception) // Obsługuje błędy
+                    }
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception) // Obsługuje błędy podczas pobierania danych
+            }
+    }
 
     fun removeJournalByDocumentId(
         documentId: String,
@@ -347,5 +380,26 @@ class DatabaseFetch {
             .addOnFailureListener { exception -> onFailure(exception) }
     }
 
-
+    fun deleteSurveyFromJournal(
+        documentId: String,
+        surveyToDelete: Survey,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val documentReference = Utilities.firestore.collection("journals").document(documentId)
+        documentReference.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val currentSurveys = document.get("surveyResponses") as? List<Map<String, Any>>
+                if (currentSurveys != null) {
+                    val updatedSurveys = currentSurveys.filterNot { survey ->
+                        survey["title"] == surveyToDelete.title &&
+                                survey["date"] == surveyToDelete.date
+                    }
+                    documentReference.update("surveyResponses", updatedSurveys)
+                        .addOnSuccessListener { onSuccess() }
+                        .addOnFailureListener { exception -> onFailure(exception) }
+                }
+            }
+        }
+    }
 }
