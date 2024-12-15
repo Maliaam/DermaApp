@@ -29,6 +29,7 @@
     <color name="grey">#E0E0E0</color>
     <color name="dark_grey">#BDBDBD</color>
     <color name="icon_highlight">#F5F5F5</color>
+    <color name="light_blue">#3b5269</color>
 
 
 </resources>

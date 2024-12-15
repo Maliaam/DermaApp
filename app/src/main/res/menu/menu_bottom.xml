@@ -9,7 +9,7 @@
     <item
         android:id="@+id/wiki"
         android:icon="@drawable/image_feed_encyclopedia"
-        android:title="Wikipedia" />
+        android:title="Dermatozy" />
 
     <item
         android:enabled="true"

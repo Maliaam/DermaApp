@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:backgroundTint="@color/medicine"
+                    android:backgroundTint="@color/light_blue"
                     android:text="TYŁ"
                     android:textColor="@color/white"
                     app:cornerRadius="5dp" />
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:backgroundTint="@color/medicine"
-                    android:text="Zakończ"
+                    android:text="DALEJ"
                     android:textColor="@color/white"
                     app:cornerRadius="5dp" />
             </LinearLayout>

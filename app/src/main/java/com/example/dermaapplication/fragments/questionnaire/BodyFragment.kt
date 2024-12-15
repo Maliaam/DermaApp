@@ -2,6 +2,7 @@ package com.example.dermaapplication.fragments.questionnaire
 
 import android.annotation.SuppressLint
 import android.graphics.Matrix
+import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.example.dermaapplication.MainActivity
@@ -30,6 +32,7 @@ class BodyFragment : Fragment() {
     private lateinit var helpButton: ImageView
     private lateinit var closeInfoButton: ImageView
     private lateinit var info: CardView
+    private lateinit var bodyImage: ImageView
 
     /** Lista pinezek dla widoku z przodu */
     private val frontPins = mutableListOf<Pair<Float, Float>>()
@@ -51,6 +54,7 @@ class BodyFragment : Fragment() {
         helpButton = view.findViewById(R.id.help_body)
         info = view.findViewById(R.id.help_description)
         closeInfoButton = view.findViewById(R.id.close_info)
+        bodyImage = view.findViewById(R.id.imageView6)
         endButton.setOnClickListener {
             (activity as MainActivity).replaceFragment(FragmentQuestionnaire())
         }
@@ -118,6 +122,17 @@ class BodyFragment : Fragment() {
      */
     private fun toggleSide() {
         isFrontSide = !isFrontSide
+        if (!isFrontSide){
+            bodyImage.setColorFilter(
+                ContextCompat.getColor(requireContext(), R.color.light_blue),
+                PorterDuff.Mode.SRC_IN)
+            frontEndButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.medicine))
+        } else {
+            bodyImage.setColorFilter(
+                ContextCompat.getColor(requireContext(), R.color.medicine),
+                PorterDuff.Mode.SRC_IN)
+            frontEndButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_blue))
+        }
         clearPins(frameLayoutContainer)
         val pins = if (isFrontSide) frontPins else backPins
         val imageView = frameLayoutContainer.findViewById<ImageView>(R.id.imageView6)

@@ -149,7 +149,7 @@ class DatabaseFetch {
                     val theme = document.getString("theme")
                     val nextQuestion = document.getString("nextQuestion")?.toInt()
                     val expectedAnswer = document.getString("expectedAnswer")
-                    val additionalInfo = document.getString("additionInfo")
+                    val additionalInfo = document.getString("additionalInfo")
 
                     if (id != null && questionText != null && answersString != null && theme != null) {
                         val answers = answersString.split(",").map { it.trim() }

@@ -157,6 +157,17 @@
                 android:id="@+id/contentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_margin="10dp"
+                    android:id="@+id/help_questionnaire"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_question"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/medicine" />
             <!-- Treść pytania -->
             <TextView
                 android:layout_marginTop="35dp"

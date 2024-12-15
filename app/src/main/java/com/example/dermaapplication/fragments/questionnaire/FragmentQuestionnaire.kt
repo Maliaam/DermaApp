@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Spinner
@@ -53,6 +54,7 @@ class FragmentQuestionnaire : Fragment() {
     private lateinit var addTextView: TextView
     private lateinit var yesNoLayout: LinearLayout
     private lateinit var journalsRV: RecyclerView
+    private lateinit var help: ImageView
     private val recordsList = mutableListOf<JournalRecord>()
     private val questionnaireEndAdapter by lazy { JournalRecordsAdapter(recordsList) }
     private val questionsList = ArrayList<Question>()
@@ -82,6 +84,7 @@ class FragmentQuestionnaire : Fragment() {
         questionnaireProgressBar = view.findViewById(R.id.progressbar_questionnaire)
         journalsRV = view.findViewById(R.id.questionnaireEnd_recyclerview)
         addTextView = view.findViewById(R.id.addAnswers)
+        help = view.findViewById(R.id.help_questionnaire)
     }
 
     private fun setupOnClickListeners() {
@@ -96,9 +99,18 @@ class FragmentQuestionnaire : Fragment() {
                 }
             })
         }
-
-        //backButton.setOnClickListener { goBack() }
-    }
+        help.setOnClickListener {
+            val question = questionsList[currentQuestionNumber]
+            val additionalHelperInfo = question.additionalInfo
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Dodatkowe informacje")
+                    .setMessage(additionalHelperInfo)
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+        }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         recyclerView.apply {
@@ -146,12 +158,14 @@ class FragmentQuestionnaire : Fragment() {
      * Wyświetla pytanie na podstawie jego indeksu w liście pytań.
      * Funkcja aktualizuje widok pytania na ekranie, ustawiając tekst pytania oraz dostosowując typ
      * odpowiedzi (przyciski "tak/nie" lub rozwijane menu) do liczby dostępnych opcji odpowiedzi.
+     * Dodatkowo ustawia element help w zależności, czy to pytanie posiada dodatkowe informacje.
      *
      * @param currentQuestionNumber Indeks pytania w liście `questionsList`, które ma zostać wyświetlone.
      */
     private fun displayQuestion(currentQuestionNumber: Int) {
         val question = questionsList[currentQuestionNumber]
-        Log.d("Survey", question.toString())
+        Log.e("Survey",question.toString())
+        help.visibility = if (question.additionalInfo == null) View.GONE else View.VISIBLE
         currentQuestionId = question.id
         questionText.text = question.question
         adjustAnswerTypeToQuestion(question)
@@ -191,7 +205,6 @@ class FragmentQuestionnaire : Fragment() {
      * @param answer Odpowiedź wybrana przez użytkownika ("tak" lub "nie").
      */
     private fun onAnswerSelected(answer: String) {
-        Log.e("Survey", userAnswers.toString())
         val currentQuestion = questionsList[currentQuestionNumber]
         val surveyItem = SurveyItem(
             question = currentQuestion.question,
@@ -243,13 +256,10 @@ class FragmentQuestionnaire : Fragment() {
                 ) {
                     if (position > 0 && isUserInteracting) {
                         val selectedAnswer = answers[position]
-                        Log.e("Survey", selectedAnswer)
                         val surveyItem = SurveyItem(
                             question = question.question,
                             answer = selectedAnswer
                         )
-                        Log.e("Survey", surveyItem.question + " " + surveyItem.answer)
-                        Log.e("Survey", currentQuestionNumber.toString())
                         userAnswers.add(surveyItem)
                         onAnswerSelected(selectedAnswer)
                     }
