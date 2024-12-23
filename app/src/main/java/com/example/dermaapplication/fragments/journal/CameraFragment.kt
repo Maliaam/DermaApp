@@ -32,7 +32,7 @@ import com.example.dermaapplication.Utilities
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
-class AnalyseFragment : Fragment() {
+class CameraFragment : Fragment() {
     private lateinit var imageCapture: ImageButton
     private lateinit var turnOnFlash: ImageButton
     private lateinit var flipCamera: ImageButton

@@ -90,7 +90,6 @@ dependencies {
     implementation(libs.glide)
 
     // CameraX
-
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
@@ -98,4 +97,9 @@ dependencies {
     implementation(libs.androidx.camera.extensions)
 
     implementation("com.google.guava:guava:33.3.1-android")
+
+    // GoogleMaps
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.places)
 }

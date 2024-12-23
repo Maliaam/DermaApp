@@ -39,7 +39,7 @@ class Utilities {
         /** Instancja klasy DatabaseFetch do wymiany danych z bazą */
         val databaseFetch = DatabaseFetch()
 
-        /** Instancja klasy użytkownika */ //TODO: Przemyśleć jej użyteczność
+        /** Instancja klasy użytkownika */
         val user = User()
 
         /** UID aktualnie zalogowanego użytkownika */

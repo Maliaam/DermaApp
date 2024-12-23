@@ -20,6 +20,7 @@ import com.example.dermaapplication.Utilities
  */
 class LoginFragment : Fragment() {
     private lateinit var loginButton: AppCompatButton
+    private lateinit var loginButtonDoc: AppCompatButton
     private lateinit var loginEmailField: EditText
     private lateinit var loginPasswordField: EditText
     private lateinit var loginResetPassword: TextView
@@ -35,14 +36,15 @@ class LoginFragment : Fragment() {
         loginButton = view.findViewById(R.id.loginButton)
         loginResetPassword = view.findViewById(R.id.login_passwordReset)
         loginRegister = view.findViewById(R.id.login_registerAccount)
+        loginButtonDoc = view.findViewById(R.id.loginButtonDoc)
 
         // Obsługa przycisku umożliwiającego zalogowanie użytkownika do aplikacji
         loginButton.setOnClickListener {
 //            if (loginEmailField.text.isNotEmpty() && loginPasswordField.text.isNotEmpty()) {
 //                val email = loginEmailField.text.toString()
 //                val password = loginPasswordField.text.toString()
-            val email = "wnuk9533@gmail.com"
-            val password = "123456"
+            val email = "admalllllll@gmail.com"
+            val password = "wnuk997"
                 Utilities.user.loginUser(email, password, requireActivity()) { success ->
                     if (success) {
                         (activity as MainActivity).changeNavigationHeader()
@@ -53,10 +55,27 @@ class LoginFragment : Fragment() {
                                 Log.d("LoginStatus", "Zalogowano jako użytkownik")
                             }
                         }
-                        Utilities.getFCMToken()
                     }
                 }
             }
+        loginButtonDoc.setOnClickListener {
+            val email = "wnuk9533@gmail.com"
+            val password = "123456"
+            Utilities.user.loginUser(email, password, requireActivity()) { success ->
+                if (success) {
+                    (activity as MainActivity).changeNavigationHeader()
+                    Utilities.initializeUserStatus { isDoctor ->
+                        if (isDoctor) {
+                            Log.d("LoginStatus", "Zalogowano jako doktor")
+                        } else {
+                            Log.d("LoginStatus", "Zalogowano jako użytkownik")
+                        }
+                    }
+                }
+            }
+        }
+
+
 //        }
 //            } else Toast.makeText(requireContext(),"Dane logowania są puste",Toast.LENGTH_SHORT).show()
 //        }

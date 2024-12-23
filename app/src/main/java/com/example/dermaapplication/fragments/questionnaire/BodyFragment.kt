@@ -56,7 +56,11 @@ class BodyFragment : Fragment() {
         closeInfoButton = view.findViewById(R.id.close_info)
         bodyImage = view.findViewById(R.id.imageView6)
         endButton.setOnClickListener {
-            (activity as MainActivity).replaceFragment(FragmentQuestionnaire())
+            val pinsBundle = exportPins(frontPins, backPins)
+            val fragment = FragmentQuestionnaire().apply {
+                arguments = pinsBundle
+            }
+            (activity as MainActivity).replaceFragment(fragment)
         }
         frontEndButton.setOnClickListener {
             toggleSide()
@@ -122,16 +126,28 @@ class BodyFragment : Fragment() {
      */
     private fun toggleSide() {
         isFrontSide = !isFrontSide
-        if (!isFrontSide){
+        if (!isFrontSide) {
             bodyImage.setColorFilter(
                 ContextCompat.getColor(requireContext(), R.color.light_blue),
-                PorterDuff.Mode.SRC_IN)
-            frontEndButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.medicine))
+                PorterDuff.Mode.SRC_IN
+            )
+            frontEndButton.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.medicine
+                )
+            )
         } else {
             bodyImage.setColorFilter(
                 ContextCompat.getColor(requireContext(), R.color.medicine),
-                PorterDuff.Mode.SRC_IN)
-            frontEndButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_blue))
+                PorterDuff.Mode.SRC_IN
+            )
+            frontEndButton.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.light_blue
+                )
+            )
         }
         clearPins(frameLayoutContainer)
         val pins = if (isFrontSide) frontPins else backPins
@@ -235,10 +251,20 @@ class BodyFragment : Fragment() {
         return removed
     }
 
+    /**
+     * Eksportuje listy pinezek jako listy map z wartościami X i Y, które można przekazać w Bundle.
+     */
     private fun exportPins(
         frontPins: MutableList<Pair<Float, Float>>,
         backPins: MutableList<Pair<Float, Float>>
-    ) {
-        
+    ): Bundle {
+        val bundle = Bundle()
+        val frontPinsAsMap = frontPins.map { mapOf("x" to it.first, "y" to it.second) }
+        val backPinsAsMap = frontPins.map { mapOf("x" to it.first, "y" to it.second) }
+
+        bundle.putSerializable("frontPins", ArrayList(frontPinsAsMap))
+        bundle.putSerializable("backPins", ArrayList(backPinsAsMap))
+
+        return bundle
     }
 }

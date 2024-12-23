@@ -17,6 +17,7 @@ import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.adapters.FeedAdapter
 import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
+import com.example.dermaapplication.fragments.docJournal.JournalDocFragment
 import com.example.dermaapplication.fragments.journal.JournalFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseaseDetailedFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
@@ -58,7 +59,13 @@ class UserFeedFragment : Fragment() {
 //        }
 
         journalCardView.setOnClickListener {
-            replaceFragment(JournalFragment())
+            Utilities.initializeUserStatus { isDoctor ->
+                if (isDoctor) {
+                    replaceFragment(JournalDocFragment())
+                } else {
+                    replaceFragment(JournalFragment())
+                }
+            }
         }
         encyclopediaCardView.setOnClickListener {
             replaceFragment(SkinDiseasesFragment())

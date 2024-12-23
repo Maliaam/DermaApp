@@ -1,5 +1,7 @@
 package com.example.dermaapplication.fragments.journal
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -7,13 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
@@ -30,7 +33,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class RecordFragment : Fragment() {
     private lateinit var recordTitle: TextView
     private lateinit var imagesRecyclerView: RecyclerView
-    private lateinit var notesRecyclerView: RecyclerView
+    private lateinit var shareButton: ImageButton
     private lateinit var notesAdapter: JournalNotesAdapter
     private lateinit var editNotesButton: ImageView
     private lateinit var goToAnalyse: MaterialCardView
@@ -47,6 +50,7 @@ class RecordFragment : Fragment() {
         goToImagesFragment = view.findViewById(R.id.record_images)
         goToRecordSurvey = view.findViewById(R.id.record_survey)
         goToRecordNotes = view.findViewById(R.id.record_notes)
+        shareButton = view.findViewById(R.id.journal_share)
     }
 
     private fun initializeData() {
@@ -83,9 +87,9 @@ class RecordFragment : Fragment() {
             }
         }
         goToAnalyse.setOnClickListener {
-            val analyseFragment = AnalyseFragment()
-            analyseFragment.setTargetFragment(this, REQUEST_CODE)
-            (activity as MainActivity).replaceFragment(AnalyseFragment())
+            val cameraFragment = CameraFragment()
+            cameraFragment.setTargetFragment(this, REQUEST_CODE)
+            (activity as MainActivity).replaceFragment(CameraFragment())
         }
         goToImagesFragment.setOnClickListener {
             if (!record?.imageUrls.isNullOrEmpty()) {
@@ -116,6 +120,32 @@ class RecordFragment : Fragment() {
             val bundle = Bundle().apply {
             }
         }
+        shareButton.setOnClickListener {
+            val uniqueCode = record?.documentId
+
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Udostępnij kod")
+                .setMessage("Kod dostępu dziennika:\n\n" +
+                        "$uniqueCode\n\n" +
+                        "Prześlij ten kod lekarzowi, aby mógł uzyskać dostęp do Twojego dziennika.")
+                .setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setNeutralButton("Kopiuj kod") { _, _ ->
+                    if (uniqueCode != null) {
+                        copyToClipboard(uniqueCode)
+                    }
+                }
+                .show()
+        }
+    }
+
+    private fun copyToClipboard(code: String) {
+        val clipboard = ContextCompat.getSystemService(requireContext(), ClipboardManager::class.java)
+        val clip = ClipData.newPlainText("Generated Code", code)
+        clipboard?.setPrimaryClip(clip)
+        Toast.makeText(requireContext(), "Kod skopiowany do schowka", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupNoteDialog(context: Context, onNoteAdded: (Note) -> Unit) {

@@ -248,23 +248,39 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
 
     private fun refreshMenu() {
         val isUserLoggedIn = FirebaseAuth.getInstance().currentUser != null
-        val chatItemMenu = navigation.menu.findItem(R.id.menu_chat)
 
-        chatItemMenu.isVisible = isUserLoggedIn
+
+        updateNavigationItemVisibility(
+            item = navigation.menu.findItem(R.id.menu_chat),
+            isVisible = isUserLoggedIn
+        )
+        updateNavigationItemVisibility(
+            item = navigation.menu.findItem(R.id.menu_login),
+            isVisible = !isUserLoggedIn
+        )
 
         val bottomChatItemMenu = bottomNavigationView.menu.findItem(R.id.chat)
-        if (!isUserLoggedIn) {
-            bottomChatItemMenu.apply {
-                title = "Specjaliści"
-                setIcon(R.drawable.icon_doctor)
-            }
-        } else {
-            bottomChatItemMenu.apply {
+        updateBottomMenuItem(bottomChatItemMenu, isUserLoggedIn)
+    }
+
+    private fun updateNavigationItemVisibility(item: MenuItem, isVisible: Boolean) {
+        item.isVisible = isVisible
+    }
+
+    private fun updateBottomMenuItem(item: MenuItem, isUserLoggedIn: Boolean) {
+        if (isUserLoggedIn) {
+            item.apply {
                 title = "Wiadomości"
                 setIcon(R.drawable.image_feed_message)
             }
+        } else {
+            item.apply {
+                title = "Specjaliści"
+                setIcon(R.drawable.icon_doctor)
+            }
         }
     }
+
 
     override fun onUserLoggedIn() {
         refreshMenu()

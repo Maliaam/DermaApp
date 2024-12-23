@@ -46,7 +46,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="550dp"
             android:layout_marginTop="-29dp">
 
             <ImageView
@@ -239,7 +239,17 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/button_bg"
-                        android:text="@string/zaloguj"
+                        android:text="zaloguj user"
+                        android:textColor="@color/white" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/loginButtonDoc"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/button_bg"
+                        android:text="zaloguj lekarz"
                         android:textColor="@color/white" />
 
                     <TextView

@@ -28,6 +28,7 @@ import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.fragments.UserFeedFragment
 import com.example.dermaapplication.fragments.journal.adapters.JournalRecordsAdapter
 import com.example.dermaapplication.items.JournalRecord
+import com.example.dermaapplication.items.Pin
 import com.example.dermaapplication.items.Question
 import com.example.dermaapplication.items.Survey
 import com.example.dermaapplication.items.SurveyItem
@@ -328,6 +329,12 @@ class FragmentQuestionnaire : Fragment() {
 
     private fun createSurveyAndSave(documentId: String,surveyTitle: String): Survey {
         val date = Utilities.getCurrentTime("short")
+
+//        val frontPins = (bundle.getSerializable("frontPins") as? List<Pin>) ?: emptyList()
+//        val backPins = (bundle.getSerializable("backPins") as? List<Pin>) ?: emptyList()
+
+
+
 
         val survey = Survey(
             title = surveyTitle,

@@ -11,6 +11,10 @@ import com.example.dermaapplication.items.Question
 import com.example.dermaapplication.items.Survey
 import com.example.dermaapplication.items.SurveyItem
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
 /**
@@ -174,6 +178,102 @@ class DatabaseFetch {
         }
     }
 
+    fun fetchFilteredJournalRecords(journalIDs: List<String>, callback: (List<JournalRecord>) -> Unit) {
+        Utilities.firestore.collection("journals")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val journalRecords = task.result?.documents?.mapNotNull { document ->
+                        try {
+                            val userUID = document.getString("userUID")
+                            val recordTitle = document.getString("recordTitle")
+                            val date = document.getString("date")
+                            val imageUrls = document.get("imageUrls") as MutableList<String>
+
+                            // Przetwarzanie pinów
+                            val frontPins = (document.get("frontPins") as? List<Map<String, Any>>)
+                                ?.mapNotNull { map ->
+                                    val x = (map["x"] as? Number)?.toFloat()
+                                    val y = (map["y"] as? Number)?.toFloat()
+                                    if (x != null && y != null) Pin(x, y) else null
+                                }
+                            val backPins = (document.get("backPins") as? List<Map<String, Any>>)
+                                ?.mapNotNull { map ->
+                                    val x = (map["x"] as? Number)?.toFloat()
+                                    val y = (map["y"] as? Number)?.toFloat()
+                                    if (x != null && y != null) Pin(x, y) else null
+                                }
+
+                            // Przetwarzanie odpowiedzi z ankiety
+                            val surveysMap = document.get("surveyResponses") as? List<Map<String, Any>>
+                            val surveys = surveysMap?.mapNotNull { surveyMap ->
+                                val title = surveyMap["title"] as? String
+                                val surveyDate = surveyMap["date"] as? String
+                                val questions = surveyMap["questions"] as? List<Map<String, Any>>
+
+                                val items = questions?.map { questionMap ->
+                                    SurveyItem(
+                                        question = questionMap["question"] as? String ?: "",
+                                        answer = questionMap["answer"] as? String ?: ""
+                                    )
+                                } ?: emptyList()
+
+                                Survey(
+                                    title = title ?: "Brak tytułu",
+                                    date = surveyDate ?: "Brak daty",
+                                    items = items
+                                )
+                            }
+
+                            // Dodatkowe notatki
+                            val additionalNotes = (document.get("additionalNotes") as? List<Map<String, String>>)
+                                ?.mapNotNull { map ->
+                                    val date = map["date"]
+                                    val content = map["content"]
+                                    if (date != null && content != null)
+                                        Note(date, content) else null
+                                }
+
+                            // Tworzenie obiektu JournalRecord
+                            JournalRecord(
+                                userUID = userUID ?: "Użytkownik niezalogowany",
+                                recordTitle = recordTitle ?: "Brak tytułu",
+                                date = date ?: "Brak daty",
+                                imageUrls = imageUrls,
+                                frontPins = frontPins,
+                                backPins = backPins,
+                                surveyResponses = surveys,
+                                additionalNotes = additionalNotes,
+                                documentId = document.id
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            null
+                        }
+                    } ?: listOf()
+
+                    // Filtruj dzienniki na podstawie journalIDs lekarza
+                    val filteredRecords = journalRecords.filter { record ->
+                        journalIDs.contains(record.documentId)
+                    }
+
+                    // Logowanie znalezionych dzienników
+                    Log.d("FilteredJournalRecords", "Znalezione dzienniki po filtrze: ${filteredRecords.size}")
+                    filteredRecords.forEach { record ->
+                        Log.d(
+                            "FilteredJournalRecords",
+                            "Dziennik: ${record.recordTitle}, Data: ${record.date}"
+                        )
+                    }
+
+                    callback(filteredRecords)
+                } else {
+                    callback(listOf())
+                }
+            }
+    }
+
+
     fun fetchJournalRecords(callback: (List<JournalRecord>) -> Unit) {
         Utilities.firestore.collection("journals")
             .whereEqualTo("userUID", Utilities.getCurrentUserUid())
@@ -267,7 +367,6 @@ class DatabaseFetch {
             }
     }
 
-
     fun addJournalRecordToDatabase(
         record: JournalRecord,
         onSuccess: (String) -> Unit,
@@ -319,6 +418,7 @@ class DatabaseFetch {
                 onFailure(exception)
             }
     }
+
 
     fun updateJournalSurveys(
         documentId: String,
@@ -399,6 +499,70 @@ class DatabaseFetch {
                         .addOnSuccessListener { onSuccess() }
                         .addOnFailureListener { exception -> onFailure(exception) }
                 }
+            }
+        }
+    }
+
+    /**
+     * Wyszukuje dokument użytkownika w kolekcji "users" na podstawie pola "uid".
+     *
+     * @param userUid Unikalny identyfikator użytkownika (UID), na podstawie którego znajduje
+     *                dokument.
+     * @param callback Funkcja zwrotna, która zwraca znaleziony dokument ('DocumentSnapshot'), lub
+     *                 'null', jeśli dokument nie został znaleziony.
+     */
+    private fun findUserDocument(userUid: String,callback: (DocumentSnapshot?) -> Unit ){
+        val usersCollection = FirebaseFirestore.getInstance().collection("users")
+        usersCollection.whereEqualTo("uid",userUid).get()
+            .addOnSuccessListener { query ->
+                if(!query.isEmpty) callback(query.documents[0])
+                else callback(null)
+            }
+    }
+
+    /**
+     * Przesyła zdjęcie profilowe użytkownika do FirebaseStorage, a następnie zapisuje jego URL w
+     * FirebaseFirestore.
+     *
+     * @param uri URI pliku zdjęcia, które ma zostać przesłane do bazy danych.
+     */
+    fun uploadUserProfilePhoto(uri: Uri){
+        val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val storageReference =  FirebaseStorage.getInstance().reference.child(
+            "users/$userUid/profileImage/profileImage.jpg"
+        )
+        val uploadTask = storageReference.putFile(uri)
+        uploadTask.addOnSuccessListener {
+            storageReference.downloadUrl.addOnSuccessListener { downloadedUrl ->
+                saveImageUrlToFirestore(downloadedUrl.toString())
+            }
+        }
+    }
+
+    /**
+     * Zapisuje URL zdjęcia profilowego użytkownika w dokumencie użytkownika w FirebaseFirestore.
+     *
+     * @param imageUrl URL zdjęcia profilowego, który ma zostać zapisany.
+     */
+    fun saveImageUrlToFirestore(imageUrl: String){
+        findUserDocument(Utilities.getCurrentUserUid()) { document ->
+            document?.reference?.update("profileImageUrl",imageUrl)
+        }
+    }
+
+    /**
+     * Pobiera URL zdjęcia profilowego użytkownika z Firestore i zwraca go za pomocą funkcji callback.
+     *
+     * @param callback Funkcja zwrotna, która zwraca URL zdjęcia profilowego jako 'String' lub
+     *                 'null', jeśli zdjęcie nie zostało odnalezione.
+     */
+    fun loadUserProfileImage(callback: (String?) -> Unit){
+        findUserDocument(Utilities.getCurrentUserUid()) { document ->
+            if(document != null){
+                val imageUrl = document.getString("profileImageUrl")
+                callback(imageUrl)
+            } else {
+                callback(null)
             }
         }
     }

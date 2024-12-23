@@ -10,9 +10,3 @@ data class SurveyItem(
     val question: String,
     val answer: String
 )
-
-data class Survey(
-    val title: String,
-    val date: String,
-    val items: List<SurveyItem>
-)

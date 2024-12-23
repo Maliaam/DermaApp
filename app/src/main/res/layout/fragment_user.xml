@@ -29,6 +29,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/white" />
 
+
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView3"
                     android:layout_width="64dp"
@@ -41,6 +43,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/userFeed_profileImage"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:contentDescription="@string/user_profile_image"
@@ -85,6 +88,27 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView2" />
+                <com.google.android.material.card.MaterialCardView
+                    app:strokeColor="@color/medicine"
+                    app:cardElevation="5dp"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_marginEnd="-5dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:cardBackgroundColor="#d5d6d8"
+                    android:layout_gravity="end|bottom"
+                    app:cardCornerRadius="30dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardView3"
+                    app:layout_constraintEnd_toEndOf="@+id/cardView3">
+                    <ImageButton
+                        android:tint="@color/medicine"
+                        android:layout_gravity="center"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitXY"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_edit"/>
+                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
