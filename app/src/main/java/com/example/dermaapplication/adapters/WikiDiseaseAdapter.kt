@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dermaapplication.R
 import com.example.dermaapplication.items.Disease
+import com.google.android.material.imageview.ShapeableImageView
 
 /**
  * Adapter odpowiedzialny za wyświetlanie listy chorób za pomocą RecyclerView.
@@ -32,7 +33,7 @@ class WikiDiseaseAdapter(var diseasesList: List<Disease>) :
      * @property diseaseDescription TextView reprezentujący opis choroby.
      */
     inner class WikiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val diseaseImage: ImageView = itemView.findViewById(R.id.wiki_skinMenu_diseaseImageRv)
+        val diseaseImage: ShapeableImageView = itemView.findViewById(R.id.wiki_skinMenu_diseaseImageRv)
         val diseaseName: TextView = itemView.findViewById(R.id.wiki_skinMenu_diseaseNameRv)
         val diseaseDescription: TextView =
             itemView.findViewById(R.id.wiki_skinMenu_diseaseDescriptionRv)

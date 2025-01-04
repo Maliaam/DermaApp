@@ -9,9 +9,7 @@
         android:id="@+id/note_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wpisz notatkę"
-        android:inputType="textMultiLine"
-        android:lines="5"
-        android:maxLines="5"
+        android:lines="1"
+        android:maxLines="1"
         android:gravity="top|start"/>
 </LinearLayout>

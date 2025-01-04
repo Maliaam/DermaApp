@@ -26,5 +26,7 @@ data class JournalRecord(
     val backPins: List<Pin>? = null,
     val surveyResponses: List<Survey>? = null,
     var additionalNotes: List<Note>? = null,
-    var documentId: String?
+    var documentId: String?,
+    val doctorName: String? = null,
+    val doctorUid: String? = null
 ) : Serializable

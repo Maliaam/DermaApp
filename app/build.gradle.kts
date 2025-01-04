@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlinx.kover") version "0.9.0"
 }
 
 android {
@@ -52,11 +53,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions{
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -70,13 +74,14 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragment.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     //Firebase
     implementation(platform(libs.firebase.bom))
@@ -98,8 +103,7 @@ dependencies {
 
     implementation("com.google.guava:guava:33.3.1-android")
 
-    // GoogleMaps
-    implementation(libs.play.services.maps)
-    implementation(libs.play.services.location)
-    implementation(libs.places)
+    // TEsting
+
+
 }

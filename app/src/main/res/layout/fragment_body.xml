@@ -31,6 +31,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+
             <LinearLayout
                 android:id="@+id/linearLayout5"
                 android:layout_width="match_parent"
@@ -41,40 +42,34 @@
 
                 <TextView
                     android:id="@+id/textView4"
-                    android:layout_width="290dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:fontFamily="@font/playfairdisplayregular"
                     android:text="Zaznacz na obrazie gdzie występują zmiany skórne"
                     android:textSize="18sp" />
 
-                <ImageView
-                    android:id="@+id/help_body"
-                    android:layout_width="32dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/icon_question"
-                    app:tint="@color/medicine" />
             </LinearLayout>
-
             <FrameLayout
                 android:id="@+id/frameLayoutContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="190dp"
+                android:layout_height="380dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                 <ImageView
                     android:id="@+id/imageView6"
-                    android:layout_width="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_gravity="center"
                     android:layout_height="380dp"
-                    android:src="@drawable/body_positive1"
+                    android:src="@drawable/front_body"
                     app:tint="@color/medicine" />
             </FrameLayout>
 
             <LinearLayout
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:backgroundTint="@color/light_blue"
+                    android:backgroundTint="@color/medicine"
                     android:text="TYŁ"
                     android:textColor="@color/white"
                     app:cornerRadius="5dp" />
@@ -101,36 +96,17 @@
                     android:textColor="@color/white"
                     app:cornerRadius="5dp" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/help_body"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/icon_question"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+                app:tint="@color/medicine" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <androidx.cardview.widget.CardView
-        android:visibility="gone"
-        android:id="@+id/help_description"
-        android:layout_width="wrap_content"
-        android:layout_height="120dp"
-        android:layout_margin="20dp"
-        app:cardElevation="10dp"
-        app:cardCornerRadius="15dp"
-        android:background="@color/CardViewFeedColor">
-
-        <TextView
-            android:fontFamily="@font/playfairdisplayregular"
-            android:justificationMode="inter_word"
-            android:textStyle="bold"
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/help_body"
-            android:textSize="16sp" />
-        <ImageView
-            android:id="@+id/close_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:padding="5dp"
-            android:src="@drawable/icon_close"
-            app:tint="@color/medicine" />
-    </androidx.cardview.widget.CardView>
-
 </FrameLayout>

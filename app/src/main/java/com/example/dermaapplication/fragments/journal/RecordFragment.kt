@@ -2,15 +2,13 @@ package com.example.dermaapplication.fragments.journal
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -18,44 +16,57 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.fragments.journal.adapters.JournalImagesAdapter
-import com.example.dermaapplication.fragments.journal.adapters.JournalNotesAdapter
+import com.example.dermaapplication.fragments.journal.adapters.NotesAdapter
+import com.example.dermaapplication.fragments.journal.notes.NotesFragment
 import com.example.dermaapplication.fragments.journal.surveys.SurveyListFragment
 import com.example.dermaapplication.items.JournalRecord
-import com.example.dermaapplication.items.Note
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
+@Suppress("DEPRECATION")
 class RecordFragment : Fragment() {
     private lateinit var recordTitle: TextView
     private lateinit var imagesRecyclerView: RecyclerView
     private lateinit var shareButton: ImageButton
-    private lateinit var notesAdapter: JournalNotesAdapter
     private lateinit var editNotesButton: ImageView
-    private lateinit var goToAnalyse: MaterialCardView
+    private lateinit var goToCamera: MaterialCardView
     private lateinit var goToImagesFragment: CardView
     private lateinit var goToRecordSurvey: CardView
     private lateinit var goToRecordNotes: CardView
+    private lateinit var doctorName: TextView
+    private lateinit var doctorInfoLayout: LinearLayout
+    private lateinit var doctorInfoLayoutEmpty: LinearLayout
+    private lateinit var doctorImage: ImageView
+    private var doctorFullName: String? = null
     private var record: JournalRecord? = null
+    private var doctorUid: String? = null
 
     private fun initializeViews(view: View) {
+        doctorImage = view.findViewById(R.id.doctor_image)
         recordTitle = view.findViewById(R.id.record_title)
         imagesRecyclerView = view.findViewById(R.id.record_images_recyclerview)
         editNotesButton = view.findViewById(R.id.record_edit_notes)
-        goToAnalyse = view.findViewById(R.id.rightBottomLayout)
+        goToCamera = view.findViewById(R.id.rightBottomLayout)
         goToImagesFragment = view.findViewById(R.id.record_images)
         goToRecordSurvey = view.findViewById(R.id.record_survey)
         goToRecordNotes = view.findViewById(R.id.record_notes)
         shareButton = view.findViewById(R.id.journal_share)
+        doctorName = view.findViewById(R.id.journal_doctor_name)
+        doctorInfoLayout = view.findViewById(R.id.doctor_info_layout)
+        doctorInfoLayoutEmpty = view.findViewById(R.id.doctor_info_layout_empty)
     }
 
     private fun initializeData() {
         record = arguments?.getSerializable("record") as? JournalRecord
         recordTitle.text = record?.recordTitle
+        doctorFullName = record?.doctorName
+        doctorUid = record?.doctorUid
     }
 
     private fun setupImagesRecyclerView() {
@@ -66,27 +77,30 @@ class RecordFragment : Fragment() {
         }
     }
 
-
-    private fun setupOnClickListeners() {
-        editNotesButton.setOnClickListener {
-            setupNoteDialog(requireContext()) { newNote ->
-                val updatedNotes = record?.additionalNotes?.toMutableList() ?: mutableListOf()
-                updatedNotes.add(newNote)
-                record?.additionalNotes = updatedNotes
-
-                record?.documentId?.let { documentId ->
-                    Utilities.databaseFetch.updateJournalRecordNote(documentId, updatedNotes,
-                        onSuccess = {
-                            Log.d("Firestore", "Notatki zaktualizowane pomyślnie")
-                            notesAdapter.updateNotes(updatedNotes)
-                        },
-                        onFailure = { exception ->
-                            Log.e("Firestore", "Błąd podczas aktualizacji notatek", exception)
-                        })
+    private fun setupDoctorInfo() {
+        if (doctorFullName != null) {
+            doctorName.text = doctorFullName
+            doctorUid?.let { uid ->
+                Utilities.databaseFetch.fetchUserProfileImageUrlByUid(uid) { imageUrl ->
+                    if (!imageUrl.isNullOrEmpty()) {
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.man)
+                            .error(R.drawable.man)
+                            .into(doctorImage)
+                    }
                 }
             }
+            doctorInfoLayout.visibility = View.VISIBLE
+        } else {
+            doctorInfoLayout.visibility = View.GONE
+            doctorInfoLayoutEmpty.visibility = View.VISIBLE
         }
-        goToAnalyse.setOnClickListener {
+    }
+
+
+    private fun setupOnClickListeners() {
+        goToCamera.setOnClickListener {
             val cameraFragment = CameraFragment()
             cameraFragment.setTargetFragment(this, REQUEST_CODE)
             (activity as MainActivity).replaceFragment(CameraFragment())
@@ -112,18 +126,14 @@ class RecordFragment : Fragment() {
             val bundle = Bundle().apply {
                 putSerializable("surveyResponses",ArrayList(surveyResponses))
                 putString("documentId",record?.documentId)
+                putSerializable("frontPins",ArrayList(record?.frontPins ?: emptyList()))
+                putSerializable("backPins",ArrayList(record?.backPins ?: emptyList()))
             }
             surveyListFragment.arguments = bundle
             (activity as MainActivity).replaceFragment(surveyListFragment)
         }
-        goToRecordNotes.setOnClickListener {
-            val bundle = Bundle().apply {
-            }
-        }
         shareButton.setOnClickListener {
             val uniqueCode = record?.documentId
-
-
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Udostępnij kod")
                 .setMessage("Kod dostępu dziennika:\n\n" +
@@ -139,6 +149,15 @@ class RecordFragment : Fragment() {
                 }
                 .show()
         }
+        goToRecordNotes.setOnClickListener {
+            val notesFragment = NotesFragment()
+            val bundle = Bundle().apply {
+                putSerializable("record", arguments?.getSerializable("record"))
+            }
+            notesFragment.arguments = bundle
+            (activity as MainActivity).replaceFragment(notesFragment)
+
+        }
     }
 
     private fun copyToClipboard(code: String) {
@@ -148,30 +167,6 @@ class RecordFragment : Fragment() {
         Toast.makeText(requireContext(), "Kod skopiowany do schowka", Toast.LENGTH_SHORT).show()
     }
 
-    private fun setupNoteDialog(context: Context, onNoteAdded: (Note) -> Unit) {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_dialog, null)
-        val noteEditText = dialogView.findViewById<EditText>(R.id.note_edit_text)
-
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Dodaj notatkę")
-            .setView(dialogView)
-            .setCancelable(true)
-            .setPositiveButton("Zapisz") { dialog, _ ->
-                val noteDate = Utilities.getCurrentTime("short")
-                val noteContent = noteEditText.text.toString()
-                if (noteContent.isNotEmpty()) {
-                    val newNote = Note(noteDate, noteContent)
-                    onNoteAdded(newNote)
-                    dialog.dismiss()
-                } else {
-                    Toast.makeText(context, "Notatka nie może być pusta", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNegativeButton("Anuluj") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -183,6 +178,7 @@ class RecordFragment : Fragment() {
         initializeData()
         setupImagesRecyclerView()
         setupOnClickListeners()
+        setupDoctorInfo()
         return view
     }
 

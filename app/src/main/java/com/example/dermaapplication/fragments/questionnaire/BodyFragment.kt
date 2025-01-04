@@ -5,10 +5,13 @@ import android.graphics.Matrix
 import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
@@ -17,7 +20,10 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
+import com.example.dermaapplication.Utilities
+import com.example.dermaapplication.items.Pin
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.math.abs
 
 /**
@@ -30,31 +36,26 @@ class BodyFragment : Fragment() {
     private lateinit var frontEndButton: MaterialButton
     private lateinit var frameLayoutContainer: FrameLayout
     private lateinit var helpButton: ImageView
-    private lateinit var closeInfoButton: ImageView
-    private lateinit var info: CardView
     private lateinit var bodyImage: ImageView
 
     /** Lista pinezek dla widoku z przodu */
-    private val frontPins = mutableListOf<Pair<Float, Float>>()
+    private val frontPins = mutableListOf<Pin>()
 
     /** Lista pinezek dla widoku z tyłu */
-    private val backPins = mutableListOf<Pair<Float, Float>>()
+    private val backPins = mutableListOf<Pin>()
 
     /** Flaga wskazująca, która strona (przód/tył) jest aktywna */
     private var isFrontSide = true
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_body, container, false)
+    private fun initializeViews(view: View) {
         endButton = view.findViewById(R.id.buttonEnd)
         frontEndButton = view.findViewById(R.id.buttonFrontBack)
         frameLayoutContainer = view.findViewById(R.id.frameLayoutContainer)
         helpButton = view.findViewById(R.id.help_body)
-        info = view.findViewById(R.id.help_description)
-        closeInfoButton = view.findViewById(R.id.close_info)
         bodyImage = view.findViewById(R.id.imageView6)
+    }
+
+    private fun setupOnClickListeners() {
         endButton.setOnClickListener {
             val pinsBundle = exportPins(frontPins, backPins)
             val fragment = FragmentQuestionnaire().apply {
@@ -65,59 +66,80 @@ class BodyFragment : Fragment() {
         frontEndButton.setOnClickListener {
             toggleSide()
         }
-        frontEndButton.text = if (isFrontSide) "TYŁ" else "PRZÓD"
         helpButton.setOnClickListener {
-            info.visibility = View.VISIBLE
+            Utilities.infoDialogBuilder(
+                requireContext(),
+                "Dodatkowe informacje",
+                resources.getString(R.string.help_body),
+                "OK"
+            )
         }
-        closeInfoButton.setOnClickListener {
-            info.visibility = View.GONE
-        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_body, container, false)
+        initializeViews(view)
+        setupOnClickListeners()
+        frontEndButton.text = if (isFrontSide) "TYŁ" else "PRZÓD"
+
         frameLayoutContainer.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                val imageView = frameLayoutContainer.findViewById<ImageView>(R.id.imageView6)
-                val imageBounds = getImageBounds(imageView)
-                if (removePinIfClicked(frameLayoutContainer, event.x, event.y, 0.05f)) {
+                if (removePinIfClicked(frameLayoutContainer, event.x, event.y, 20f)) {
+                    Log.d("PinDebug", "Pin removed at x: ${event.x}, y: ${event.y}")
                     return@setOnTouchListener true
                 }
-                if (imageBounds.contains(event.x, event.y)) {
-                    val relativeX = (event.x - imageBounds.left) / imageBounds.width()
-                    val relativeY = (event.y - imageBounds.top) / imageBounds.height()
-                    val absoluteX = relativeX * imageBounds.width() + imageBounds.left
-                    val absoluteY = relativeY * imageBounds.height() + imageBounds.top
-                    addPin(frameLayoutContainer, absoluteX, absoluteY)
-                    if (isFrontSide) {
-                        frontPins.add(Pair(relativeX, relativeY))
-                    } else {
-                        backPins.add(Pair(relativeX, relativeY))
-                    }
-                }
-                true
-            } else {
-                false
+                addPin(frameLayoutContainer, event.x, event.y)
+                Log.d("PinDebug", "Pin added at x: ${event.x}, y: ${event.y}")
+                return@setOnTouchListener true
             }
+            false
         }
+
         return view
     }
 
     /**
-     * Dodaje nową pinezkę w określonym punkcie na obrazie. Pinezka jest reprezentowana przez mały,
-     * czerwony punkt, który jest umieszczany na widoku człowieka. Jest to punkt orientacyjny,
-     * wskazujący miejsce, w którym użytkownik zaznaczył coś na obrazie.
+     * Dodaje nową pinezkę w określonym punkcie na obrazie. Pinezka jest reprezentowana przez
+     * czerwony punkt (ImageView), który jest umieszczany na widoku człowieka.
      *
      * @param container Kontener, do którego pinezka zostanie dodana.
      * @param x Współrzędna X, gdzie ma zostać umieszczona pinezka.
      * @param y Współrzędna Y, gdzie ma zostać umieszczona pinezka.
      */
     private fun addPin(container: FrameLayout, x: Float, y: Float) {
-        val pin = View(requireContext()).apply {
+        val pin = ImageView(requireContext()).apply {
             layoutParams = FrameLayout.LayoutParams(60, 60).apply {
-                setMargins(x.toInt() - 10, y.toInt() - 10, 0, 0)
+                setMargins(x.toInt() - 30, y.toInt() - 45, 0, 0)
             }
-            setBackgroundResource(R.drawable.ic_pin)
+            setImageResource(R.drawable.pin_image)
+            scaleType = ImageView.ScaleType.CENTER_INSIDE
             tag = "pin"
         }
+
+        val scaleAnimation = ScaleAnimation(
+            0f, 1f,
+            0f, 1f,
+            Animation.RELATIVE_TO_SELF, 0.5f,
+            Animation.RELATIVE_TO_SELF, 0.5f
+        ).apply {
+            duration = 300
+            fillAfter = true
+        }
+
         container.addView(pin)
+        pin.startAnimation(scaleAnimation)
+
+        val pinObject = Pin(x, y)
+        if (isFrontSide) {
+            frontPins.add(pinObject)
+        } else {
+            backPins.add(pinObject)
+        }
     }
+
 
     /**
      * Funkcja przełącza między stronami "przód" i "tył" i aktualizuje widoczność pinezek.
@@ -126,40 +148,19 @@ class BodyFragment : Fragment() {
      */
     private fun toggleSide() {
         isFrontSide = !isFrontSide
-        if (!isFrontSide) {
-            bodyImage.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.light_blue),
-                PorterDuff.Mode.SRC_IN
-            )
-            frontEndButton.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.medicine
-                )
-            )
-        } else {
-            bodyImage.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.medicine),
-                PorterDuff.Mode.SRC_IN
-            )
-            frontEndButton.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.light_blue
-                )
-            )
-        }
+        bodyImage.setImageResource(if (isFrontSide) R.drawable.front_body else R.drawable.back_body)
         clearPins(frameLayoutContainer)
-        val pins = if (isFrontSide) frontPins else backPins
-        val imageView = frameLayoutContainer.findViewById<ImageView>(R.id.imageView6)
-        val imageBounds = getImageBounds(imageView)
-        pins.forEach { (relativeX, relativeY) ->
-            val absoluteX = relativeX * imageBounds.width() + imageBounds.left
-            val absoluteY = relativeY * imageBounds.height() + imageBounds.top
-            addPin(frameLayoutContainer, absoluteX, absoluteY)
+
+        val pinList = if (isFrontSide) frontPins else backPins
+        val pinsCopy = ArrayList(pinList)
+        pinsCopy.forEach { pin ->
+            addPin(frameLayoutContainer, pin.x, pin.y)
         }
+
+
         frontEndButton.text = if (isFrontSide) "TYŁ" else "PRZÓD"
     }
+
 
     /**
      * Usuwa wszystkie pinezki z widoku, aby przygotować przestrzeń dla nowych pinezek po
@@ -217,8 +218,9 @@ class BodyFragment : Fragment() {
         marginError: Float
     ): Boolean {
         var removed = false
-        val iterator = container.children.iterator()
+        val pinList = if (isFrontSide) frontPins else backPins
 
+        val iterator = container.children.iterator()
         while (iterator.hasNext()) {
             val view = iterator.next()
             if (view.tag == "pin") {
@@ -226,23 +228,13 @@ class BodyFragment : Fragment() {
                     view.x, view.y, view.x + view.width,
                     view.y + view.height
                 )
-
-
+                // Sprawdzamy, czy kliknięcie jest w granicach pinezki
                 if (pinBounds.contains(coordinateX, coordinateY)) {
                     container.removeView(view)
                     removed = true
-
-                    val imageView = container.findViewById<ImageView>(R.id.imageView6)
-                    val imageBounds = getImageBounds(imageView)
-                    if (imageBounds.contains(coordinateX, coordinateY)) {
-                        val relativeX = (coordinateX - imageBounds.left) / imageBounds.width()
-                        val relativeY = (coordinateY - imageBounds.top) / imageBounds.height()
-
-                        val pinList = if (isFrontSide) frontPins else backPins
-
-                        pinList.removeIf { (x, y) ->
-                            abs(x - relativeX) < marginError && abs(y - relativeY) < marginError
-                        }
+                    // Usuwamy z listy `Pin`
+                    pinList.removeIf { pin ->
+                        abs(pin.x - coordinateX) <= marginError && abs(pin.y - coordinateY) <= marginError
                     }
                     break
                 }
@@ -250,17 +242,25 @@ class BodyFragment : Fragment() {
         }
         return removed
     }
+    private fun normalizeCoordinates(x: Float, y:Float,imageView: ImageView): Pair<Float,Float>{
+        val bounds = getImageBounds(imageView)
+        val normalizedX = (x - bounds.left) / bounds.width()
+        val normalizedY = (y - bounds.top) / bounds.height()
+        return Pair(normalizedX,normalizedY)
+    }
+
 
     /**
-     * Eksportuje listy pinezek jako listy map z wartościami X i Y, które można przekazać w Bundle.
+     * Eksportuje listy pinezek jako listy map z wartościami X i Y, które przekazywane są do bundle.
+     * @return bundle zawierający listy map.
      */
     private fun exportPins(
-        frontPins: MutableList<Pair<Float, Float>>,
-        backPins: MutableList<Pair<Float, Float>>
+        frontPins: MutableList<Pin>,
+        backPins: MutableList<Pin>
     ): Bundle {
         val bundle = Bundle()
-        val frontPinsAsMap = frontPins.map { mapOf("x" to it.first, "y" to it.second) }
-        val backPinsAsMap = frontPins.map { mapOf("x" to it.first, "y" to it.second) }
+        val frontPinsAsMap = frontPins.map { mapOf("x" to it.x, "y" to it.y) }
+        val backPinsAsMap = backPins.map { mapOf("x" to it.x, "y" to it.y) }
 
         bundle.putSerializable("frontPins", ArrayList(frontPinsAsMap))
         bundle.putSerializable("backPins", ArrayList(backPinsAsMap))

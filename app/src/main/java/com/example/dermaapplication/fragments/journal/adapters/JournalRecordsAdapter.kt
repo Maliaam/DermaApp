@@ -1,5 +1,6 @@
 package com.example.dermaapplication.fragments.journal.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.R
+import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.JournalRecord
 
 /**
@@ -49,11 +51,15 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
                     onItemClick?.invoke(journalRecords[adapterPosition])
                 }
             }
+
             deleteIcon.setOnClickListener {
-                onDeleteClick?.invoke(journalRecords[adapterPosition])
+                if (isDeleteMode) {
+                    onDeleteClick?.invoke(journalRecords[adapterPosition])
+                }
             }
         }
     }
+
 
     /**
      * Ustawia listę przefiltrowanych wpisów dziennika w adapterze.
@@ -89,6 +95,11 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
         val record = journalRecords[position]
         holder.journalRecord.text = record.recordTitle
         holder.dateText.text = record.date
+        if(Utilities.getCurrentUserUid() != record.userUID){
+            holder.dateText.text = Utilities.databaseFetch.findNameAndSurnameByUid(record.userUID){ name, surname ->
+                holder.dateText.text = "$name $surname"
+            }.toString()
+        }
 
         if (isDeleteMode) {
             holder.deleteIcon.setImageResource(R.drawable.icon_recyclebin)
@@ -99,3 +110,4 @@ class JournalRecordsAdapter(private var journalRecords: List<JournalRecord>) :
         }
     }
 }
+

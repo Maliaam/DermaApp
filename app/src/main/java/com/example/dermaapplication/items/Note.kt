@@ -7,7 +7,6 @@ package com.example.dermaapplication.items
  * @param content treść notatki.
  */
 data class Note(
-    // Data notatki jest ważna, bo użytkownik może zobaczyć w który dzień np. występował świąd
     val date: String,
     val content: String
 )

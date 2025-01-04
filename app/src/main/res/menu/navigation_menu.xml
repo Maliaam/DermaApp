@@ -31,7 +31,15 @@
         android:icon="@drawable/checklist"
         android:title="@string/menu_questionaire" />
     <item
-        android:id="@+id/menu_specialists"
-        android:icon="@drawable/doctor"
-        android:title="@string/menu_specialists" />
+        android:id="@+id/dziennik"
+        android:icon="@drawable/book"
+        android:title="Dziennik"/>
+    <item
+        android:id="@+id/attribution"
+        android:icon="@drawable/ic_creative_commons"
+        android:title="Źródła grafik"/>
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Wyloguj się"/>
 </menu>

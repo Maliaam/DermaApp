@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="80dp"
-    android:background="@color/white">
+    android:background="#FEF7FF"
+    android:backgroundTint="#FEF7FF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,8 +20,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -63,13 +63,22 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/imageCarousel"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="250dp"
                     android:clipToPadding="false"
-                    android:paddingStart="32dp"
-                    android:paddingEnd="32dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/image_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1/3"
+                    android:padding="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageCarousel"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
                     android:id="@+id/leftArrow"
@@ -85,9 +94,9 @@
 
                 <ImageView
                     android:id="@+id/rightArrow"
-                    android:layout_marginEnd="10dp"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_right_arrow"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="@id/imageCarousel"
@@ -95,118 +104,130 @@
                     app:layout_constraintTop_toTopOf="@id/imageCarousel"
                     app:tint="@color/white" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/white"
-                    app:layout_constraintBottom_toTopOf="@+id/textView3" />
 
-                <TextView
-                    android:layout_marginTop="20dp"
-                    android:id="@+id/textView3"
+                <com.google.android.material.card.MaterialCardView
+                    app:strokeColor="@android:color/transparent"
+                    android:id="@+id/materialCardView2"
                     android:layout_width="match_parent"
+                    app:cardCornerRadius="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:fontFamily="@font/playfairdisplayregular"
-                    android:textStyle="bold"
-                    android:layout_marginStart="8dp"
-                    android:textSize="22sp"
-                    android:textColor="#B388FF"
-                    android:text="Opis schorzenia"
-                    app:layout_constraintTop_toBottomOf="@+id/imageCarousel" />
-
-                <TextView
-                    android:id="@+id/wiki_detailed_diseaseDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/playfairdisplayregular"
-                    android:lineSpacingExtra="4dp"
-                    android:justificationMode="inter_word"
-                    android:padding="8dp"
-                    android:text="Opis schorzenia skórnego "
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageCarousel">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:fontFamily="@font/playfairdisplayregular"
+                            android:text="Opis schorzenia"
+                            android:textColor="@color/darkUI"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="14dp"
+                            android:layout_marginBottom="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+
+                                <TextView
+                                    android:id="@+id/wiki_detailed_diseaseDescription"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/playfairdisplayregular"
+                                    android:justificationMode="inter_word"
+                                    android:lineSpacingExtra="4dp"
+                                    android:padding="8dp"
+                                    android:text="Opis schorzenia skórnego "
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:id="@+id/characteristicsSection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:orientation="vertical"
-                    android:padding="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/wiki_detailed_diseaseDescription">
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
 
-                    <View
+                    <com.google.android.material.card.MaterialCardView
+                        app:strokeColor="@android:color/transparent"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/white"/>
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Symptomy"
-                        android:fontFamily="@font/playfairdisplayregular"
-                        android:textColor="#BB86FC"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/symptomsRecyclerView"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        app:cardCornerRadius="0dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+
+                            <TextView
+                                android:layout_marginTop="10dp"
+                                android:layout_marginStart="20dp"
+                                android:id="@+id/textView6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/playfairdisplayregular"
+                                android:elevation="10dp"
+                                android:text="Symptomy"
+                                android:textColor="@color/darkUI"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginEnd="14dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/symptomsRecyclerView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="18dp"
+                                    android:layout_marginEnd="18dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent" />
+
+                            </com.google.android.material.card.MaterialCardView>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/doctorsText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Doktorzy"
-                    android:textColor="#BB86FC"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/characteristicsSection" />
-
-                <LinearLayout
-                    android:id="@+id/doctorsSection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/doctorsText">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@drawable/circle_background"
-                        android:src="@drawable/man" />
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@drawable/circle_background"
-                        android:src="@drawable/man" />
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@drawable/circle_background"
-                        android:src="@drawable/man" />
-                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </LinearLayout>

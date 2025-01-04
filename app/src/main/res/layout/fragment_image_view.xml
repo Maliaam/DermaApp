@@ -113,7 +113,43 @@
             app:tint="@color/white" />
     </LinearLayout>
 
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/thirdLinear"
+        android:layout_marginTop="10dp"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_below="@id/secondLinear"
+        android:layout_marginEnd="15dp"
+        android:layout_alignParentEnd="true">
+
+        <!-- TextView for skin change -->
+        <TextView
+            android:id="@+id/text_zoom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Powiększ zdjęcie"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:gravity="start" /> <!-- Ensure text starts from the left -->
+
+        <!-- ImageButton for skin change -->
+        <ImageButton
+            android:id="@+id/zoom_symbol"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_search"
+            android:scaleType="fitXY"
+            app:tint="@color/white" />
+    </LinearLayout>
     <ImageButton
+        android:visibility="gone"
         android:id="@+id/undo_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -126,6 +162,7 @@
         app:tint="@color/white" />
 
     <com.google.android.material.button.MaterialButton
+        android:visibility="gone"
         android:id="@+id/end_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

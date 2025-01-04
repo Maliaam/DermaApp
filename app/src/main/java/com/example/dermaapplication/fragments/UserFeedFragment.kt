@@ -1,17 +1,15 @@
 package com.example.dermaapplication.fragments
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
@@ -22,7 +20,6 @@ import com.example.dermaapplication.fragments.journal.JournalFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseaseDetailedFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
 import com.example.dermaapplication.items.Disease
-import com.google.android.material.card.MaterialCardView
 
 class UserFeedFragment : Fragment() {
     private lateinit var journalCardView: CardView

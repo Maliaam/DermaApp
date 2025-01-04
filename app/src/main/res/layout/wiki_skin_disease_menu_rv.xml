@@ -1,60 +1,69 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="105dp"
     android:layout_marginBottom="12dp"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#d2d5d7">
+        android:layout_height="wrap_content">
 
-        <!-- Obraz choroby -->
-        <ImageView
-            android:id="@+id/wiki_skinMenu_diseaseImageRv"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerCrop"
-
-            android:src="@drawable/baseline_10k_24"
-            android:contentDescription="@string/image_missing" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:background="#d2d5d7"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/wiki_skinMenu_diseaseNameRv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/medicine"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/playfairdisplayregular"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="Nazwa choroby" />
 
-            <TextView
-                android:id="@+id/wiki_skinMenu_diseaseDescriptionRv"
-                android:layout_width="wrap_content"
+            <!-- Obraz choroby -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/wiki_skinMenu_diseaseImageRv"
+                style="@style/ShapeableImageViewRoundedCorners"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/image_missing"
+                android:scaleType="fitXY"
+                android:src="@drawable/baseline_10k_24" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/medicine"
-                android:textSize="14sp"
-                android:fontFamily="@font/playfairdisplayregular"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:text="Krótki opis choroby, który daje podstawowe informacje." />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/wiki_skinMenu_diseaseNameRv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/playfairdisplayregular"
+                    android:maxLines="1"
+                    android:text="Nazwa choroby"
+                    android:textColor="@color/medicine"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/wiki_skinMenu_diseaseDescriptionRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/playfairdisplayregular"
+                    android:maxLines="2"
+                    android:text="Krótki opis choroby, który daje podstawowe informacje."
+                    android:textColor="@color/medicine"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

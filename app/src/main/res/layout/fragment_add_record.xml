@@ -226,6 +226,8 @@
                                 app:layout_constraintTop_toTopOf="parent">
 
                                 <LinearLayout
+                                    android:visibility="gone"
+                                    android:id="@+id/doctor_info_layout"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
@@ -241,6 +243,7 @@
                                         android:textSize="16sp" />
 
                                     <TextView
+                                        android:id="@+id/journal_doctor_name"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/playfairdisplayregular"
@@ -262,23 +265,39 @@
                                         app:layout_constraintTop_toTopOf="parent">
 
                                         <ImageView
-                                            android:id="@+id/user_image"
+                                            android:id="@+id/doctor_image"
                                             android:layout_width="64dp"
                                             android:layout_height="64dp"
                                             android:contentDescription="@string/user_profile_image"
                                             android:scaleType="centerCrop"
                                             android:src="@drawable/image_default_man" />
                                     </androidx.cardview.widget.CardView>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:visibility="gone"
+                                    android:id="@+id/doctor_info_layout_empty"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="10dp"
+                                    android:orientation="vertical">
                                     <TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/playfairdisplayregular"
-                                        android:text="Przychodnia Piotra Skargi ul. Januszewska 114b Wrocław"
+                                        android:text="Udostępnij swój dziennik poprzez wysłanie lekarzowi specjalnego kodu autoryzującego. Możesz go wygenerować w praym górnym rogu ekranu za pomocą przycisku:"
                                         android:textAlignment="center"
-                                        android:layout_marginTop="10dp"
                                         android:textColor="@color/black"
-                                        android:textSize="12sp"
-                                        />
+                                        android:textSize="12sp" />
+
+                                        <ImageView
+                                            android:layout_marginTop="10dp"
+                                            android:layout_gravity="center"
+                                            android:layout_width="40dp"
+                                            android:layout_height="40dp"
+                                            android:contentDescription="@string/user_profile_image"
+                                            android:scaleType="fitXY"
+                                            android:src="@drawable/icon_share" />
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
 
@@ -455,6 +474,7 @@
                                 android:textColor="@color/medicine"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 

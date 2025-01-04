@@ -12,10 +12,12 @@ import com.example.dermaapplication.items.Note
  * Adapter odpowiedzialny za wyświetlanie notatek za pomocą RecyclerView.
  * @param notes Lista obiektów Note reprezentująca notatki w dzienniku.
  */
-class JournalNotesAdapter(private var notes: List<Note>) :
-    RecyclerView.Adapter<JournalNotesAdapter.NoteViewHolder>() {
+class NotesAdapter(private var notes: List<Note>) :
+    RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
-    fun updateNotes(newNotes: List<Note>){
+    private val expandedPositions = mutableSetOf<Int>()
+
+    fun updateNotes(newNotes: List<Note>) {
         notes = newNotes
         notifyDataSetChanged()
     }
@@ -27,8 +29,9 @@ class JournalNotesAdapter(private var notes: List<Note>) :
      * @property noteContent TextView reprezentujący tekst notatki.
      */
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val noteDate: TextView = itemView.findViewById(R.id.note_date)
-        val noteContent: TextView = itemView.findViewById(R.id.note_content)
+        val previewTextView: TextView = itemView.findViewById(R.id.noteContentPreview)
+        val dateTextView: TextView = itemView.findViewById(R.id.noteDate)
+        val fullContentTextView: TextView = itemView.findViewById(R.id.noteFullContent)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -46,7 +49,21 @@ class JournalNotesAdapter(private var notes: List<Note>) :
      * @param position Pozycja elementu w liście przekazanej do adaptera.
      */
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.noteDate.text = notes[position].date
-        holder.noteContent.text = notes[position].content
+        val note = notes[position]
+        val isExpanded = expandedPositions.contains(position)
+        holder.previewTextView.text =
+            note.content.take(30) + if (note.content.length > 30) "..." else ""
+        holder.dateTextView.text = note.date
+        holder.fullContentTextView.text = note.content
+        holder.fullContentTextView.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
+        holder.itemView.setOnClickListener {
+            if (isExpanded) {
+                expandedPositions.remove(position)
+            } else {
+                expandedPositions.add(position)
+            }
+            notifyItemChanged(position)
+        }
     }
 }

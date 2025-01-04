@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermaapplication.R
 import com.example.dermaapplication.items.Users
 
@@ -32,7 +33,11 @@ class DoctorsChatAdapter(var doctorsList: List<Users>) : RecyclerView.Adapter<Do
     }
 
     override fun onBindViewHolder(holder: DoctorsChatViewHolder, position: Int) {
-        holder.image.setImageResource(R.drawable.man)
+        Glide.with(holder.itemView.context)
+            .load(doctorsList[position].profileImageUrl)
+            .placeholder(R.drawable.man)
+            .error(R.drawable.man)
+            .into(holder.image)
         holder.name.text = doctorsList[position].name
     }
 }

@@ -33,7 +33,6 @@ class DrawingOverlay @JvmOverloads constructor(
     private var lineEnd: Pair<Float, Float>? = null
 
 
-    // Funkcja do dodawania punktów
     fun setPoint(x: Float, y: Float) {
         points.add(Pair(x, y))
         invalidate()
@@ -46,11 +45,10 @@ class DrawingOverlay @JvmOverloads constructor(
         }
     }
 
-    // Funkcja do rysowania linii między dwoma punktami
     fun setLine(startX: Float, startY: Float, endX: Float, endY: Float) {
         this.lineStart = Pair(startX, startY)
         this.lineEnd = Pair(endX, endY)
-        invalidate()  // Odśwież widok
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {

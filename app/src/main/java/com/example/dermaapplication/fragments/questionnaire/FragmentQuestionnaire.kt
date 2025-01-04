@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
+import com.example.dermaapplication.fragments.HomeFragment
 import com.example.dermaapplication.fragments.UserFeedFragment
 import com.example.dermaapplication.fragments.journal.adapters.JournalRecordsAdapter
 import com.example.dermaapplication.items.JournalRecord
@@ -61,6 +62,7 @@ class FragmentQuestionnaire : Fragment() {
     private val questionsList = ArrayList<Question>()
     private val userAnswers = mutableListOf<SurveyItem>()
     private lateinit var questionnaireProgressBar: ProgressBar
+    private lateinit var progressPercentage: TextView
     private var currentQuestionNumber = 0
     private var totalQuestionsNumber = 0
     private var currentQuestionId = 0
@@ -75,7 +77,6 @@ class FragmentQuestionnaire : Fragment() {
         yesButton = view.findViewById(R.id.buttonYes)
         noButton = view.findViewById(R.id.buttonNo)
         backButton = view.findViewById(R.id.buttonPrevious)
-        nextButton = view.findViewById(R.id.buttonNext)
         spinner = view.findViewById(R.id.answersSpinner)
         yesNoLayout = view.findViewById(R.id.yesNoLayout)
         loadingProgressBar = view.findViewById(R.id.progressBar)
@@ -86,6 +87,7 @@ class FragmentQuestionnaire : Fragment() {
         journalsRV = view.findViewById(R.id.questionnaireEnd_recyclerview)
         addTextView = view.findViewById(R.id.addAnswers)
         help = view.findViewById(R.id.help_questionnaire)
+        progressPercentage = view.findViewById(R.id.progress_percentage)
     }
 
     private fun setupOnClickListeners() {
@@ -95,23 +97,29 @@ class FragmentQuestionnaire : Fragment() {
             setupTitleDialog(
                 requireContext(),
                 onTitleAdded = { title ->
-                record.documentId?.let { documentId ->
-                    createSurveyAndSave(documentId, title)
-                }
-            })
+                    record.documentId?.let { documentId ->
+                        createSurveyAndSave(documentId, title)
+                    }
+                })
         }
         help.setOnClickListener {
-            val question = questionsList[currentQuestionNumber]
-            val additionalHelperInfo = question.additionalInfo
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Dodatkowe informacje")
-                    .setMessage(additionalHelperInfo)
-                    .setPositiveButton("OK") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
+            Utilities.infoDialogBuilder(
+                requireContext(),
+                "Dodatkowe informacje",
+                questionsList[currentQuestionNumber].additionalInfo!!,
+                "OK"
+            )
+        }
+        backButton.setOnClickListener {
+            if (currentQuestionNumber > 0) {
+                userAnswers.removeAt(currentQuestionNumber - 1)
+                currentQuestionNumber--
+                displayQuestion(currentQuestionNumber)
+                updateProgressBar(currentQuestionNumber)
+                Log.e("Survey", userAnswers.toString())
             }
         }
+    }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         recyclerView.apply {
@@ -124,6 +132,7 @@ class FragmentQuestionnaire : Fragment() {
     /**
      * Ładuje wszystkie dzienniki użytkownika w końcowym widoku ankiety
      */
+    @SuppressLint("NotifyDataSetChanged")
     private fun fetchJournalRecord() {
         Utilities.databaseFetch.fetchJournalRecords { records ->
             if (records.isNotEmpty()) {
@@ -165,8 +174,8 @@ class FragmentQuestionnaire : Fragment() {
      */
     private fun displayQuestion(currentQuestionNumber: Int) {
         val question = questionsList[currentQuestionNumber]
-        Log.e("Survey",question.toString())
         help.visibility = if (question.additionalInfo == null) View.GONE else View.VISIBLE
+        backButton.visibility = if (currentQuestionNumber > 0) View.VISIBLE else View.GONE
         currentQuestionId = question.id
         questionText.text = question.question
         adjustAnswerTypeToQuestion(question)
@@ -312,6 +321,7 @@ class FragmentQuestionnaire : Fragment() {
      * Funkcja wyświetlająca komunikat kończący ankietę.
      * Informuje użytkownika o zakończeniu wypełniania ankiety.
      */
+    @SuppressLint("SetTextI18n")
     private fun showEndOfQuestionnaire() {
         Toast.makeText(context, "Dziękujemy za wypełnienie ankiety!", Toast.LENGTH_SHORT).show()
         journalsRV.visibility = View.VISIBLE
@@ -320,21 +330,15 @@ class FragmentQuestionnaire : Fragment() {
         content.visibility = View.GONE
         if (FirebaseAuth.getInstance().currentUser == null) {
             questionText.text = "Ankieta zakończona. Zarejestruj się aby móc zapistwać ankiety."
+            (activity as MainActivity).replaceFragment(HomeFragment())
         } else {
             questionText.visibility = View.GONE
             addTextView.visibility = View.VISIBLE
         }
-        //todo jak nie ma wpisów a zalogowany to możliwość dodania
     }
 
-    private fun createSurveyAndSave(documentId: String,surveyTitle: String): Survey {
+    private fun createSurveyAndSave(documentId: String, surveyTitle: String): Survey {
         val date = Utilities.getCurrentTime("short")
-
-//        val frontPins = (bundle.getSerializable("frontPins") as? List<Pin>) ?: emptyList()
-//        val backPins = (bundle.getSerializable("backPins") as? List<Pin>) ?: emptyList()
-
-
-
 
         val survey = Survey(
             title = surveyTitle,
@@ -357,6 +361,20 @@ class FragmentQuestionnaire : Fragment() {
             }
         )
 
+        val bundle = arguments
+
+        bundle?.let {
+            // Odbieranie i konwertowanie map z powrotem na obiekty Pin
+            val frontPins = (it.getSerializable("frontPins") as? List<Map<String, Float>>)
+                ?.map { map -> Pin(map["x"] ?: 0f, map["y"] ?: 0f) } ?: emptyList()
+
+            val backPins = (it.getSerializable("backPins") as? List<Map<String, Float>>)
+                ?.map { map -> Pin(map["x"] ?: 0f, map["y"] ?: 0f) } ?: emptyList()
+
+            // Teraz frontPins i backPins zawierają obiekty Pin
+            Utilities.databaseFetch.updatePinsInSurvey(documentId, frontPins, backPins)
+        }
+
         return survey
     }
 
@@ -365,22 +383,32 @@ class FragmentQuestionnaire : Fragment() {
     private fun initializeProgressBar(count: Int) {
         questionnaireProgressBar.max = count
         questionnaireProgressBar.progress = 0
+        progressPercentage.text = "0%"
     }
 
     /** Aktualizuje wartość ProgressBar na podstawie aktualnego indeksu pytania. */
+    @Suppress("DEPRECATION")
+    @SuppressLint("SetTextI18n")
     private fun updateProgressBar(currentIndex: Int) {
         questionnaireProgressBar.progress = currentIndex + 1
+        val progress = ((currentIndex + 1).toFloat() / questionnaireProgressBar.max * 100).toInt()
+        progressPercentage.text = "$progress%"
+        if (progress < 49) {
+            progressPercentage.setTextColor(resources.getColor(R.color.medicine))
+        } else {
+            progressPercentage.setTextColor(resources.getColor(R.color.white))
+        }
     }
 
     private fun setupTitleDialog(
         context: Context,
         onTitleAdded: (String) -> Unit
-        ){
+    ) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.layout_dialog, null)
         val titleEditText = dialogView.findViewById<EditText>(R.id.note_edit_text)
 
         MaterialAlertDialogBuilder(context)
-            .setTitle("Wpisz tytuł dziennika")
+            .setTitle("Wpisz tytuł ankiety")
             .setView(dialogView)
             .setCancelable(true)
             .setPositiveButton("Zapisz") { dialog, _ ->

@@ -6,5 +6,5 @@
     android:fontFamily="@font/playfairdisplayregular"
     android:padding="8dp"
     android:textStyle="bold"
-    android:textColor="@color/white"
+    android:textColor="@color/black"
     android:textSize="18sp" />

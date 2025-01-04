@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_marginStart="25dp"
-            android:text="@string/userName"
+            android:text="Zarejestruj się!"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_weight="1" />

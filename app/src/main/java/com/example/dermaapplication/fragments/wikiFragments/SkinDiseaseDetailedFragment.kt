@@ -1,5 +1,6 @@
 package com.example.dermaapplication.fragments.wikiFragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ class SkinDiseaseDetailedFragment : Fragment() {
     private lateinit var diseaseNextImage: ImageView
     private lateinit var viewPager: ViewPager
     private lateinit var symptomsRecyclerView: RecyclerView
+    private lateinit var imageCounter: TextView
     private val urlList = mutableListOf<String>()
     private val imgAdapter by lazy { ImagePagerAdapter(urlList) }
 
@@ -40,6 +42,7 @@ class SkinDiseaseDetailedFragment : Fragment() {
         diseasePreviousImage = view.findViewById(R.id.leftArrow)
         diseaseNextImage = view.findViewById(R.id.rightArrow)
         symptomsRecyclerView = view.findViewById(R.id.symptomsRecyclerView)
+        imageCounter = view.findViewById(R.id.image_counter)
     }
 
     /**
@@ -56,6 +59,7 @@ class SkinDiseaseDetailedFragment : Fragment() {
      */
     private fun setupImagePager() {
         viewPager.adapter = imgAdapter
+        updateImageCounter()
         diseasePreviousImage.setOnClickListener { navigateImage(-1) }
         diseaseNextImage.setOnClickListener { navigateImage(1) }
     }
@@ -69,7 +73,15 @@ class SkinDiseaseDetailedFragment : Fragment() {
         val newItem = currentItem + direction
         if (newItem in 0 until urlList.size) {
             viewPager.currentItem = newItem
+            updateImageCounter()
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateImageCounter(){
+        val currentItem = viewPager.currentItem
+        val totalImages = urlList.size
+        imageCounter.text = "${currentItem + 1}/$totalImages"
     }
 
     /**
@@ -99,6 +111,7 @@ class SkinDiseaseDetailedFragment : Fragment() {
                 val symptomsAdapter = SymptomsAdapter(it.symptoms)
                 symptomsRecyclerView.adapter = symptomsAdapter
                 imgAdapter.notifyDataSetChanged()
+                updateImageCounter()
             }
         }
     }

@@ -1,21 +1,25 @@
 package com.example.dermaapplication.fragments.journal.surveys
 
+import android.graphics.Matrix
+import android.graphics.RectF
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.R
-import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.fragments.journal.adapters.SurveyListAdapter
+import com.example.dermaapplication.items.Pin
 import com.example.dermaapplication.items.Survey
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SurveyListFragment : Fragment() {
 
@@ -25,11 +29,14 @@ class SurveyListFragment : Fragment() {
     private lateinit var goBack: ImageButton
     private lateinit var settingsExpand: ImageButton
 
+    private lateinit var frontBodyView: FrameLayout
+    private lateinit var backBodyView: FrameLayout
+
     private var settingsExpanded = false
     private lateinit var settings: MaterialCardView
     private lateinit var deleteLayout: LinearLayout
     private lateinit var deleteModeButton: RadioButton
-    var deleteModeFlag = false
+    private var deleteModeFlag = false
 
 
     private fun setupOnClickListeners() {
@@ -64,11 +71,13 @@ class SurveyListFragment : Fragment() {
         settings = view.findViewById(R.id.survey_settings)
         deleteLayout = view.findViewById(R.id.survey_deleteModeLayout)
         deleteModeButton = view.findViewById(R.id.survey_deleteMode)
-
+        frontBodyView = view.findViewById(R.id.survey_frontView)
+        backBodyView = view.findViewById(R.id.survey_backView)
 
         setupRecyclerView()
         loadSurveysFromBundle()
         setupOnClickListeners()
+        loadPinsFromBundle()
 
         return view
     }
@@ -93,9 +102,21 @@ class SurveyListFragment : Fragment() {
      * Tworzy obiekt Survey na podstawie odpowiedzi i ustawia je w RecyclerView
      */
     private fun loadSurveysFromBundle() {
-        // Odbierz listę odpowiedzi ankiet (SurveyItem) przekazanych w Bundle
         val surveyResponses = arguments?.getSerializable("surveyResponses") as? List<Survey>
         surveyAdapter.updateSurveys(surveyResponses)
+    }
+    private fun loadPinsFromBundle(){
+        val frontPins = arguments?.getSerializable("frontPins") as? List<Pin>
+        val backPins = arguments?.getSerializable("backPins") as? List<Pin>
+
+        frontPins?.forEach { pin ->
+            addPin(frontBodyView, pin)
+        }
+        backPins?.forEach { pin ->
+            addPin(backBodyView, pin)
+        }
+
+
     }
 //    private fun showDeleteConfirmationDialog(survey: Survey, documentId: String){
 //        MaterialAlertDialogBuilder(requireContext())
@@ -118,5 +139,27 @@ class SurveyListFragment : Fragment() {
 //            }
 //            .show()
 //    }
+private fun addPin(container: FrameLayout, pin: Pin) {
+    val pinView = ImageView(requireContext()).apply {
+        layoutParams = FrameLayout.LayoutParams(60, 60).apply {
+            setMargins(pin.x.toInt() - 30, pin.y.toInt() - 45, 0, 0)
+        }
+        setImageResource(R.drawable.pin_image)
+        scaleType = ImageView.ScaleType.CENTER_INSIDE
+    }
+    container.addView(pinView)
+}
+    private fun getImageBounds(imageView: ImageView): RectF {
+        val drawable = imageView.drawable ?: return RectF()
+        val matrix = imageView.imageMatrix
+        val values = FloatArray(9)
+        matrix.getValues(values)
+        val left = values[Matrix.MTRANS_X]
+        val top = values[Matrix.MTRANS_Y]
+        val width = drawable.intrinsicWidth * values[Matrix.MSCALE_X]
+        val height = drawable.intrinsicHeight * values[Matrix.MSCALE_Y]
+        return RectF(left, top, left + width, top + height)
+    }
+
 }
 

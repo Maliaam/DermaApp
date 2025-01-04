@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ShapeableImageView Style -->
+    <style name="ShapeableImageViewRoundedCorners" parent="Widget.MaterialComponents.ShapeableImageView">
+        <item name="shapeAppearanceOverlay">@style/RoundedRightCornersShape</item>
+    </style>
+
+    <!-- Shape Style for ShapeableImageView -->
+    <style name="RoundedRightCornersShape" parent="ShapeableImageViewRoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">12dp</item>
+        <item name="cornerSizeBottomRight">12dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+</resources>

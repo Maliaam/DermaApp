@@ -1,6 +1,8 @@
 [versions]
 agp = "8.3.0"
 cameraxVersion = "1.4.0"
+core = "1.6.1"
+espressoCoreVersion = "3.5.1"
 firebaseAuth = "23.1.0"
 firebaseBom = "33.4.0"
 firebaseFirestore = "25.1.0"
@@ -8,6 +10,7 @@ firebaseFirestoreVersion = "25.1.1"
 firebaseMessaging = "24.0.3"
 firebaseMessagingVersion = "24.1.0"
 firebaseStorage = "21.0.1"
+fragmentTesting = "1.8.5"
 glide = "4.16.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -26,8 +29,10 @@ activity = "1.8.0"
 places = "4.1.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
+runner = "1.6.2"
 sceneformUx = "1.17.1"
 googleServices = "4.4.2"
+espressoContrib = "3.6.1"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
@@ -35,7 +40,12 @@ androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "
 androidx-camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraxVersion" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraxVersion" }
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraxVersion" }
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-espresso-core-v351 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
+androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "core" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
@@ -68,6 +78,7 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 sceneform-ux = { module = "com.google.ar.sceneform.ux:sceneform-ux", version.ref = "sceneformUx" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
+androidx-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

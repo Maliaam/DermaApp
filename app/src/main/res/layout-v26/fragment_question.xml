@@ -252,7 +252,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/progressbar_questionnaire"
+                app:layout_constraintBottom_toTopOf="@id/progressBar_container"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="336dp">
 
@@ -261,42 +261,43 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Poprzednie"
+                    android:text="Poprzednie pytanie"
                     android:textColor="?attr/colorPrimary" />
 
-                <Button
-                    android:id="@+id/buttonNext"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Następne"
-                    android:textColor="?attr/colorPrimary" />
             </LinearLayout>
-                
-                <ProgressBar
-                    android:id="@+id/progressbar_questionnaire"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+
+                <FrameLayout
+                    android:id="@+id/progressBar_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progressDrawable="@drawable/progress_bar_style"
-                    android:progress="0"
-                    android:max="100"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ProgressBar
+                        android:id="@+id/progressbar_questionnaire"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progressDrawable="@drawable/progress_bar_style"
+                        android:progress="0"
+                        android:max="100" />
+
+                    <TextView
+                        android:id="@+id/progress_percentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="0%"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="5dp"
+                        android:textStyle="bold" />
+                </FrameLayout>
 
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/dotContainer"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:orientation="horizontal"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

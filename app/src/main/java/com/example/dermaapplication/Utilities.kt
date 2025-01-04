@@ -1,15 +1,18 @@
 package com.example.dermaapplication
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import com.example.dermaapplication.database.DatabaseFetch
 import com.example.dermaapplication.items.JournalRecord
+import com.example.dermaapplication.items.Message
 import com.example.dermaapplication.user.User
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -46,7 +49,7 @@ class Utilities {
         private var userUID: String = ""
 
         /** Aktualny wpis w dzienniku */
-        var currentJournalRecord: JournalRecord ?= null
+        var currentJournalRecord: JournalRecord? = null
 
 
         /**
@@ -169,14 +172,20 @@ class Utilities {
                     callback(false)
                 }
         }
-        fun getFCMToken(){
-            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                if(task.isSuccessful){
-                    val token = task.result
-                    Log.e("Token",token)
+        fun infoDialogBuilder(
+            context: Context,
+            title: String,
+            message: String,
+            positiveButtonText: String,
+            onPositiveButtonClick:(() -> Unit)? = null){
+            MaterialAlertDialogBuilder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(positiveButtonText) { dialog, _ ->
+                    onPositiveButtonClick?.invoke()
+                    dialog.dismiss()
                 }
-
-            }
+                .show()
         }
     }
 }

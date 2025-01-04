@@ -9,7 +9,7 @@
     <!-- Strings for navigation menu -->
     <string name="menu_login">Zaloguj się</string>
     <string name="menu_home">Strona główna</string>
-    <string name="menu_skin">Wikipedia schorzeń</string>
+    <string name="menu_skin">Encyklopedia dermatoz</string>
     <string name="menu_questionaire">Ankieta</string>
     <string name="menu_specialists">Specjaliści</string>
     <string name="todo">TODO</string>
@@ -70,12 +70,20 @@
     <string name="disease_name">Disease Name</string>
     <string name="loading_progress">%d%%</string>
     <string name="end_questionnaire_confirm">Czy chcesz zakończyć ankiete?</string>
-    <string name="help_body">Kliknij w obraz, aby zaznaczyć miejsce, w którym występują zmiany skórne. Jeśli chcesz usunąć pinezkę, kliknij ją drugi raz. Obraz domyślnie przedstawia przód ciała, jeśli chcesz to zmienić, kliknij w przycisk TYŁ.</string>
+    <string name="help_body">Kliknij w model ciała człowieka, aby zaznaczyć miejsce, w którym
+        występujązmiany skórne.Jeśli chcesz usunąć pinezkę, kliknij ją ponownie.Obraz domyślnie
+        przedstawia przód ciała, jeśli chcesz zmienić płaszczyznę, kliknij w przycisk "TYŁ". Po
+        zakończeniu oznaczania miejsc, kliknij w przycisk "DALEJ", aby przejść do kolejnej sekcji
+        ankiety.
+    </string>
     <string name="journal_tittle">Tytuł dziennika</string>
     <string name="add_image">add_image</string>
     <string name="last_note_text">Zaczerwienienie skóry</string>
     <string name="_2024_04_14">last_note_date</string>
     <string name="gallery">GALERIA ZDJĘĆ</string>
     <string name="done_surveys">Wypełnione ankiety</string>
+    <string name="notes_help">
+        Kliknij na notatkę, aby rozwinąć jej pełną treść. Kliknij ponownie, aby zwinąć widok. Notatki można usuwać, przytrzymując wybraną pozycję. Listę notatek możesz sortować względem daty – rosnąco lub malejąco.
+    </string>
 
 </resources>

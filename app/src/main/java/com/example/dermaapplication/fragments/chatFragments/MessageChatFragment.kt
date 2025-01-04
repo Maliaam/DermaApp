@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermaapplication.MainActivity
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.adapters.MessageAdapter
 import com.example.dermaapplication.items.Message
 import com.example.dermaapplication.vmd.ChatViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 /**
  * Fragment odpowiedzialny za wyświetlanie czatu pomiędzy nadawcą a odbiorcą.
@@ -48,6 +50,7 @@ class MessageChatFragment : Fragment() {
         sendMessageText = view.findViewById(R.id.message_editText)
         personName = view.findViewById(R.id.message_receiverNameSurname)
         makePhotoButton = view.findViewById(R.id.message_makePhoto)
+
 
         // Pobranie danych z bundle (przekazanych z ChatMenuFragment)
         senderId = arguments?.getString("senderUID")!!
@@ -86,11 +89,6 @@ class MessageChatFragment : Fragment() {
         goBack.setOnClickListener {
             (activity as? MainActivity)?.showBottomNav()
             (activity as? MainActivity)?.replaceFragment(ChatMenuFragment())
-        }
-
-        makePhotoButton.setOnClickListener{
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            //TODO: Dodanie kamery i robienie zdjęcia
         }
 
         return view

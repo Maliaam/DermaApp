@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.items.Message
+import com.google.firebase.auth.FirebaseAuth
 
 class ChatAdapter(var messageList: List<Message>) :
     RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
@@ -36,19 +38,33 @@ class ChatAdapter(var messageList: List<Message>) :
         return messageList.size
     }
 
+    fun updateList(newList: List<Message>) {
+        this.messageList = newList
+        notifyDataSetChanged()
+    }
+
     //TODO IMAGE DLA UŻYTKOWNIKA
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        holder.image.setImageResource(R.drawable.man)
+        val loggedInUid = FirebaseAuth.getInstance().currentUser?.uid
+        val senderUid = messageList[position].senderId
+        val receiverUid = messageList[position].receiverId
+        val uid = if (senderUid != loggedInUid) senderUid else receiverUid
+        Utilities.databaseFetch.fetchUserProfileImageUrlByUid(uid){ imageUrl ->
+            if(imageUrl != null) {
+                Glide.with(holder.itemView.context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.man)
+                    .error(R.drawable.baseline_10k_24)
+                    .into(holder.image)
+            }
+        }
         holder.lastMessageText.text = messageList[position].messageText
         holder.lastMessageHour.text = messageList[position].timestamp
 
-        if (Utilities.isUserDoctor == true) {
-            if(messageList[position].receiverId != Utilities.getCurrentUserUid()) {
-                holder.receiverName.text = messageList[position].receiverName
-            }else{
-                holder.receiverName.text = messageList[position].receiverName
-            }
-        } else {
+        if (receiverUid == Utilities.getCurrentUserUid()){
+            holder.receiverName.text = messageList[position].senderName
+        }
+        if (receiverUid != Utilities.getCurrentUserUid()){
             holder.receiverName.text = messageList[position].receiverName
         }
     }

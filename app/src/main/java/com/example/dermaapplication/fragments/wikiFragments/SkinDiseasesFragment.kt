@@ -13,6 +13,7 @@ import com.example.dermaapplication.R
 import com.example.dermaapplication.Utilities
 import com.example.dermaapplication.adapters.WikiDiseaseAdapter
 import com.example.dermaapplication.items.Disease
+import java.text.Collator
 import java.util.Locale
 
 /**
@@ -36,12 +37,18 @@ class SkinDiseasesFragment : Fragment() {
 
         Utilities.databaseFetch.fetchDiseases { diseases ->
             if (diseases.isNotEmpty()) {
+                val collator = Collator.getInstance(Locale("pl", "PL"))
                 diseasesList.clear()
-                diseasesList.addAll(diseases)
+                diseasesList.addAll(diseases.sortedWith { o1, o2 ->
+                    collator.compare(
+                        o1.name,
+                        o2.name
+                    )
+                }) // Sortowanie wg polskiego alfabetu
                 skinAdapter.notifyDataSetChanged()
             }
-
         }
+
         return view
     }
 
@@ -53,8 +60,8 @@ class SkinDiseasesFragment : Fragment() {
     private fun initializeOnItemClick() {
         skinAdapter.onItemClick = { disease ->
             val bundle = Bundle().apply {
-                putString("diseaseName",disease.name)
-                putString("diseaseDescription",disease.description)
+                putString("diseaseName", disease.name)
+                putString("diseaseDescription", disease.description)
             }
             val skinDiseaseDetailedFragment = SkinDiseaseDetailedFragment().apply {
                 arguments = bundle
@@ -110,17 +117,33 @@ class SkinDiseasesFragment : Fragment() {
      *
      * @param query Zapytanie wyszukiwania wpisane przez użytkownika do SearchView.
      */
-    private fun filterSearch(query: String?) = if (!query.isNullOrEmpty()) {
-        val filteredQuery = ArrayList<Disease>()
-        val lowerCaseQuery = query.lowercase(Locale.ROOT)
-        for (data in diseasesList) {
-            if (data.name.lowercase(Locale.ROOT).contains(lowerCaseQuery)) {
-                filteredQuery.add(data)
+    private fun filterSearch(query: String?) {
+        if (!query.isNullOrEmpty()) {
+            val filteredQuery = ArrayList<Disease>()
+            val lowerCaseQuery = query.lowercase(Locale.ROOT)
+            for (data in diseasesList) {
+                if (data.name.lowercase(Locale.ROOT).contains(lowerCaseQuery)) {
+                    filteredQuery.add(data)
+                }
             }
+            val collator = Collator.getInstance(Locale("pl", "PL"))
+            skinAdapter.setFilteredList(filteredQuery.sortedWith { o1, o2 ->
+                collator.compare(
+                    o1.name,
+                    o2.name
+                )
+            })
+        } else {
+            val collator = Collator.getInstance(Locale("pl", "PL"))
+            recyclerView.visibility = View.VISIBLE
+            skinAdapter.setFilteredList(diseasesList.sortedWith { o1, o2 ->
+                collator.compare(
+                    o1.name,
+                    o2.name
+                )
+            })
         }
-        skinAdapter.setFilteredList(filteredQuery)
-    } else {
-        recyclerView.visibility = View.VISIBLE
-        skinAdapter.setFilteredList(diseasesList)
     }
 }
+
+

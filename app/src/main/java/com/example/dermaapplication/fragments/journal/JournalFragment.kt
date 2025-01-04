@@ -1,7 +1,9 @@
 package com.example.dermaapplication.fragments.journal
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +63,7 @@ class JournalFragment : Fragment() {
      * Przełącza flagę usuwania wpisów dziennika.
      * Gdy tryb usuwania jest aktywny, użytkownik może usuwać elementy z listy.
      */
+    @SuppressLint("NotifyDataSetChanged")
     private fun toggleDeleteMode() {
         journalAdapter.isDeleteMode = !journalAdapter.isDeleteMode
         journalAdapter.notifyDataSetChanged()
@@ -77,6 +80,7 @@ class JournalFragment : Fragment() {
         val editText = EditText(context).apply {
             hint = "Wpisz tytuł"
             setPadding(16, 16, 16, 16)
+            filters = arrayOf(InputFilter.LengthFilter(14))
         }
         MaterialAlertDialogBuilder(context)
             .setTitle("Dodaj wpis")
@@ -87,7 +91,7 @@ class JournalFragment : Fragment() {
                     onTitleEntered(title)
                 }
                 dialog.dismiss()
-                (activity as MainActivity).replaceFragment(JournalFragment())
+                journalAdapter.notifyDataSetChanged()
             }.setNegativeButton("Anuluj") { dialog, _ -> dialog.dismiss() }
             .show()
     }

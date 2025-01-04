@@ -38,7 +38,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <androidx.appcompat.widget.SearchView
+    <SearchView
         android:id="@+id/chatSearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

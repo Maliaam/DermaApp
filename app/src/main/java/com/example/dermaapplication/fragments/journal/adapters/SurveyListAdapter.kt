@@ -8,9 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.R
-import com.example.dermaapplication.fragments.journal.surveys.SurveyListFragment
 import com.example.dermaapplication.items.Survey
-import com.example.dermaapplication.items.SurveyItem
 
 class SurveyListAdapter(
     private val isDeleteMode: () -> Boolean

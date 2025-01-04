@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermaapplication.adapters.DiseaseAdapter
 import com.example.dermaapplication.database.FirebaseAuthListener
+import com.example.dermaapplication.fragments.AttributionFragment
 import com.example.dermaapplication.fragments.HomeFragment
 import com.example.dermaapplication.fragments.SpecialistsFragment
 import com.example.dermaapplication.fragments.UserFeedFragment
 import com.example.dermaapplication.fragments.UserFragment
 import com.example.dermaapplication.fragments.chatFragments.ChatMenuFragment
+import com.example.dermaapplication.fragments.journal.JournalFragment
 import com.example.dermaapplication.fragments.questionnaire.BodyFragment
 import com.example.dermaapplication.fragments.registration.LoginFragment
 import com.example.dermaapplication.fragments.wikiFragments.SkinDiseasesFragment
@@ -28,6 +30,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
 /**
@@ -60,6 +63,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
         setupRecyclerView()
         setupMainMenu()
         setupBottomMenu()
+        replaceFragment(HomeFragment())
 
     }
 
@@ -93,7 +97,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
                     if (FirebaseAuth.getInstance().currentUser != null)
                         replaceFragment(ChatMenuFragment())
                     else
-                        replaceFragment(SpecialistsFragment())
+                        replaceFragment(LoginFragment())
                     true
                 }
 
@@ -101,7 +105,7 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
             }
         }
         fabButton.setOnClickListener {
-            replaceFragment(UserFragment())
+            //todo zamienić na fragment user
         }
     }
 
@@ -123,6 +127,8 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
 
         if (Utilities.getCurrentUserUid() != "")
             navigation.menu.findItem(R.id.menu_chat).isVisible = false
+            navigation.menu.findItem(R.id.dziennik).isVisible = false
+            navigation.menu.findItem(R.id.menu_logout).isVisible = false
 
         //TODO: Edytować menu nawigacyjne w zależności od typu konta
         navigation.setNavigationItemSelectedListener { menuItem ->
@@ -149,9 +155,11 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
                 R.id.menu_ankieta -> {
                     replaceFragment(BodyFragment())
                 }
-
-                R.id.menu_specialists -> {
-                    replaceFragment(SpecialistsFragment())
+                R.id.dziennik -> {
+                    replaceFragment(JournalFragment())
+                }
+                R.id.attribution -> {
+                    replaceFragment(AttributionFragment())
                 }
             }
 
@@ -249,7 +257,6 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
     private fun refreshMenu() {
         val isUserLoggedIn = FirebaseAuth.getInstance().currentUser != null
 
-
         updateNavigationItemVisibility(
             item = navigation.menu.findItem(R.id.menu_chat),
             isVisible = isUserLoggedIn
@@ -257,6 +264,14 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
         updateNavigationItemVisibility(
             item = navigation.menu.findItem(R.id.menu_login),
             isVisible = !isUserLoggedIn
+        )
+        updateNavigationItemVisibility(
+            item = navigation.menu.findItem(R.id.dziennik),
+            isVisible = isUserLoggedIn
+        )
+        updateNavigationItemVisibility(
+            item = navigation.menu.findItem(R.id.menu_logout),
+            isVisible = isUserLoggedIn
         )
 
         val bottomChatItemMenu = bottomNavigationView.menu.findItem(R.id.chat)
@@ -275,8 +290,8 @@ class MainActivity : AppCompatActivity(), AuthStateCallback {
             }
         } else {
             item.apply {
-                title = "Specjaliści"
-                setIcon(R.drawable.icon_doctor)
+                title = "Zaloguj"
+                setIcon(R.drawable.enter)
             }
         }
     }
